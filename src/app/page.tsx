@@ -42,6 +42,8 @@ export default function Home() {
       <div>
         <h2>做个有出息的人!</h2>
         <h4 style={{ textAlign: 'center' }}>Very silky</h4>
+        <h4 style={{ textAlign: 'center', color: 'red' }}>太爽了！</h4>
+        <h4 style={{ textAlign: 'center' }}>你想要休息多久？</h4>
       </div>
 
       <div className={styles.grid}>
