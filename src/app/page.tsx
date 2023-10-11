@@ -6,7 +6,7 @@ import styles from './page.module.css'
 import '../../public/locales/index'
 export default function Home() {
   return (
-    <main className={styles.main}>
+    <main className={styles.main} >
       <Logo />
       <Welcome />
     </main>
