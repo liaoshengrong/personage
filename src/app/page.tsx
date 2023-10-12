@@ -2,7 +2,8 @@
 import react, { createContext, useState } from "react";
 import Welcome from "@/component/welcome";
 import Logo from "../component/logo";
-import styles from "./page.module.css";
+// import styles from "./page.module.css";
+import styles from "./page.module.scss";
 import "../../public/locales/index";
 import CardList from "../component/card-list";
 export default function Home() {

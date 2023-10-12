@@ -1,11 +1,28 @@
-.container{
+.card {
     min-width: 30rem;
     max-width: 40rem;
+    min-height: 10rem;
     display: flex;
-    flex:1;
-    border: 1px solid skyblue;
+    flex-direction: column;
+    // align-items: center;
     justify-content: center;
-    align-items: center;
-    margin: 2rem;
-    border-radius:1rem;
+    flex: 1;
+    border: 1px solid skyblue;
+    margin: 1rem;
+    border-radius: 1rem;
+    user-select: none;
+    cursor: pointer;
+    padding: 2.5rem;
+    opacity: 0;
+
+    p{
+        font-size: 4rem;
+        margin-bottom: 2.5rem;
+    }
+
+    span{
+        font-size: 1.2rem;
+        color: skyblue;
+    }
+
 }

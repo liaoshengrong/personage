@@ -2,8 +2,6 @@ import React from "react";
 
 const HighlightText = ({ text, children, highlightStyle }) => {
   const textArr = children.split(new RegExp(`(${text})`));
-  console.log(text, textArr, children, "textArr");
-
   return (
     <div>
       {textArr.map((item, index) => {

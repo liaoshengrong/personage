@@ -1,25 +1,15 @@
-import * as React from "react";
-import {
-  AnimationDefinition,
-  MotionProps,
-  motion,
-  useAnimation,
-} from "framer-motion";
-import styles from "./index.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react";
 import HighlightText from "../highlight";
+import styles from "./index.module.scss";
 // import { useTranslation } from 'react-i18next'
 enum Status {
-  // welcome = "欢迎来到我的个人网站！",
-  welcome = "welcome",
+  welcome = "欢迎来到我的个人网站！",
+  // welcome = "welcome",
   content = "该网站是由Nextjs搭建而成",
   finally = "请在下方卡片中选择查看的信息内容",
   highlightText = "Nextjs",
 }
-// const animateView: MotionProps = {
-//   animate: ,
-//   transition: { duration: 1.5 },
-// };
 const animate = { width: "100%", opacity: 1 };
 
 const transition = {
@@ -29,7 +19,6 @@ const transition = {
 const Welcome = ({ containerComplete }) => {
   const controls = useAnimation();
   const controlsWelcome = useAnimation();
-
   const controlsContent = useAnimation();
   const controlsFinaly = useAnimation();
 
@@ -42,7 +31,7 @@ const Welcome = ({ containerComplete }) => {
   };
 
   const finallyComplete = async () => {
-    controls.start({ scale: 0.5, flex: 0 });
+    controls.start({ scale: 1, flex: 0 });
   };
 
   useEffect(() => {
@@ -52,7 +41,7 @@ const Welcome = ({ containerComplete }) => {
   return (
     <motion.div
       className={styles.container}
-      initial={{ fontSizeAdjust: 0 }}
+      initial={{ scale: 2, flex: 0.5 }}
       animate={controls}
       transition={transition}
       onAnimationComplete={containerComplete}
