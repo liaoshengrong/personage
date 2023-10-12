@@ -1,0 +1,11 @@
+.container{
+    min-width: 30rem;
+    max-width: 40rem;
+    display: flex;
+    flex:1;
+    border: 1px solid skyblue;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+    border-radius:1rem;
+}
