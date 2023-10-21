@@ -8,8 +8,8 @@ import "../../public/locales/index";
 import CardList from "../component/card-list";
 import { loadItem, saveItem } from "../utils/storage";
 export default function Home() {
-  const isFirstComeIn = loadItem("isFirstComeIn");
   const [startCard, setStartCard] = useState(false);
+  const [isFirstComeIn, setIsFirstComeIn] = useState(false);
 
   const containerComplete = () => {
     setStartCard(true);
