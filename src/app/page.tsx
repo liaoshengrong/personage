@@ -11,8 +11,6 @@ export default function Home() {
   const isFirstComeIn = loadItem("isFirstComeIn");
   const [startCard, setStartCard] = useState(false);
 
-  console.log(isFirstComeIn, "isFirstComeIn");
-
   const containerComplete = () => {
     setStartCard(true);
   };
@@ -21,19 +19,18 @@ export default function Home() {
     if (!isFirstComeIn) {
       setStartCard(true);
     }
-    // const handleLoad = () => {
-    //   false && saveItem("isFirstComeIn", true);
-    // };
-  }, []);
+  }, [isFirstComeIn]);
 
   return (
     <main className={styles.main}>
-      <Logo />
-      <Welcome
-        isNeedAnimated={isFirstComeIn}
-        containerComplete={containerComplete}
-      />
-      {startCard && <CardList isNeedAnimated={isFirstComeIn} />}
+      <div className={styles.container}>
+        <Logo />
+        <Welcome
+          isNeedAnimated={isFirstComeIn}
+          containerComplete={containerComplete}
+        />
+        {startCard && <CardList isNeedAnimated={isFirstComeIn} />}
+      </div>
     </main>
   );
 }

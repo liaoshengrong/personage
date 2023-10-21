@@ -30,7 +30,7 @@ const Welcome = ({ isNeedAnimated, containerComplete }) => {
 
   useEffect(() => {
     isNeedAnimated && controlsWelcome.start(animate);
-  }, [isNeedAnimated]);
+  }, []);
 
   return (
     <motion.div

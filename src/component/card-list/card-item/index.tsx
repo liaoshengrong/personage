@@ -8,7 +8,6 @@ import { colors } from "../../../utils/color";
 function CardItem(props: CardItemProp) {
   const { title, content, isStart, onComplete, path, isNeedAnimated } = props;
   const controls = useAnimation();
-  const hoverControls = useAnimation();
   const router = useRouter();
   useEffect(() => {
     if (isStart) {
@@ -24,7 +23,7 @@ function CardItem(props: CardItemProp) {
       animate={controls}
       whileHover={{
         color: colors.skyblue,
-        borderColor: "yellowgreen",
+        borderColor: colors.yellowgreen,
         boxShadow: "0 0 8px 3px white",
       }}
       whileTap={{ scale: 0.95 }}
