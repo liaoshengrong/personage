@@ -14,6 +14,9 @@ function Item({ data }: { data: ImageListProp["images"][number] }) {
           }}
           src={`${url}?w=248&fit=crop&auto=format`}
           srcSet={`${url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+          sizes="(max-width: 600px) 300px, 
+         (max-width: 1200px) 600px, 
+         1200px"
           loading="lazy"
         />
       </a>
