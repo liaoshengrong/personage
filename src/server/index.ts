@@ -15,7 +15,7 @@ export const getImageList: ResBase<ImageListProp> = cache(async () => {
     params: {
       many: true
     },
-  }).then(res => res)
+  }).then(res => res.data)
 
   // return api.post('', {
   //   query: IMAGE_LIST,
