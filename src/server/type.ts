@@ -13,10 +13,15 @@ export interface ImageListProp {
     url: string
     width: number
     height: number
-    image_id: number
-    tags: {
+    image_id?: number
+    tags?: {
       tag_id: number,
       description: string,
     }[]
   }[]
+}
+
+export interface GirlListProp {
+  imageUrl: string;
+  imageSize: string;
 }

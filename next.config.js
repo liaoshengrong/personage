@@ -7,6 +7,10 @@ const nextConfig = {
   reactStrictMode: false,
   // Enable source map if needed
   productionBrowserSourceMaps: true,
+  images: {
+    domains: ['cdn.waifu.im', 'power-api.cretinzp.com'],
+  },
+
   // i18n: {
   //   defaultLocale: 'en',
   //   locales: ['en', 'zh'],

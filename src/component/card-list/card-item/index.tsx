@@ -1,9 +1,11 @@
 import { motion, useAnimation } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Router from "next/router";
 import { useEffect } from "react";
 import { CardItemProp } from "../index.preset";
 import styles from "./index.module.scss";
 import { colors } from "../../../utils/color";
+import Link from "next/link";
 
 function CardItem(props: CardItemProp) {
   const { title, content, isStart, onComplete, path, isNeedAnimated } = props;
@@ -18,7 +20,6 @@ function CardItem(props: CardItemProp) {
   return (
     <motion.div
       className={styles.card}
-      onClick={() => router.push(path)}
       initial={isNeedAnimated && { opacity: 0, y: 100 }}
       animate={controls}
       whileHover={{
@@ -30,8 +31,10 @@ function CardItem(props: CardItemProp) {
       transition={{ duration: 0.5 }}
       onAnimationComplete={onComplete}
     >
-      <p>{title}</p>
-      <span>{content}</span>
+      <Link rel="stylesheet" href={path} passHref={false}>
+        <p>{title}</p>
+        <span>{content}</span>
+      </Link>
     </motion.div>
   );
 }

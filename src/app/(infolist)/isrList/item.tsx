@@ -1,23 +1,27 @@
 import { ImageListProp } from "@/server/type";
 import React from "react";
+import Image from "next/image";
 import styles from "./page.module.scss";
 function Item({ data }: { data: ImageListProp["images"][number] }) {
   const { width, height, url, image_id, artist, tags } = data;
   const description = tags?.[0]?.description;
+  const basic = width > height ? 30 : 20;
   return (
     <div className={styles.itemContainer} key={image_id}>
       <a href={url} target="_blank">
-        <img
+        <Image
+          width={width}
+          height={height}
+          alt={url}
+          src={url}
           className={styles.image}
           style={{
-            height: `${(height / width) * 20}rem`,
+            width: basic + "rem",
+            height: `${(height / width) * basic}rem`,
           }}
-          src={`${url}?w=248&fit=crop&auto=format`}
-          srcSet={`${url}?w=248&fit=crop&auto=format&dpr=2 2x`}
-          sizes="(max-width: 600px) 300px, 
-         (max-width: 1200px) 600px, 
-         1200px"
+          // layout="fixed"
           loading="lazy"
+          quality={20}
         />
       </a>
 
