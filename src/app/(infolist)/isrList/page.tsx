@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Item from "./item";
 import styles from "./page.module.scss";
 import { unique } from "@/utils/function";
+import data from "@/data_json/data.json";
 function IsrList() {
   const [page, setPage] = useState(2);
   const [list, setList] = useState([]);
@@ -29,24 +30,24 @@ function IsrList() {
     }
   };
 
-  useEffect(() => {
-    getData(1);
-    getData(2);
-  }, []);
+  // useEffect(() => {
+  //   getData(1);
+  //   getData(2);
+  // }, []);
 
   return (
     <div className={styles.container} ref={ref} onScroll={onScroll}>
       <div className={styles.listContainer}>
-        {list?.map((item) => {
+        {data.slice(0, 50)?.map((item) => {
           return (
             <Item
-              key={item.imageUrl}
-              data={{
-                url: item.imageUrl,
-                width: +item.imageSize.split("x")[0],
-                height: +item.imageSize.split("x")[1],
-              }}
-              // data={item}
+              key={item.url}
+              // data={{
+              //   url: item.imageUrl,
+              //   width: +item.imageSize.split("x")[0],
+              //   height: +item.imageSize.split("x")[1],
+              // }}
+              data={item}
             />
           );
         })}

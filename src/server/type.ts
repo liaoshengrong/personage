@@ -11,6 +11,7 @@ export interface ImageListProp {
       twitter: string
     },
     url: string
+    big_url?: string
     width: number
     height: number
     image_id?: number

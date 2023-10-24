@@ -8,7 +8,7 @@ const nextConfig = {
   // Enable source map if needed
   productionBrowserSourceMaps: true,
   images: {
-    domains: ['cdn.waifu.im', 'power-api.cretinzp.com'],
+    domains: ['cdn.waifu.im', 'power-api.cretinzp.com', 'images.wallpaperscraft.com'],
   },
 
   // i18n: {

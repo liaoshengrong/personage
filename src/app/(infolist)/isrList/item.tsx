@@ -3,18 +3,17 @@ import React from "react";
 import Image from "next/image";
 import styles from "./page.module.scss";
 function Item({ data }: { data: ImageListProp["images"][number] }) {
-  const { width, height, url, image_id, artist, tags } = data;
+  const { width, height, url, image_id, artist, tags, big_url } = data;
   const description = tags?.[0]?.description;
   const basic = width > height ? 30 : 20;
   return (
     <div className={styles.itemContainer} key={image_id}>
-      <a href={url} target="_blank">
+      <a href={big_url} target="_blank">
         <Image
           width={width}
           height={height}
           alt={url}
-          // src={url}
-          src="https://images.wallpaperscraft.com/image/single/girl_lights_grass_163914_1080x1920.jpg"
+          src={url}
           className={styles.image}
           style={{
             width: basic + "rem",
