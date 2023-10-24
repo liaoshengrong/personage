@@ -9,6 +9,8 @@ import CardList from "../component/card-list";
 import { loadItem, saveItem } from "../utils/storage";
 import { getGirlImageList } from "@/server";
 import { preload } from "@/utils/function";
+
+type PreloadListProp = (page?: number, callBack?: PreloadListProp) => void;
 export default function Home() {
   const [startCard, setStartCard] = useState(false);
   const [isFirstComeIn, setIsFirstComeIn] = useState(false);
@@ -17,8 +19,9 @@ export default function Home() {
     setStartCard(true);
   };
 
-  const preloadList = (page) => {
+  const preloadList: PreloadListProp = (page, callBack) => {
     getGirlImageList({ page }).then((res) => {
+      callBack && callBack();
       if (window.requestIdleCallback) {
         window.requestIdleCallback(() => preload(res));
       } else {
@@ -30,8 +33,11 @@ export default function Home() {
     if (!isFirstComeIn) {
       setStartCard(true);
     }
-    preloadList(1);
-    preloadList(2);
+    if (typeof window !== undefined) {
+      const isFirstComeIns = loadItem("isFirst");
+      console.log(isFirstComeIns, "isFirstComeIns");
+    }
+    preloadList(1, () => preloadList(2));
   }, [isFirstComeIn]);
 
   return (

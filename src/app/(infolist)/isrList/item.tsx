@@ -13,7 +13,8 @@ function Item({ data }: { data: ImageListProp["images"][number] }) {
           width={width}
           height={height}
           alt={url}
-          src={url}
+          // src={url}
+          src="https://images.wallpaperscraft.com/image/single/girl_lights_grass_163914_1080x1920.jpg"
           className={styles.image}
           style={{
             width: basic + "rem",

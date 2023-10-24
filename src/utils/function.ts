@@ -21,7 +21,7 @@ export function preload(list) {
     };
   }
 }
-
+// 数组去重
 export function unique(data, uniqueField) {
   let uniqueArr = data.filter((item, index) => {
     return (
