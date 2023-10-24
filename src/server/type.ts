@@ -15,6 +15,7 @@ export interface ImageListProp {
     width: number
     height: number
     image_id?: number
+    description?: string
     tags?: {
       tag_id: number,
       description: string,
