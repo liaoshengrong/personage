@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import data from '@/data_json/data.json'
-export async function GET(req: NextRequest) {
-  console.log(req, '这是req');
 
-  return NextResponse.json({
-    list: data
-  })
+export async function GET(req: NextRequest) {
+  try {
+    const page = +req.url.split('?page=')[1]
+    console.log(req.url, page, '这是req');
+    const pageTotal = 20
+    const pageStart = (page - 1) * pageTotal
+    const pageEnd = (page * pageTotal)
+    return NextResponse.json({
+      list: data.slice(pageStart, pageEnd)
+    })
+  } catch (error) {
+    return NextResponse.json({
+      error
+    })
+  }
 }

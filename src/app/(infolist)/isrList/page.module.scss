@@ -1,5 +1,5 @@
 .container {
-  display: flex;
+  // display: flex;
   width: 100%;
   height: 100vh;
   overflow-x: hidden;
@@ -39,5 +39,21 @@
       .description {
       }
     }
+  }
+  button {
+    display: flex;
+    width: 20%;
+    height: 3rem;
+    border: 0;
+    margin: auto;
+    margin-top: 2rem;
+    border: 1px solid skyblue;
+    justify-content: center;
+    color: skyblue;
+    user-select: none;
+    cursor: pointer;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 0.5rem;
   }
 }

@@ -10,6 +10,14 @@ const nextConfig = {
   images: {
     domains: ['cdn.waifu.im', 'power-api.cretinzp.com', 'images.wallpaperscraft.com'],
   },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api',
+  //       destination: '/',
+  //     },
+  //   ]
+  // },
 
   // i18n: {
   //   defaultLocale: 'en',

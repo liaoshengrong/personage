@@ -1,5 +1,5 @@
 "use client";
-import react, { createContext, useEffect, useState } from "react";
+import react, { createContext, useEffect, useMemo, useState } from "react";
 import Welcome from "@/component/welcome";
 import Logo from "../component/logo";
 // import styles from "./page.module.css";
@@ -8,27 +8,40 @@ import "../../public/locales/index";
 import CardList from "../component/card-list";
 import { loadItem, saveItem } from "../utils/storage";
 import { getGirlImageList } from "@/server";
-import { preload } from "@/utils/function";
+import { preloadMount } from "@/utils/function";
+import { apiRequest } from "@/server/fetch";
+import { ImageListProp } from "@/server/type";
 
-type PreloadListProp = (page?: number, callBack?: PreloadListProp) => void;
 export default function Home() {
   const [startCard, setStartCard] = useState(false);
   const [isFirstComeIn, setIsFirstComeIn] = useState(false);
+
+  const { data, isLoading } = apiRequest<ImageListProp>("/list", "GET", {
+    page: 1,
+  });
+
+  const datalist = useMemo(() => data?.list, [data]);
+  console.log(data, isLoading, "data");
 
   const containerComplete = () => {
     setStartCard(true);
   };
 
-  const preloadList: PreloadListProp = (page, callBack) => {
-    getGirlImageList({ page }).then((res) => {
-      callBack && callBack();
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(() => preload(res));
-      } else {
-        setTimeout(() => preload(res), 0);
-      }
-    });
+  const preloadList = (datalist: ImageListProp["list"]) => {
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => preloadMount(datalist));
+    } else {
+      setTimeout(() => preloadMount(datalist), 0);
+    }
   };
+
+  useEffect(() => {
+    // 做预挂载
+    if (datalist) {
+      preloadList(datalist);
+    }
+  }, [datalist]);
+
   useEffect(() => {
     if (!isFirstComeIn) {
       setStartCard(true);
@@ -37,7 +50,6 @@ export default function Home() {
       const isFirstComeIns = loadItem("isFirst");
       console.log(isFirstComeIns, "isFirstComeIns");
     }
-    preloadList(1, () => preloadList(2));
   }, [isFirstComeIn]);
 
   return (
