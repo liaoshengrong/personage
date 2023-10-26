@@ -22,7 +22,7 @@ function IsrList() {
   // const { data, isLoading } = apiRequest<ImageListProp>("/list", "GET", {
   //   page: page,
   // });
-  const { data, error, isLoading } = useSWR(`list/?page=${page}`, (url) =>
+  const { data, error, isLoading } = useSWR(`list?page=${page}`, (url) =>
     fetcher<ImageListProp>(url, { method: "GET", data: { page: 1 } })
   );
 
