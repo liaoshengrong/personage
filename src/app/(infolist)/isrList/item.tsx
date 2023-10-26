@@ -27,7 +27,7 @@ function Item({ data }: { data: ImageListProp["list"][number] }) {
 
       <div className={styles.content}>
         <div className={styles.info}>
-          <span>作者:{artist?.name ?? "白泽桃"}</span>
+          <span>作者:{"白泽桃"}</span>
           <span>
             尺寸:{width}x{height}
           </span>
