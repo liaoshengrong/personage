@@ -1,4 +1,4 @@
-[
+export default [
   {
     "url": "https://images.wallpaperscraft.com/image/single/girl_lights_grass_163914_168x300.jpg",
     "width": 1080,
