@@ -22,6 +22,7 @@ function Item({ data }: { data: ImageListProp["list"][number] }) {
           // layout="fixed"
           loading="lazy"
           quality={20}
+          loader={({ src }) => src}
         />
       </a>
 
