@@ -3,10 +3,8 @@ import data from "./data";
 
 export const dynamic = "force-static";
 export async function GET(req: NextRequest) {
-  console.log(data, "datadata");
-
   try {
-    const page = +req.url.split("?page=")[1];
+    const page = +(req.url.split("?page=")[1] ?? 1);
     console.log(req.url, page, "这是req");
     const pageTotal = 20;
     const pageStart = (page - 1) * pageTotal;

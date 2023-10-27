@@ -27,7 +27,6 @@ export const fetcher = async <T>(
   input?: InputProp
 ): Promise<T> => {
   let fetchUrl = `${API_BASE_URL}${url}`;
-  console.log(fetchUrl, "fetchUrl");
 
   const { method, data } = input;
 
@@ -48,6 +47,7 @@ export const fetcher = async <T>(
     }
   }
 
+  console.log(fetchUrl, "fetchUrl");
   const res = await fetch(fetchUrl, options);
   const fetchData = await res.json();
 
