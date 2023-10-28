@@ -1,12 +1,12 @@
-import useSWR from 'swr';
-import fetch from 'isomorphic-unfetch';
+import useSWR from "swr";
+import fetch from "isomorphic-unfetch";
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 interface APIResponse<T> {
   data: T;
   error: Error;
-  isLoading?: boolean
+  isLoading?: boolean;
 }
 
 interface FetchOptions {
@@ -16,28 +16,30 @@ interface FetchOptions {
 }
 
 export interface InputProp {
-  method: HttpMethod,
-  data: Record<string, any>
+  method: HttpMethod;
+  data: Record<string, any>;
 }
 
-const API_BASE_URL = 'api/'; // 替换为实际的API基础URL
+const API_BASE_URL = "https://shengrong.netlify.app/api/"; // 替换为实际的API基础URL
 
-export const fetcher = async <T>(url: string, input?: InputProp): Promise<T> => {
-  let fetchUrl = `${API_BASE_URL}${url}`
-  console.log(fetchUrl, 'fetchUrl');
+export const fetcher = async <T>(
+  url: string,
+  input?: InputProp
+): Promise<T> => {
+  let fetchUrl = `${API_BASE_URL}${url}`;
 
-  const { method, data } = input
+  const { method, data } = input;
 
   const options: FetchOptions = {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       // 在此处添加任何其他公共请求头
     },
   };
 
-  if (data && !url.includes('?')) {
-    if (method === 'GET') {
+  if (data && !url.includes("?")) {
+    if (method === "GET") {
       const queryParams = new URLSearchParams(data);
       fetchUrl = `${fetchUrl}?${queryParams.toString()}`;
     } else {
@@ -45,23 +47,27 @@ export const fetcher = async <T>(url: string, input?: InputProp): Promise<T> => 
     }
   }
 
-
+  console.log(fetchUrl, "fetchUrl");
   const res = await fetch(fetchUrl, options);
   const fetchData = await res.json();
 
   if (!res.ok) {
-    throw new Error(fetchData.message || 'An error occurred');
+    throw new Error(fetchData.message || "An error occurred");
   }
 
   return fetchData;
 };
 
-export const apiRequest = <T>(url: string, method: HttpMethod = 'GET', data?: Record<string, any>): APIResponse<T> => {
-
-
-
-
-  const { data: responseData, error, isLoading } = useSWR<T>(url, (url) => fetcher<T>(url, { method, data }));
+export const apiRequest = <T>(
+  url: string,
+  method: HttpMethod = "GET",
+  data?: Record<string, any>
+): APIResponse<T> => {
+  const {
+    data: responseData,
+    error,
+    isLoading,
+  } = useSWR<T>(url, (url) => fetcher<T>(url, { method, data }));
 
   return { data: responseData, error, isLoading };
 };

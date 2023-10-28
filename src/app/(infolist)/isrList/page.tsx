@@ -51,7 +51,7 @@ function IsrList() {
   // }, []);
 
   if (isLoading) {
-    return <div className={styles.container}>laoding...</div>;
+    return <div className={styles.container}>loading...</div>;
   }
 
   return (
