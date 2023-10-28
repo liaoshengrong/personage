@@ -4,6 +4,7 @@ const nextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
   },
+  output: "export",
   reactStrictMode: false,
   // Enable source map if needed
   productionBrowserSourceMaps: true,
