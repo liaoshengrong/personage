@@ -245,7 +245,7 @@
   dependencies:
     is-promise "^4.0.0"
 
-"@netlify/functions@^2.1.0":
+"@netlify/functions@^2.1.0", "@netlify/functions@^2.3.0":
   version "2.3.0"
   resolved "https://registry.npmmirror.com/@netlify/functions/-/functions-2.3.0.tgz#37e2ca41c0034a10de4addbdff7fbb8ec669e8c7"
   integrity sha512-E3kzXPWMP/r1rAWhjTaXcaOT47dhEvg/eQUJjRLhD9Zzp0WqkdynHr+bqff4rFNv6tuXrtFZrpbPJFKHH0c0zw==
