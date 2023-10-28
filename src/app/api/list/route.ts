@@ -19,7 +19,3 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export const config = {
-  type: "experimental-scheduled",
-};
-

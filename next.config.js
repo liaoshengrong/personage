@@ -15,23 +15,7 @@ const nextConfig = {
       "images.wallpaperscraft.com",
     ],
   },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "*",
-          },
-          {
-            key: "Referrer",
-            value: "origin-when-cross-origin",
-          },
-        ],
-      },
-    ];
-  },
+
   // async rewrites() {
   //   return [
   //     {
