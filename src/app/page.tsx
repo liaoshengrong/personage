@@ -1,6 +1,6 @@
-import { getDatalist } from "@/utils";
-import React, { use } from "react";
+import React from "react";
 import List from "./_components/List";
+import data from "@/config/data.json";
 
 const Index = () => {
   return (
@@ -9,7 +9,7 @@ const Index = () => {
         <div className="text-base mb-4 text-center font-en text-black/80 tracking-widest">
           MARK LIAO
         </div>
-        <List />
+        <List data={data} />
       </div>
     </div>
   );
