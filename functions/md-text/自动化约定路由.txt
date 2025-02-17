@@ -1,0 +1,188 @@
+在平时开发中，如果你的项目没有使用 umijs 或者 nextjs，那么我们在注册一个路由时，一般流程为：
+
+1. 新建一个文件
+2. 添加一个页面路径枚举
+3. 添加一个路由
+4. 使用该路由注册页面。
+
+如果有大量的新页面需要注册，那么就会产生大量的重复代码，我们可以利用类似上一篇`icon自动化管理`的方式去做**自动化约定路由**
+
+## 思路
+
+1. 创建一个`src/router/index.ts`文件，用于存放路由配置
+2. 创建一个`src/pages/index.ts`文件，用于统一导出所有页面
+3. 创建一个`src/router/types.ts`文件，用于存放路由类型定义
+
+思路较为简单，还是利用`webpack watchRun`的钩子去实现自定义插件。  
+直接附上所有代码：
+
+```ts
+const fs = require("fs");
+const path = require("path");
+const generatePages = require("./generate-pages");
+const generateRoutes = require("./generate-routes");
+const generateBrowserRouter = require("./generate-browser-router");
+/**
+ * @description 该插件用于自动监听src/pages文件夹，当有页面文件级修改时，自动生成路由相关文件
+ */
+const AutomationRouter = (compiler) => {
+  compiler.hooks.watchRun.tap("AutomationRouter", (compilation) => {
+    const directoryPath = path.resolve("src/pages");
+    const files = fs.readdirSync(directoryPath);
+
+    const directories = files.filter((file) => {
+      const filePath = path.join(directoryPath, file);
+      return fs.statSync(filePath).isDirectory();
+    });
+
+    const page_names = generatePages(directories);
+
+    generateRoutes(directories);
+    generateBrowserRouter(page_names);
+  });
+};
+module.exports = {
+  apply: AutomationRouter,
+};
+
+// generatePages
+const fs = require("fs");
+const path = require("path");
+
+const generatePages = (dirs) => {
+  console.log(dirs, "dirs ---- ");
+  let pagesString = `//此文件已自动化，手动修改此文件无效\nimport { lazy } from 'react';\n`;
+  const page_names = [];
+  dirs.forEach((name) => {
+    switch (name) {
+      case "404":
+        pagesString += `\nexport const NotFound = lazy(() => import("./404"));\n`;
+        page_names.push("NotFound");
+        break;
+      case "Remote":
+        pagesString += `\nexport const RemoteSamplePage = lazy(() => import("./Remote/Sample"));\n`;
+        page_names.push("RemoteSamplePage");
+        break;
+      default:
+        pagesString += `\nexport const ${name} = lazy(() => import("./${name}"));\n`;
+        page_names.push(name);
+        break;
+    }
+  });
+
+  const dir_path = "../../src/pages/index.ts";
+  const pages_path = path.resolve(__dirname, dir_path);
+  const current_pages = fs.readFileSync(pages_path, "utf-8");
+
+  if (current_pages !== pagesString) {
+    fs.writeFileSync(pages_path, pagesString);
+  }
+  return page_names;
+};
+module.exports = generatePages;
+
+// generateRoutes
+const path = require("path");
+const fs = require("fs");
+const generateRoutes = (dirs) => {
+  const baseRoutes = { Root: "/", Deposito: "/deposito" };
+  dirs.forEach((name) => {
+    switch (name) {
+      case "404":
+        baseRoutes["NotFound"] = "*";
+        break;
+      case "Remote":
+        baseRoutes["RemotePage"] = "/remotePage";
+        break;
+      default:
+        baseRoutes[name] = `/${name.slice(0, 1).toLowerCase()}${name.slice(1)}`;
+        break;
+    }
+  });
+  const enumString = `//此文件已自动化，手动修改此文件无效\nenum PathEnum {
+    ${Object.keys(baseRoutes)
+      .map((key) => `${key} = "${baseRoutes[key]}",`)
+      .join("\n    ")}
+  }
+  export default PathEnum;
+  `;
+
+  const dir_path = "../../src/routes/automate/route-path.ts";
+  const routePath = path.resolve(__dirname, dir_path);
+  const current_Enum = fs.readFileSync(routePath, "utf-8");
+
+  if (current_Enum !== enumString) {
+    fs.writeFileSync(routePath, enumString);
+  }
+};
+
+module.exports = generateRoutes;
+
+// generateBrowserRouter
+const path = require("path");
+const fs = require("fs");
+
+const generateBrowserRouter = (page_names) => {
+  const children = [
+    { path: "PathEnum.Root", loader: `loader[PathEnum.Root]` },
+  ].concat(
+    page_names.map((name) => {
+      const path_name = name === "RemoteSamplePage" ? "RemotePage" : name;
+      return {
+        path: `PathEnum.${path_name}`,
+        Component: name,
+        loader: `loader[PathEnum.${path_name}]`,
+      };
+    })
+  );
+
+  const childrenToString = JSON.stringify(children, null, 2);
+
+  let context = `// 此文件已自动化，手动修改此文件无效
+import { createBrowserRouter } from "react-router-dom";
+import {\n  ${page_names.join(",\n  ")} \n} from "@/pages";
+import PathEnum from "./route-path";
+import Layout from "@/layouts";
+import { loader } from "../config";
+export { PathEnum };
+export default createBrowserRouter([
+  {
+    path: PathEnum.Root,
+    Component: Layout,
+    loader: loader.layout,
+    children: ${childrenToString.replaceAll('"', "")}
+}])
+`;
+
+  const dir_path = "../../src/routes/automate/index.ts";
+  const brower_path = path.resolve(__dirname, dir_path);
+  const current_brower = fs.readFileSync(brower_path, "utf-8");
+
+  if (current_brower !== context) {
+    fs.writeFileSync(brower_path, context);
+  }
+};
+
+module.exports = generateBrowserRouter;
+```
+
+在 `App.tsx `里
+
+```js
+import { useEffect } from "react";
+import useAuth from "./hooks/auth";
+import { RouterProvider } from "react-router-dom";
+import routes from "./routes";
+
+function App() {
+  const { checkAuthProfile } = useAuth();
+  useEffect(() => {
+    console.log("App Effect");
+    checkAuthProfile({ checkGoogle: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return <RouterProvider router={routes} />;
+}
+
+export default App;
+```
