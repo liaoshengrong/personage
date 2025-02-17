@@ -16,7 +16,7 @@ function convertXlsxToJson() {
     desc: item["描述"],
     date: item["日期"],
     title: item["标题"],
-  }));
+  })).filter((item) => item.tag !== "");
 
   // 将 JSON 数据写入到文件
   fs.writeFileSync(outputJsonPath, JSON.stringify(data, null, 4));

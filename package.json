@@ -7,9 +7,10 @@
     "build": "node scripts/handXlsxToJson.js && next build",
     "start": "next start",
     "lint": "next lint"
-
   },
   "dependencies": {
+    "@netlify/functions": "^3.0.0",
+    "dayjs": "^1.11.13",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

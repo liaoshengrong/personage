@@ -1,15 +1,11 @@
 import React from "react";
-type DataType = {
-  tag: string;
-  desc: string;
-  date: string;
-  title: string;
-};
+import Perview from "./Perview";
+
 const List = ({ data }: { data: DataType[] }) => {
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {data.map((item, index) => (
-        <div key={index}>{item.title}</div>
+        <Perview key={index} data={item} />
       ))}
     </div>
   );
