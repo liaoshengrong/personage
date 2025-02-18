@@ -17,9 +17,15 @@ function convertXlsxToJson() {
     date: item["日期"],
     title: item["标题"],
   })).filter((item) => item.tag !== "");
+  // 按date排序
+  const newData = data.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  });
 
   // 将 JSON 数据写入到文件
-  fs.writeFileSync(outputJsonPath, JSON.stringify(data, null, 4));
+  fs.writeFileSync(outputJsonPath, JSON.stringify(newData, null, 4));
   console.log(`File has been written to ${outputJsonPath}`);
 }
 

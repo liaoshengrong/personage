@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import Typography from "@tailwindcss/typography";
 const BASE = 16;
 const rem = (px: number) => `${px / BASE}rem`;
 
@@ -30,5 +31,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [Typography],
 } satisfies Config;
