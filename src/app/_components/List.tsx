@@ -38,6 +38,7 @@ const List = ({ data }: { data: DataType[] }) => {
               data={item}
               index={index}
               onChoose={onChoose}
+              isActive={chooseData?.title === item.title}
             />
           ))}
         </div>

@@ -5,14 +5,18 @@ interface IProps {
   data: DataType;
   index: number;
   onChoose: (data: DataType) => void;
+  isActive: boolean;
 }
-const Perview = ({ data, index, onChoose }: IProps) => {
+const Perview = ({ data, index, onChoose, isActive }: IProps) => {
   const { title, tag, desc, date } = data;
   const animatecss =
     index % 2 === 0 ? "animate__bounceInLeft" : "animate__bounceInRight";
   useEffect(() => {
     getFiles(tag, title);
   }, []);
+  const titlecss = isActive
+    ? "text-[#FF0000] text-nowrap text-lg"
+    : " text-black/90 text-nowrap text-lg";
 
   return (
     <div
@@ -23,7 +27,7 @@ const Perview = ({ data, index, onChoose }: IProps) => {
         {dayjs(date).format("MMM DD,YYYY")}
       </div>
       <div className="flex flex-col gap-2">
-        <div className="text-black/70 text-nowrap text-lg">{title}</div>
+        <div className={titlecss}>{title}</div>
         <div className="text-base text-black/60">{desc}</div>
       </div>
     </div>
