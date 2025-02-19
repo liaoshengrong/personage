@@ -4,7 +4,7 @@ import ProgressBar from "../_components/ProgressBar";
 
 const Index = () => {
   return (
-    <div className="min-h-screen p-8 h-full">
+    <div className="min-h-screen p-8 h-full bg-gray-200">
       <Navbar />
       <div className="w-full max-w-xl  mx-auto rounded-md p-5 mt-5">
         {tagArr.map((item, index) => (

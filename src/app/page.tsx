@@ -2,13 +2,14 @@ import React from "react";
 import List from "./_components/List";
 import data from "@/config/data.json";
 import Navbar from "./_components/Navbar";
+import PageContainer from "./_components/PageContainer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen p-8 h-full">
+    <PageContainer>
       <Navbar />
       <List data={data} />
-    </div>
+    </PageContainer>
   );
 };
 

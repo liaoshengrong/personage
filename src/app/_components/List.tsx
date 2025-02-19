@@ -43,10 +43,10 @@ const List = ({ data }: { data: DataType[] }) => {
           ))}
         </div>
         <div
-          className="rounded-lg flex-shrink-0 transition-all duration-1000 border overflow-y-auto p-5 sticky top-0 max-h-screen"
+          className="rounded-lg flex-shrink-0 transition-all duration-1000 overflow-y-auto p-5 sticky top-0 max-h-screen"
           style={{
             width: isChoose ? "750px" : 0,
-            borderWidth: isChoose ? "4px" : "0px",
+
             height: isChoose ? height + "px" : 0,
             opacity: isChoose ? 1 : 0,
           }}

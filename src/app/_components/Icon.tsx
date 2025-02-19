@@ -6,11 +6,16 @@ interface IProps {
   src: string | StaticImageData;
   direction: string;
   path?: string;
+  stop?: boolean;
 }
+const config = {
+  left: "animate__backInLeft",
+  right: "animate__backInRight",
+  top: "animate__backInUp",
+};
 const Icon = (props: IProps) => {
-  const { src, direction, path } = props;
-  const cssname =
-    direction === "left" ? "animate__backInLeft" : "animate__backInRight";
+  const { src, direction, path, stop } = props;
+  const cssname = stop ? "" : config[direction as keyof typeof config];
   return (
     <Link href={path ?? "/"}>
       <Image
