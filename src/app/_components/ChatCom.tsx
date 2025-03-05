@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface Message {
   role: "user" | "bot";
@@ -12,6 +12,7 @@ export default function ChatCom() {
   const [message, setMessage] = useState<string>("");
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   const sendMessage = async () => {
     if (!message.trim()) return;
@@ -58,10 +59,20 @@ export default function ChatCom() {
     }
   };
 
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [chatHistory, isLoading]);
+
   return (
     <div className="p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 animate__animated animate__fadeInUp">
       {/* 聊天历史 */}
-      <div className="h-96 overflow-y-auto p-4 border-b border-gray-200">
+      <div
+        ref={chatContainerRef}
+        className="h-96 overflow-y-auto p-4 border-b border-gray-200"
+      >
         {chatHistory.map((msg, index) => (
           <div
             key={index}
