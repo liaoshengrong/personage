@@ -1,7 +1,9 @@
+import { CORS_HEADERS } from "./utils/common";
 exports.handler = async function (event, context) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: "Method Not Allowed" }),
     };
   }
@@ -29,11 +31,13 @@ exports.handler = async function (event, context) {
 
     return {
       statusCode: 200,
+      headers: CORS_HEADERS,
       body: JSON.stringify(data),
     };
   } catch (error) {
     return {
       statusCode: 500,
+      headers: CORS_HEADERS,
       body: JSON.stringify({
         error: "Internal Server Error",
         details: error.message,
