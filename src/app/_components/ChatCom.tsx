@@ -19,7 +19,7 @@ export default function ChatCom() {
     setChatHistory(newChatHistory);
     setMessage("");
 
-    const res = await fetch("/api/ai-chat", {
+    const res = await fetch("/api/hello", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages: newChatHistory }),
