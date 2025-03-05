@@ -21,7 +21,7 @@ const Icon = (props: IProps) => {
       <Image
         src={src}
         alt=""
-        className={`w-6 cursor-pointer animate__animated ${cssname}`}
+        className={`w-6 cursor-pointer object-cover  animate__animated ${cssname}`}
       />
     </Link>
   );
