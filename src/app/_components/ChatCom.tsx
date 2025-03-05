@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 interface Message {
   role: "user" | "bot";
   content: string;
 }
-
+const url = "https://shengrong.netlify.app/.netlify/functions/hello";
 export default function ChatCom() {
   const [message, setMessage] = useState<string>("");
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
@@ -32,6 +32,14 @@ export default function ChatCom() {
     };
     setChatHistory([...newChatHistory, botMessage]);
   };
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data, "dataatata");
+      });
+  }, []);
 
   return (
     <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-lg">
