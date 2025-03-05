@@ -1,5 +1,12 @@
 import { CORS_HEADERS } from "./utils/common";
 exports.handler = async function (event, context) {
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: "",
+    };
+  }
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
