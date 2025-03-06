@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import MDRender from "./MDRender";
 
 interface Message {
   role: "user" | "bot";
@@ -87,7 +88,11 @@ export default function ChatCom() {
                   : "bg-gray-100 text-gray-900"
               } max-w-3xl inline-block`}
             >
-              {msg.content}
+              {msg.role === "user" ? (
+                msg.content
+              ) : (
+                <MDRender content={msg.content} />
+              )}
             </div>
           </div>
         ))}
