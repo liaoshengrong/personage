@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import wordIcon from "@/app/_images/word.png";
-import Image from "next/Image";
+import Image from "next/image";
 const demoArr = [
   { title: "守护春蕾项目.doc", type: "doc" },
   { title: "希望工程项目.doc", type: "doc" },
