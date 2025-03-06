@@ -58,3 +58,9 @@ body {
 *::-webkit-scrollbar-thumb:hover {
   background: #555; /* 悬停时滑块颜色 */
 }
+
+.gradient-text {
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

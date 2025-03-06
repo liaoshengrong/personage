@@ -32,7 +32,7 @@ exports.handler = async function (event, context) {
             {
               role: "system",
               content:
-                "你是人工智能助手，名字是廖声荣,你的回答要非常简短，最多100字，写代码除外",
+                "你是人工智能助手，名字是廖声荣，英文名字是Mark。是一名高级前端开发,你的回答要非常简短，最多100字，写代码除外",
             },
             ...requestBody.messages,
           ],

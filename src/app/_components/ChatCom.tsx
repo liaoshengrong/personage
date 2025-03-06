@@ -11,7 +11,9 @@ const url = "https://shengrong.netlify.app/.netlify/functions/ai-chat";
 
 export default function ChatCom() {
   const [message, setMessage] = useState<string>("");
-  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  const [chatHistory, setChatHistory] = useState<Message[]>([
+    { role: "system", content: "你好，我是Mark的AI大模型。" },
+  ]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -69,10 +71,11 @@ export default function ChatCom() {
 
   return (
     <div className="p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 animate__animated animate__fadeInUp">
+      <GradientText text="个人AI大模型，欢迎体验" />
       {/* 聊天历史 */}
       <div
         ref={chatContainerRef}
-        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200"
+        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32"
         style={{ maxHeight: "calc(100vh - 400px)" }} // 设置最大高度为视口高度减去一些固定高度
       >
         {chatHistory.map((msg, index) => (
@@ -124,3 +127,27 @@ export default function ChatCom() {
     </div>
   );
 }
+
+const GradientText = ({ text }: { text: string }) => {
+  return (
+    <div className="mb-4">
+      <svg width="100%" height="30px" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop
+              offset="0%"
+              style={{ stopColor: "#ff0000", stopOpacity: 1 }}
+            />
+            <stop
+              offset="100%"
+              style={{ stopColor: "#00ff1e", stopOpacity: 1 }}
+            />
+          </linearGradient>
+        </defs>
+        <text fill="url(#grad1)" fontSize={20} x="35%" y="80%">
+          {text}
+        </text>
+      </svg>
+    </div>
+  );
+};
