@@ -3,21 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gradient Text with SVG</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Stream Data Example</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f9;
+        flex-direction: column;
+      }
+      #timeDisplay {
+        font-size: 2em;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+      }
+    </style>
   </head>
-  <body class="p-10">
-    <!-- 使用SVG实现文字渐变 -->
-    <svg width="500" height="100">
-      <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color: #ff0000; stop-opacity: 1" />
-          <stop offset="100%" style="stop-color: #00ff1e; stop-opacity: 1" />
-        </linearGradient>
-      </defs>
-      <text fill="url(#grad1)" font-size="45" font-family="Arial" x="0" y="50">
-        这是一个渐变色的文字。
-      </text>
-    </svg>
+  <body>
+    <div id="timeDisplay">Waiting for data...</div>
+    <button id="startButton">Start Streaming</button>
+
+    <script>
+      document
+        .getElementById("startButton")
+        .addEventListener("click", function () {
+          const eventSource = new EventSource("http://localhost:5000/stream");
+
+          eventSource.onmessage = function (event) {
+            document.getElementById(
+              "timeDisplay"
+            ).textContent = `Current Time: ${event.data}`;
+          };
+
+          eventSource.onerror = function (err) {
+            console.error("EventSource failed:", err);
+            eventSource.close();
+            document.getElementById("timeDisplay").textContent =
+              "Connection closed due to error.";
+          };
+        });
+    </script>
   </body>
 </html>
