@@ -49,27 +49,28 @@ exports.handler = async function (event, context) {
   const decoder = new TextDecoder("utf-8");
   let result = "";
 
+  const chunks = [];
+
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
     const chunk = decoder.decode(value);
+    chunks.push(chunk);
     result += chunk;
 
-    // 模拟流式传输，这里可以设置一个合理的间隔时间
+    // 发送每个chunk给客户端
+    // 这里可以设置一个合理的间隔时间
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // 返回每个chunk给客户端
-    context.callbackWaitsForEmptyEventLoop = false;
-    context.succeed({
-      statusCode: 200,
-      headers: CORS_HEADERS,
-      body: chunk,
-    });
   }
 
   return {
     statusCode: 200,
-    headers: CORS_HEADERS,
-    body: result,
+    headers: {
+      ...CORS_HEADERS,
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    },
+    body: chunks.join("\n"),
   };
 };
