@@ -31,7 +31,8 @@ exports.handler = async function (event, context) {
           messages: [
             {
               role: "system",
-              content: "你是人工智能助手,你的回答要非常简短，最多100字",
+              content:
+                "你是人工智能助手，名字是廖声荣,你的回答要非常简短，最多100字，写代码除外",
             },
             ...requestBody.messages,
           ],

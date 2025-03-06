@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import MDRender from "./MDRender";
 
 interface Message {
-  role: "user" | "bot";
+  role: "user" | "system";
   content: string;
 }
 
@@ -35,14 +35,14 @@ export default function ChatCom() {
 
       const data = await res.json();
       const botMessage: Message = {
-        role: "bot",
+        role: "system",
         content: data.choices?.[0]?.message?.content || "No response",
       };
       setChatHistory([...newChatHistory, botMessage]);
     } catch (error) {
       setChatHistory([
         ...newChatHistory,
-        { role: "bot", content: "发生错误，请重试。" },
+        { role: "user", content: "发生错误，请重试。" },
       ]);
     } finally {
       setIsLoading(false);
@@ -72,7 +72,8 @@ export default function ChatCom() {
       {/* 聊天历史 */}
       <div
         ref={chatContainerRef}
-        className="h-96 overflow-y-auto p-4 border-b border-gray-200"
+        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200"
+        style={{ maxHeight: "calc(100vh - 400px)" }} // 设置最大高度为视口高度减去一些固定高度
       >
         {chatHistory.map((msg, index) => (
           <div
