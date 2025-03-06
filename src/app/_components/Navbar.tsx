@@ -4,9 +4,11 @@ import vitaeIcon from "../_images/vitae.svg";
 import skillIcon from "../_images/skill.svg";
 import listIcon from "../_images/list.svg";
 import parseIcon from "../_images/parse.svg";
+import aiIcon from "../_images/ai.svg";
 import Link from "next/link";
 const Navbar = ({ stop }: { stop?: boolean }) => {
-  const animatecss = stop ? "" : "animate__backInUp";
+  // const animatecss = stop ? "" : "animate__backInUp";
+  const animatecss = "animate__backInUp";
   return (
     <>
       <div
@@ -21,15 +23,6 @@ const Navbar = ({ stop }: { stop?: boolean }) => {
             <Tip title={v.title} />
           </div>
         ))}
-
-        {/* <div className="group relative">
-          <Icon src={listIcon} direction="top" path="/" />
-          <Tip title="博客列表" />
-        </div>
-        <div className="group relative">
-          <Icon src={vitaeIcon} direction="right" path="/resume" />
-          <Tip title="个人简历" />
-        </div> */}
       </div>
     </>
   );
@@ -48,18 +41,24 @@ const menus = [
     title: "博客列表",
     path: "/",
     icon: listIcon,
-    direction: "top",
+    direction: "left",
   },
   {
-    title: "文件解析",
-    path: "/parse",
-    icon: parseIcon,
+    title: "个人AI",
+    path: "/chat",
+    icon: aiIcon,
     direction: "top",
   },
   {
     title: "个人简历",
     path: "/resume",
     icon: vitaeIcon,
+    direction: "right",
+  },
+  {
+    title: "文件解析",
+    path: "/parse",
+    icon: parseIcon,
     direction: "right",
   },
 ];

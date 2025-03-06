@@ -6,7 +6,7 @@ const Resume: React.FC = () => {
   return (
     <PageContainer>
       <Navbar stop />
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden mt-4">
+      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden mt-8 animate__animated animate__fadeInUp">
         <div className="p-8">
           {/* 头部信息 */}
           <header className="mb-10 border-b pb-4">
