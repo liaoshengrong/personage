@@ -70,7 +70,7 @@ export default function ChatCom() {
   }, [chatHistory, isLoading]);
 
   return (
-    <div className="p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 animate__animated animate__fadeInUp">
+    <div className="w-full p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 animate__animated animate__fadeInUp">
       <GradientText text="个人AI大模型，欢迎体验" />
       {/* 聊天历史 */}
       <div
