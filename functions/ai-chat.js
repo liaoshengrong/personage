@@ -19,16 +19,22 @@ exports.handler = async function (event, context) {
     const requestBody = JSON.parse(event.body);
 
     const response = await fetch(
-      "https://spark-api-open.xf-yun.com/v1/chat/completions",
+      "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
       {
         method: "POST",
         headers: {
-          Authorization: "Bearer jimQIqtAxHFErgZrPsNN:FOnrJZmMCWKdMFTYorFC",
+          Authorization: "Bearer 9dbd4d83-611b-4a19-83a8-0f705bd3dbb9",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "generalv3",
-          messages: requestBody.messages,
+          model: "doubao-1-5-lite-32k-250115",
+          messages: [
+            {
+              role: "system",
+              content: "你是人工智能助手,你的回答要非常简短，最多100字",
+            },
+            ...requestBody.messages,
+          ],
           stream: false,
         }),
       }
