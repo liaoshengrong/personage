@@ -29,60 +29,21 @@ export default function ChatCom() {
     setIsLoading(true);
 
     try {
-      const res: any = await fetch(url, {
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newChatHistory }),
       });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-
-      const reader = res?.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-      let accumulatedData = "";
-      let currentBotMessage = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        accumulatedData += chunk;
-
-        // 处理每个chunk中的完整JSON对象
-        while (accumulatedData.includes("\n")) {
-          const [dataStr, remaining] = accumulatedData.split("\n", 2);
-          accumulatedData = remaining;
-
-          try {
-            const data = JSON.parse(dataStr);
-            if (data.choices && data.choices.length > 0) {
-              currentBotMessage += data.choices[0].delta.content || "";
-              setChatHistory((prev) =>
-                prev.slice(0, -1).concat([
-                  { role: "user", content: message },
-                  { role: "system", content: currentBotMessage },
-                ])
-              );
-            }
-          } catch (e) {
-            console.error("Error parsing JSON:", e);
-          }
-        }
-      }
-
-      // 最终的消息处理
-      setChatHistory((prev) =>
-        prev.slice(0, -1).concat([
-          { role: "user", content: message },
-          { role: "system", content: currentBotMessage },
-        ])
-      );
+      const data = await res.json();
+      const botMessage: Message = {
+        role: "system",
+        content: data.choices?.[0]?.message?.content || "No response",
+      };
+      setChatHistory([...newChatHistory, botMessage]);
     } catch (error) {
-      console.error(error);
       setChatHistory([
-        ...chatHistory,
+        ...newChatHistory,
         { role: "user", content: "发生错误，请重试。" },
       ]);
     } finally {
