@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import MDRender from "./MDRender";
+import MDRender from "../_components/MDRender";
 
 interface Message {
   role: "user" | "system";

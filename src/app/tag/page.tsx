@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../_components/Navbar";
-import ProgressBar from "../_components/ProgressBar";
+import ProgressBar from "./ProgressBar";
 
 const Index = () => {
   return (

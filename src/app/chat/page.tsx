@@ -1,7 +1,7 @@
 import React from "react";
 import PageContainer from "../_components/PageContainer";
 import Navbar from "../_components/Navbar";
-import ChatCom from "../_components/ChatCom";
+import ChatCom from "./ChatCom";
 
 const Index = () => {
   return (
