@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: false, // 确保ESLint在构建时生效并且使用项目中的配置
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.xxapi.cn",
+      },
+    ],
+  },
   webpack: (config, options) => {
     if (options.dev) {
       config.plugins.push(

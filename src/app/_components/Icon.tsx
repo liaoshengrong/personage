@@ -17,7 +17,7 @@ const Icon = (props: IProps) => {
   const { src, direction, path, stop } = props;
   const cssname = stop ? "" : config[direction as keyof typeof config];
   return (
-    <Link href={path ?? "/"}>
+    <Link href={path ?? "/"} prefetch>
       <Image
         src={src}
         alt=""

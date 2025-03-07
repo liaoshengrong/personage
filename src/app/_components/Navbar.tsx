@@ -56,8 +56,8 @@ const menus = [
     direction: "right",
   },
   {
-    title: "文件解析",
-    path: "/parse",
+    title: "手写demo",
+    path: "/demo",
     icon: parseIcon,
     direction: "right",
   },

@@ -6,7 +6,6 @@ const demoArr = [
   { title: "守护春蕾项目.doc", type: "doc" },
   { title: "希望工程项目.doc", type: "doc" },
   { title: "一块早餐项目.doc", type: "doc" },
-  { title: "留守儿童陪伴项目.doc", type: "doc" },
 ];
 type Option = (typeof demoArr)[number];
 
@@ -18,8 +17,6 @@ const Drag = () => {
   const ref = useRef<Option | undefined>(undefined);
   const curCss = isDrag ? "cursor-grabbing" : "cursor-grab";
 
-  console.log(file, "filefile");
-
   const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsEnter(false);
@@ -28,10 +25,13 @@ const Drag = () => {
       setSelect(ref.current as Option);
       return;
     }
-    setFile(e.dataTransfer.files[0]);
+    const tempFile = e.dataTransfer.files[0];
+    console.log(tempFile, "file__file");
+
+    setFile(tempFile);
     setSelect({
-      title: e.dataTransfer.files[0].name,
-      type: e.dataTransfer.files[0].type,
+      title: tempFile.name,
+      type: tempFile.type,
     });
   };
 
@@ -58,7 +58,7 @@ const Drag = () => {
               放这里松手,不要乱动
             </div>
           ) : select ? (
-            <div className="flex flex-col gap-2 text-xl text-gray-400">
+            <div className="flex flex-col gap-2 text-xl ">
               <span>文件名：{select.title}</span>
               <span style={{ wordBreak: "break-all" }}>
                 文件格式：{select.type}
