@@ -10,13 +10,19 @@ export const getVideoData = async () => {
 // https://v2.xxapi.cn/api/pcmeinvpic
 // 随机生成壁纸
 export const getWallpaper = async () => {
-  const result: string[] = [];
+  const op = { redirect: "follow" };
+  const urls = [];
+
   for (let i = 0; i < 5; i++) {
-    const res = await fetch("https://v2.xxapi.cn/api/pcmeinvpic?v=" + i, {
-      redirect: "follow",
-    });
-    const json = await res.json();
-    result.push(json.data);
+    urls.push("https://v2.xxapi.cn/api/pcmeinvpic?v=" + i);
   }
-  return result;
+
+  const fetchs = urls.map((url) =>
+    fetch(url, op as RequestInit)
+      .then((res) => res.json())
+      .then((json) => json.data)
+  );
+
+  const res = Promise.all(fetchs);
+  return res;
 };

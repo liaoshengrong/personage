@@ -38,7 +38,7 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
   };
 
   return (
-    <div className="w-full mt-8 rounded-lg bg-gray-100 h-[800px] p-5 flex flex-col gap-4">
+    <div className="w-full mt-8 rounded-lg bg-gray-100 h-[800px] p-5 flex flex-col gap-4 animate__animated animate__fadeInUp">
       <div className="flex-1 flex items-center justify-center overflow-hidden">
         {loading ? (
           <Loading />
