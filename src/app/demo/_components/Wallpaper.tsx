@@ -46,7 +46,6 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
           <Image
             src={big}
             alt=""
-            loading="eager"
             title="点击下载"
             width={720}
             height={540}
@@ -68,7 +67,6 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
               <Image
                 src={item}
                 alt=""
-                loading="lazy"
                 title="点击预览"
                 width={240}
                 height={180}
