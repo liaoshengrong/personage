@@ -50,7 +50,7 @@ const ShortVideo = ({ data }: { data: string[] }) => {
     <div className="bg-gray-100 flex gap-5 h-[785px] mt-8 overflow-hidden rounded-lg animate__animated animate__fadeInUp">
       <div className="flex-1 overflow-hidden h-full py-2 relative">
         {transitions((style, i) => (
-          // @ts-expect-error
+          // @ts-expect-error: Include children type
           <animated.div
             key={i}
             style={style}

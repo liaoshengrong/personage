@@ -13,7 +13,7 @@ const Perview = ({ data, index, onChoose, isActive }: IProps) => {
     index % 2 === 0 ? "animate__bounceInLeft" : "animate__bounceInRight";
   useEffect(() => {
     getFiles(tag, title);
-  }, []);
+  }, [tag, title]);
   const titlecss = isActive
     ? "text-[#FF0000] text-nowrap text-lg"
     : " text-black/90 text-nowrap text-lg";
