@@ -7,14 +7,19 @@ import ShortVideo from "./_components/ShortVideo";
 import { getVideoData, getWallpaper } from "./api";
 import Wallpaper from "./_components/Wallpaper";
 
-const Index = ({ searchParams }: { searchParams: { tab?: string } }) => {
+const Index = ({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) => {
   const video = use(getVideoData());
   const wallpapers = use(getWallpaper());
+  const { tab } = use(searchParams);
 
   return (
     <PageContainer>
       <Navbar />
-      <Tabs titles={tabs} defalultTab={searchParams?.tab}>
+      <Tabs titles={tabs} defalultTab={tab}>
         <ShortVideo data={[video]} />
         <Drag />
         <Wallpaper data={wallpapers} />
