@@ -12,7 +12,7 @@ const Index = ({
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) => {
-  const video = use(getVideoData());
+  // const video = use(getVideoData());
   const wallpapers = use(getWallpaper());
   const { tab } = use(searchParams);
 
@@ -20,7 +20,7 @@ const Index = ({
     <PageContainer>
       <Navbar />
       <Tabs titles={tabs} defalultTab={tab}>
-        <ShortVideo data={[video]} />
+        {/* <ShortVideo data={[video]} /> */}
         <Drag />
         <Wallpaper data={wallpapers} />
       </Tabs>
