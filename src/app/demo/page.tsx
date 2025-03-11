@@ -14,7 +14,7 @@ const Index = ({
 }) => {
   const video = use(getVideoData());
   const wallpapers = use(getWallpaper());
-  const { tab } = use(searchParams);
+  const { tab } = searchParams ? use(searchParams) : {};
 
   return (
     <PageContainer>
