@@ -11,22 +11,18 @@ exports.handler = async function (event, context) {
 
   const res = await fetch(`https://api.hn/acg.php?zd=pc&return=jsonpro`);
   const data = await res.json();
-  // : data.map((v, i) => ({
-  //   ...v,
-  //   title: "壁纸" + (i + 1),
-  // }))
+
   const page = parseInt(event.queryStringParameters?.page) || 1;
   const pageSize = parseInt(event.queryStringParameters?.pageSize) || 10;
 
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
 
-  const paginatedData = _data?.slice(startIndex, endIndex);
-
   const _data = data?.map((v, i) => ({
     ...v,
     title: "壁纸" + (i + 1) * page,
   }));
+  const paginatedData = _data?.slice(startIndex, endIndex);
 
   return {
     statusCode: 200,
