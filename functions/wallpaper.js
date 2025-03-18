@@ -1,7 +1,7 @@
 // https://api.hn/acg.php
 import { CORS_HEADERS } from "./utils/common";
 exports.handler = async function (event, context) {
-  const requestBody = JSON.parse(event.body);
+  const requestBody = JSON.parse(event);
 
   if (event.httpMethod === "OPTIONS") {
     return {
