@@ -20,7 +20,7 @@ exports.handler = async function (event, context) {
 
   const _data = data?.map((v, i) => ({
     ...v,
-    title: "壁纸" + (i + 1) * page,
+    title: "壁纸" + (i + 1 + pageSize * (page - 1)),
   }));
   const paginatedData = _data?.slice(0, pageSize);
 
