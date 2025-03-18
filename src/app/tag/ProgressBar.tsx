@@ -16,7 +16,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   useEffect(() => {
     setTimeout(() => {
       setWidth(percentage);
-    }, 100);
+    }, 200);
   }, [percentage]);
 
   // 根据百分比选择不同的颜色（可以根据需求调整）
@@ -41,7 +41,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <div className="w-full h-4 rounded-full bg-gray-200 flex-1">
         {/* 进度条 */}
         <div
-          className={`h-full rounded-full transition-width duration-700 ease-in-out ${progressBarColor}`}
+          className={`h-full rounded-full transition-width duration-1000 ease-in-out ${progressBarColor}`}
           style={{ width: width + "%" }}
         ></div>
       </div>
