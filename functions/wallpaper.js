@@ -29,7 +29,7 @@ exports.handler = async function (event, context) {
     headers: CORS_HEADERS,
     body: JSON.stringify({
       data: paginatedData,
-      total: _data?.length || 0,
+      total: 96,
       page,
       pageSize,
     }),
