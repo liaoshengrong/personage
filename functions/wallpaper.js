@@ -10,9 +10,10 @@ exports.handler = async function (event, context) {
   }
 
   const res = await fetch(`https://api.hn/acg.php?zd=pc&return=jsonpro`);
+  const data = await res.json();
   return {
     statusCode: 200,
     headers: CORS_HEADERS,
-    body: JSON.stringify({ data: res }),
+    body: JSON.stringify({ data }),
   };
 };
