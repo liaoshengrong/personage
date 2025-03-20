@@ -71,7 +71,7 @@ exports.handler = async function (event, context) {
     };
   }
 
-  const res = await fetch(`https://api.hn/acg.php?zd=pc&return=jsonpro`);
+  // const res = await fetch(`https://api.hn/acg.php?zd=pc&return=jsonpro`);
   // const data = await res.json();
   const data = arr;
 
