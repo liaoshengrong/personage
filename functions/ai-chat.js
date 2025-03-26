@@ -1,4 +1,5 @@
 import { CORS_HEADERS } from "./utils/common";
+
 exports.handler = async function (event, context) {
   if (event.httpMethod === "OPTIONS") {
     return {
@@ -18,6 +19,7 @@ exports.handler = async function (event, context) {
   try {
     const requestBody = JSON.parse(event.body);
 
+    // 使用 fetch 获取流式数据
     const response = await fetch(
       "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
       {
@@ -36,17 +38,30 @@ exports.handler = async function (event, context) {
             },
             ...requestBody.messages,
           ],
-          stream: false,
+          stream: true, // 开启流式传输
         }),
       }
     );
 
-    const data = await response.json();
+    // 检查是否支持流式传输
+    if (!response.body) {
+      return {
+        statusCode: 500,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ error: "Streaming not supported" }),
+      };
+    }
 
+    // 返回流式响应
     return {
       statusCode: 200,
-      headers: CORS_HEADERS,
-      body: JSON.stringify(data),
+      headers: {
+        ...CORS_HEADERS,
+        "Content-Type": "text/event-stream", // 设置为 SSE 格式
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+      body: response.body, // 直接传递流式数据
     };
   } catch (error) {
     return {
