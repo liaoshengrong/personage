@@ -36,18 +36,62 @@ exports.handler = async function (event, context) {
             },
             ...requestBody.messages,
           ],
-          stream: false,
+          stream: true,
         }),
       }
     );
 
-    const data = await response.json();
+    const stream = response.body;
+    if (!stream) {
+      throw new Error("No stream available");
+    }
 
-    return {
-      statusCode: 200,
-      headers: CORS_HEADERS,
-      body: JSON.stringify(data),
+    const headers = {
+      ...CORS_HEADERS,
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
     };
+
+    const reader = stream.getReader();
+    const encoder = new TextEncoder();
+
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const text = new TextDecoder().decode(value);
+            const lines = text.split("\n");
+
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const data = line.slice(6);
+                if (data === "[DONE]") continue;
+
+                try {
+                  const json = JSON.parse(data);
+                  const content = json.choices[0]?.delta?.content || "";
+                  if (content) {
+                    controller.enqueue(encoder.encode(`data: ${content}\n\n`));
+                  }
+                } catch (error) {
+                  console.error("Error parsing JSON:", error);
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Stream reading error:", error);
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(readable, { headers });
   } catch (error) {
     return {
       statusCode: 500,

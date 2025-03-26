@@ -15,6 +15,7 @@ export default function ChatCom() {
     { role: "system", content: "你好，我是Mark的AI大模型。" },
   ]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [streamingMessage, setStreamingMessage] = useState<string>("");
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   const sendMessage = async () => {
@@ -27,27 +28,46 @@ export default function ChatCom() {
     setChatHistory(newChatHistory);
     setMessage("");
     setIsLoading(true);
+    setStreamingMessage("");
 
     try {
-      const res = await fetch(url, {
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newChatHistory }),
       });
 
-      const data = await res.json();
-      const botMessage: Message = {
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No reader available");
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = new TextDecoder().decode(value);
+        const lines = text.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const content = line.slice(6);
+            setStreamingMessage((prev) => prev + content);
+          }
+        }
+      }
+
+      const finalMessage: Message = {
         role: "system",
-        content: data.choices?.[0]?.message?.content || "No response",
+        content: streamingMessage || "No response",
       };
-      setChatHistory([...newChatHistory, botMessage]);
+      setChatHistory((prev) => [...prev, finalMessage]);
     } catch (error) {
-      setChatHistory([
-        ...newChatHistory,
-        { role: "user", content: "发生错误，请重试。" },
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "system", content: "发生错误，请重试。" },
       ]);
     } finally {
       setIsLoading(false);
+      setStreamingMessage("");
     }
   };
 
@@ -100,7 +120,14 @@ export default function ChatCom() {
             </div>
           </div>
         ))}
-        {isLoading && (
+        {streamingMessage && (
+          <div className="flex justify-start mb-4">
+            <div className="px-4 py-2 rounded-lg text-base bg-gray-100 text-gray-900 max-w-3xl inline-block">
+              <MDRender content={streamingMessage} />
+            </div>
+          </div>
+        )}
+        {isLoading && !streamingMessage && (
           <div className="flex justify-center mt-4">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
