@@ -54,44 +54,39 @@ exports.handler = async function (event, context) {
     };
 
     const reader = stream.getReader();
-    const encoder = new TextEncoder();
+    let responseText = "";
 
-    const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-            const text = new TextDecoder().decode(value);
-            const lines = text.split("\n");
+      const text = new TextDecoder().decode(value);
+      const lines = text.split("\n");
 
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
-                const data = line.slice(6);
-                if (data === "[DONE]") continue;
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const data = line.slice(6);
+          if (data === "[DONE]") continue;
 
-                try {
-                  const json = JSON.parse(data);
-                  const content = json.choices[0]?.delta?.content || "";
-                  if (content) {
-                    controller.enqueue(encoder.encode(`data: ${content}\n\n`));
-                  }
-                } catch (error) {
-                  console.error("Error parsing JSON:", error);
-                }
-              }
+          try {
+            const json = JSON.parse(data);
+            const content = json.choices[0]?.delta?.content || "";
+            if (content) {
+              responseText += `data: ${content}\n\n`;
             }
+          } catch (error) {
+            console.error("Error parsing JSON:", error);
           }
-        } catch (error) {
-          console.error("Stream reading error:", error);
-        } finally {
-          controller.close();
         }
-      },
-    });
+      }
+    }
 
-    return new Response(readable, { headers });
+    return {
+      statusCode: 200,
+      headers,
+      body: responseText,
+      isBase64Encoded: false,
+    };
   } catch (error) {
     return {
       statusCode: 500,
