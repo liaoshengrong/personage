@@ -45,6 +45,15 @@ exports.handler = async function (event, context) {
       throw new Error("No stream available");
     }
 
+    const reader = response.body.getReader();
+    let responseText = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      responseText += new TextDecoder().decode(value);
+    }
+
     const headers = {
       ...CORS_HEADERS,
       "Content-Type": "text/event-stream",
@@ -52,49 +61,12 @@ exports.handler = async function (event, context) {
       Connection: "keep-alive",
     };
 
-    const reader = response.body.getReader();
-    const encoder = new TextEncoder();
-    let responseText = "";
-
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            const text = new TextDecoder().decode(value);
-            const lines = text.split("\n");
-
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
-                const data = line.slice(6);
-                if (data === "[DONE]") continue;
-
-                try {
-                  const json = JSON.parse(data);
-                  const content = json.choices[0]?.delta?.content || "";
-                  if (content) {
-                    responseText += content;
-                    controller.enqueue(encoder.encode(`data: ${content}\n\n`));
-                  }
-                } catch (error) {
-                  console.error("Error parsing JSON:", error);
-                }
-              }
-            }
-          }
-          controller.close();
-        } catch (error) {
-          controller.error(error);
-        }
-      },
-    });
-
-    return new Response(stream, {
+    return {
+      statusCode: 200,
       headers,
-      status: 200,
-    });
+      body: responseText,
+      isBase64Encoded: false,
+    };
   } catch (error) {
     return {
       statusCode: 500,
