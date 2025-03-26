@@ -34,13 +34,30 @@ export default function ChatCom() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newChatHistory }),
       });
+      if (!res.ok) {
+        console.error("请求失败:", res.statusText);
+        return;
+      }
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
 
-      const data = await res.json();
-      const botMessage: Message = {
-        role: "system",
-        content: data.choices?.[0]?.message?.content || "No response",
-      };
-      setChatHistory([...newChatHistory, botMessage]);
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          console.log("收到数据:", chunk); // 处理流式数据
+        }
+      }
+
+      // const data = await res.json();
+
+      // const botMessage: Message = {
+      //   role: "system",
+      //   content: data.choices?.[0]?.message?.content || "No response",
+      // };
+      // setChatHistory([...newChatHistory, botMessage]);
     } catch (error) {
       setChatHistory([
         ...newChatHistory,
