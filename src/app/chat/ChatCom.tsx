@@ -46,13 +46,17 @@ export default function ChatCom() {
         if (done) break;
 
         const text = new TextDecoder().decode(value);
+        console.log(text, "texttext");
+
         const lines = text.split("\n");
+        console.log(lines, "lineslines");
 
         for (const line of lines) {
           if (line.startsWith("data: ")) {
             const content = line.slice(6);
             if (content === "[DONE]") continue;
-            fullResponse += content;
+            const msg = JSON.parse(content);
+            fullResponse += msg.choices[0].delta.content || "";
             setStreamingMessage(fullResponse);
           }
         }
