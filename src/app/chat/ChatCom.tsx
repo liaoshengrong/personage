@@ -40,6 +40,7 @@ export default function ChatCom() {
       const reader = response.body?.getReader();
       if (!reader) throw new Error("No reader available");
 
+      let fullResponse = "";
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -50,14 +51,15 @@ export default function ChatCom() {
         for (const line of lines) {
           if (line.startsWith("data: ")) {
             const content = line.slice(6);
-            setStreamingMessage((prev) => prev + content);
+            fullResponse += content;
+            setStreamingMessage(fullResponse);
           }
         }
       }
 
       const finalMessage: Message = {
         role: "system",
-        content: streamingMessage || "No response",
+        content: fullResponse || "No response",
       };
       setChatHistory((prev) => [...prev, finalMessage]);
     } catch (error) {

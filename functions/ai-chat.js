@@ -72,7 +72,7 @@ exports.handler = async function (event, context) {
             const json = JSON.parse(data);
             const content = json.choices[0]?.delta?.content || "";
             if (content) {
-              responseText += `data: ${content}\n\n`;
+              responseText += content;
             }
           } catch (error) {
             console.error("Error parsing JSON:", error);
