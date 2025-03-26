@@ -47,6 +47,14 @@ exports.handler = async function (event, context) {
       }
     );
 
+    if (!response.ok) {
+      return {
+        statusCode: response.status,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ error: `Upstream service error: ${response.statusText}` }),
+      };
+    }
+
     if (!response.body) {
       return {
         statusCode: 500,
@@ -67,6 +75,7 @@ exports.handler = async function (event, context) {
       body: response.body,
     };
   } catch (error) {
+    console.error("Error handling request:", error); // 添加日志记录
     return {
       statusCode: 500,
       headers: CORS_HEADERS,

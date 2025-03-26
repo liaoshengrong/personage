@@ -40,6 +40,7 @@ export default function ChatCom() {
       }
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
+      let accumulatedData = "";
 
       if (reader) {
         while (true) {
@@ -47,17 +48,17 @@ export default function ChatCom() {
           if (done) break;
 
           const chunk = decoder.decode(value, { stream: true });
+          accumulatedData += chunk;
           console.log("收到数据:", chunk); // 处理流式数据
         }
       }
 
-      // const data = await res.json();
-
-      // const botMessage: Message = {
-      //   role: "system",
-      //   content: data.choices?.[0]?.message?.content || "No response",
-      // };
-      // setChatHistory([...newChatHistory, botMessage]);
+      // 假设流式数据是纯文本，直接作为bot的消息内容
+      const botMessage: Message = {
+        role: "system",
+        content: accumulatedData,
+      };
+      setChatHistory((prevHistory) => [...prevHistory, botMessage]);
     } catch (error) {
       setChatHistory([
         ...newChatHistory,
