@@ -51,6 +51,7 @@ export default function ChatCom() {
         for (const line of lines) {
           if (line.startsWith("data: ")) {
             const content = line.slice(6);
+            if (content === "[DONE]") continue;
             fullResponse += content;
             setStreamingMessage(fullResponse);
           }

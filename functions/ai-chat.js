@@ -56,37 +56,35 @@ exports.handler = async function (event, context) {
     const reader = stream.getReader();
     let responseText = "";
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+    const transformStream = new TransformStream({
+      transform(chunk, controller) {
+        const text = new TextDecoder().decode(chunk);
+        const lines = text.split("\n");
 
-      const text = new TextDecoder().decode(value);
-      const lines = text.split("\n");
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6);
+            if (data === "[DONE]") continue;
 
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const data = line.slice(6);
-          if (data === "[DONE]") continue;
-
-          try {
-            const json = JSON.parse(data);
-            const content = json.choices[0]?.delta?.content || "";
-            if (content) {
-              responseText += content;
+            try {
+              const json = JSON.parse(data);
+              const content = json.choices[0]?.delta?.content || "";
+              if (content) {
+                responseText += content;
+                controller.enqueue(`data: ${content}\n\n`);
+              }
+            } catch (error) {
+              console.error("Error parsing JSON:", error);
             }
-          } catch (error) {
-            console.error("Error parsing JSON:", error);
           }
         }
       }
-    }
+    });
 
-    return {
-      statusCode: 200,
+    return new Response(stream.pipeThrough(transformStream), {
       headers,
-      body: responseText,
-      isBase64Encoded: false,
-    };
+      status: 200
+    });
   } catch (error) {
     return {
       statusCode: 500,
