@@ -1,15 +1,9 @@
 import { CORS_HEADERS } from "./utils/common";
-
 exports.handler = async function (event, context) {
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
-      headers: {
-        ...CORS_HEADERS,
-        "Access-Control-Allow-Origin": "*", // 确保允许所有来源
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
-      },
+      headers: CORS_HEADERS,
       body: "",
     };
   }
@@ -42,85 +36,26 @@ exports.handler = async function (event, context) {
             },
             ...requestBody.messages,
           ],
-          stream: true,
+          stream: false,
         }),
       }
     );
 
-    if (!response.ok) {
-      const errorBody = {
-        error: `Upstream service error: ${response.statusText}`,
-      };
-      if (
-        event.headers.Accept &&
-        event.headers.Accept.includes("application/json")
-      ) {
-        return {
-          statusCode: response.status,
-          headers: CORS_HEADERS,
-          body: JSON.stringify(errorBody),
-        };
-      } else {
-        return {
-          statusCode: response.status,
-          headers: CORS_HEADERS,
-          body: `data: ${JSON.stringify(errorBody)}\n\n`,
-        };
-      }
-    }
-
-    if (!response.body) {
-      const errorBody = { error: "Streaming not supported" };
-      if (
-        event.headers.Accept &&
-        event.headers.Accept.includes("application/json")
-      ) {
-        return {
-          statusCode: 500,
-          headers: CORS_HEADERS,
-          body: JSON.stringify(errorBody),
-        };
-      } else {
-        return {
-          statusCode: 500,
-          headers: CORS_HEADERS,
-          body: `data: ${JSON.stringify(errorBody)}\n\n`,
-        };
-      }
-    }
+    const data = await response.json();
 
     return {
       statusCode: 200,
-      headers: {
-        ...CORS_HEADERS,
-        "Access-Control-Allow-Origin": "*", // 确保允许所有来源
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-      body: response.body,
+      headers: CORS_HEADERS,
+      body: JSON.stringify(data),
     };
   } catch (error) {
-    console.error("Error handling request:", error); // 添加日志记录
-    const errorBody = {
-      error: "Internal Server Error",
-      details: error.message,
+    return {
+      statusCode: 500,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({
+        error: "Internal Server Error",
+        details: error.message,
+      }),
     };
-    if (
-      event.headers.Accept &&
-      event.headers.Accept.includes("application/json")
-    ) {
-      return {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-        body: JSON.stringify(errorBody),
-      };
-    } else {
-      return {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-        body: `data: ${JSON.stringify(errorBody)}\n\n`,
-      };
-    }
   }
 };

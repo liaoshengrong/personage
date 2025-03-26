@@ -31,45 +31,16 @@ export default function ChatCom() {
     try {
       const res = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "text/event-stream" }, // 添加 Accept 头
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newChatHistory }),
       });
-      if (!res.ok) {
-        console.error("请求失败:", res.statusText);
-        return;
-      }
 
-      if (res.headers.get("Content-Type") === "text/event-stream") {
-        const reader = res.body?.getReader();
-        const decoder = new TextDecoder();
-        let accumulatedData = "";
-
-        if (reader) {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value, { stream: true });
-            accumulatedData += chunk;
-            console.log("收到数据:", chunk); // 处理流式数据
-          }
-        }
-
-        // 假设流式数据是纯文本，直接作为bot的消息内容
-        const botMessage: Message = {
-          role: "system",
-          content: accumulatedData,
-        };
-        setChatHistory((prevHistory) => [...prevHistory, botMessage]);
-      } else {
-        // 处理非流式响应
-        const data = await res.json();
-        const botMessage: Message = {
-          role: "system",
-          content: data.content, // 假设响应中有一个 content 字段
-        };
-        setChatHistory((prevHistory) => [...prevHistory, botMessage]);
-      }
+      const data = await res.json();
+      const botMessage: Message = {
+        role: "system",
+        content: data.choices?.[0]?.message?.content || "No response",
+      };
+      setChatHistory([...newChatHistory, botMessage]);
     } catch (error) {
       setChatHistory([
         ...newChatHistory,
