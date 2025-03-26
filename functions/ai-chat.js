@@ -41,8 +41,7 @@ exports.handler = async function (event, context) {
       }
     );
 
-    const stream = response.body;
-    if (!stream) {
+    if (!response.body) {
       throw new Error("No stream available");
     }
 
@@ -53,37 +52,48 @@ exports.handler = async function (event, context) {
       Connection: "keep-alive",
     };
 
-    const reader = stream.getReader();
+    const reader = response.body.getReader();
+    const encoder = new TextEncoder();
     let responseText = "";
 
-    const transformStream = new TransformStream({
-      transform(chunk, controller) {
-        const text = new TextDecoder().decode(chunk);
-        const lines = text.split("\n");
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const data = line.slice(6);
-            if (data === "[DONE]") continue;
+            const text = new TextDecoder().decode(value);
+            const lines = text.split("\n");
 
-            try {
-              const json = JSON.parse(data);
-              const content = json.choices[0]?.delta?.content || "";
-              if (content) {
-                responseText += content;
-                controller.enqueue(`data: ${content}\n\n`);
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const data = line.slice(6);
+                if (data === "[DONE]") continue;
+
+                try {
+                  const json = JSON.parse(data);
+                  const content = json.choices[0]?.delta?.content || "";
+                  if (content) {
+                    responseText += content;
+                    controller.enqueue(encoder.encode(`data: ${content}\n\n`));
+                  }
+                } catch (error) {
+                  console.error("Error parsing JSON:", error);
+                }
               }
-            } catch (error) {
-              console.error("Error parsing JSON:", error);
             }
           }
+          controller.close();
+        } catch (error) {
+          controller.error(error);
         }
-      }
+      },
     });
 
-    return new Response(stream.pipeThrough(transformStream), {
+    return new Response(stream, {
       headers,
-      status: 200
+      status: 200,
     });
   } catch (error) {
     return {
