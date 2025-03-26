@@ -8,7 +8,7 @@ exports.handler = async function (event, context) {
         ...CORS_HEADERS,
         "Access-Control-Allow-Origin": "*", // 确保允许所有来源
         "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
       },
       body: "",
     };
@@ -48,19 +48,45 @@ exports.handler = async function (event, context) {
     );
 
     if (!response.ok) {
-      return {
-        statusCode: response.status,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: `Upstream service error: ${response.statusText}` }),
+      const errorBody = {
+        error: `Upstream service error: ${response.statusText}`,
       };
+      if (
+        event.headers.Accept &&
+        event.headers.Accept.includes("application/json")
+      ) {
+        return {
+          statusCode: response.status,
+          headers: CORS_HEADERS,
+          body: JSON.stringify(errorBody),
+        };
+      } else {
+        return {
+          statusCode: response.status,
+          headers: CORS_HEADERS,
+          body: `data: ${JSON.stringify(errorBody)}\n\n`,
+        };
+      }
     }
 
     if (!response.body) {
-      return {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: "Streaming not supported" }),
-      };
+      const errorBody = { error: "Streaming not supported" };
+      if (
+        event.headers.Accept &&
+        event.headers.Accept.includes("application/json")
+      ) {
+        return {
+          statusCode: 500,
+          headers: CORS_HEADERS,
+          body: JSON.stringify(errorBody),
+        };
+      } else {
+        return {
+          statusCode: 500,
+          headers: CORS_HEADERS,
+          body: `data: ${JSON.stringify(errorBody)}\n\n`,
+        };
+      }
     }
 
     return {
@@ -76,13 +102,25 @@ exports.handler = async function (event, context) {
     };
   } catch (error) {
     console.error("Error handling request:", error); // 添加日志记录
-    return {
-      statusCode: 500,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        error: "Internal Server Error",
-        details: error.message,
-      }),
+    const errorBody = {
+      error: "Internal Server Error",
+      details: error.message,
     };
+    if (
+      event.headers.Accept &&
+      event.headers.Accept.includes("application/json")
+    ) {
+      return {
+        statusCode: 500,
+        headers: CORS_HEADERS,
+        body: JSON.stringify(errorBody),
+      };
+    } else {
+      return {
+        statusCode: 500,
+        headers: CORS_HEADERS,
+        body: `data: ${JSON.stringify(errorBody)}\n\n`,
+      };
+    }
   }
 };
