@@ -46,10 +46,7 @@ export default function ChatCom() {
         if (done) break;
 
         const text = new TextDecoder().decode(value);
-        console.log(text, "texttext");
-
         const lines = text.split("\n");
-        console.log(lines, "lineslines");
 
         for (const line of lines) {
           if (line.startsWith("data: ")) {

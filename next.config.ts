@@ -11,7 +11,6 @@ const nextConfig: NextConfig = {
     // 确保 ESLint 在构建时生效并且使用项目中的配置
     ignoreDuringBuilds: false,
   },
-
   // 实验性功能配置
   experimental: {
     // 启用 CSS 优化
