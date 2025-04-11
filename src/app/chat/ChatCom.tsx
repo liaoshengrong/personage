@@ -91,7 +91,7 @@ export default function ChatCom() {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [chatHistory, isLoading]);
+  }, [chatHistory, isLoading, streamingMessage]);
 
   return (
     <div className="w-full p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 animate__animated animate__fadeInUp">
