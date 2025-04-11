@@ -1,8 +1,13 @@
 import React from "react";
-
-const PageContainer = ({ children }: { children: React.ReactNode }) => {
+interface IProps {
+  children: React.ReactNode;
+  className?: string;
+}
+const PageContainer = ({ children, className }: IProps) => {
   return (
-    <div className="h-screen p-8 bg-gray-200 overflow-y-auto custom-scrollbar flex flex-col">
+    <div
+      className={`h-screen p-8 bg-gray-200 overflow-y-auto flex flex-col xs:p-5 ${className}`}
+    >
       {children}
     </div>
   );

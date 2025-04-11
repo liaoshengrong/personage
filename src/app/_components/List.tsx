@@ -1,15 +1,20 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import Perview from "./Perview";
+import data from "@/config/data.json";
+import { useEffect, useRef, useState } from "react";
+import { useMobile } from "../common";
 import MDRender from "./MDRender";
+import Perview from "./Perview";
 
-const List = ({ data }: { data: DataType[] }) => {
+const List = ({ isUaMobile }: { isUaMobile: boolean }) => {
+  const isMobile = isUaMobile || useMobile();
+
   const [isChoose, setIsChoose] = useState<boolean>(false);
   const [chooseData, setChooseData] = useState<DataType>();
   const [height, setHeight] = useState<number>(0);
   const [mdContent, setMdContent] = useState<string>("");
   const ref = useRef<HTMLDivElement>(null);
   const onChoose = (item: DataType) => {
+    if (isMobile) return;
     if (item.title === chooseData?.title) {
       setIsChoose(false);
       setTimeout(() => {
@@ -29,9 +34,12 @@ const List = ({ data }: { data: DataType[] }) => {
   }, [chooseData]);
 
   return (
-    <div className="max-w-screen-lg p-6 h-full flex flex-col mx-auto">
+    <div className="max-w-screen-lg p-6 flex flex-col mx-auto xs:w-full xs:p-0 xs:m-0 xs:block">
       <div className="flex flex-1 justify-center gap-10 pb-8 items-start">
-        <div className="flex flex-col gap-4 transition-all h-fit" ref={ref}>
+        <div
+          className="flex flex-col gap-4 transition-all h-fit xs:w-full xs:overflow-hidden xs:gap-0"
+          ref={ref}
+        >
           {data.map((item, index) => (
             <Perview
               key={index}
@@ -39,11 +47,12 @@ const List = ({ data }: { data: DataType[] }) => {
               index={index}
               onChoose={onChoose}
               isActive={chooseData?.title === item.title}
+              isMobile={isMobile}
             />
           ))}
         </div>
         <div
-          className="rounded-lg flex-shrink-0 transition-all duration-1000 overflow-y-auto p-5 sticky top-0 max-h-screen"
+          className="rounded-lg flex-shrink-0 transition-all duration-1000 overflow-y-auto p-5 sticky top-0 max-h-screen xs:hidden"
           style={{
             width: isChoose ? "750px" : 0,
 

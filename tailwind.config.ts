@@ -14,6 +14,10 @@ export default {
       fontFamily: {
         en: ["Enfont"],
       },
+      screens: {
+        xs: { max: "768px" },
+        pc: { min: "769px" },
+      },
       fontWeight: {
         100: "100",
         200: "200",
