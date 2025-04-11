@@ -1,7 +1,6 @@
 "use client";
 import dayjs from "dayjs";
 import React, { useEffect } from "react";
-import { useMobile } from "../common";
 import Link from "next/link";
 interface IProps {
   data: DataType;

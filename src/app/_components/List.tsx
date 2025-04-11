@@ -6,7 +6,8 @@ import MDRender from "./MDRender";
 import Perview from "./Perview";
 
 const List = ({ isUaMobile }: { isUaMobile: boolean }) => {
-  const isMobile = isUaMobile || useMobile();
+  const isLocalMobile = useMobile();
+  const isMobile = isUaMobile || isLocalMobile;
 
   const [isChoose, setIsChoose] = useState<boolean>(false);
   const [chooseData, setChooseData] = useState<DataType>();
