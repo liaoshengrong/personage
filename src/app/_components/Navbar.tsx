@@ -45,7 +45,7 @@ const Navbar = () => {
         className="xs:flex xs:h-12 xs:justify-between xs:items-center xs:absolute z-50 w-full top-0 left-0"
         style={isMobile ? fixedStyles : {}}
       >
-        <div className="text-base leading-none mb-2 xs:mb-0 text-center font-en text-black/80 tracking-widest animate__animated animate__backInUp">
+        <div className="text-base xs:text-sm leading-none mb-2 xs:mb-0 text-center font-en text-black/80 tracking-widest animate__animated animate__backInUp">
           <Link href="/"> MARK LIAO</Link>
         </div>
         <div className="flex gap-1 items-center justify-center xs:hidden">
@@ -61,7 +61,7 @@ const Navbar = () => {
             <Link
               href={item.path}
               key={index}
-              className="border border-sky-500 px-2 py-1 rounded-md text-[#6c32fe]"
+              className="border border-sky-500 px-2 py-1 rounded-md text-[#6c32fe] text-xs"
             >
               {item.text}
             </Link>
