@@ -63,7 +63,7 @@ const ShortVideo = ({ data }: { data: string[] }) => {
 
   return (
     <>
-      <div className="hidden xs:block text-xs text-gray-500 mt-3">
+      <div className="hidden xs:block text-xs text-gray-500 mt-3 animate__animated animate__fadeInUp">
         上下滑动切换视频
       </div>
       <div className="bg-gray-100 flex gap-5 h-[785px] mt-8 overflow-hidden rounded-lg animate__animated animate__fadeInUp xs:mt-3">

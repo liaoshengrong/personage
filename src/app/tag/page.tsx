@@ -1,10 +1,11 @@
 import React from "react";
 import Navbar from "../_components/Navbar";
 import ProgressBar from "./ProgressBar";
+import PageContainer from "../_components/PageContainer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen p-8 h-full bg-gray-200">
+    <PageContainer>
       <Navbar />
       <div className="w-full max-w-xl  mx-auto rounded-md p-5 mt-5">
         {tagArr.map((item, index) => (
@@ -16,7 +17,7 @@ const Index = () => {
           />
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 };
 

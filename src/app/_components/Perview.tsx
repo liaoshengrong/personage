@@ -8,7 +8,6 @@ interface IProps {
   index: number;
   onChoose: (data: DataType) => void;
   isActive: boolean;
-  isMobile: boolean;
 }
 const Perview = ({ data, index, onChoose, isActive }: IProps) => {
   const isMobile = useMobile();

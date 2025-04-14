@@ -5,8 +5,10 @@ import ChatCom from "./ChatCom";
 
 const Index = () => {
   return (
-    <PageContainer className="xs:!p-0 xs:!pt-5 xs:bg-white">
-      <Navbar />
+    <PageContainer className="xs:!p-0 xs:pt-5 xs:bg-white">
+      <div className="xs:px-5">
+        <Navbar />
+      </div>
       <ChatCom />
     </PageContainer>
   );

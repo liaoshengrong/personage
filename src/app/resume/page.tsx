@@ -6,8 +6,10 @@ import ProjectCard from "./ProjectCard";
 const Resume: React.FC = () => {
   return (
     <PageContainer className="xs:px-0 xs:bg-white">
-      <Navbar stop />
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl xs:shadow-none rounded-lg overflow-y-auto overflow-x-hidden mt-8 xs:mt-3 animate__animated animate__fadeInUp">
+      <div className="xs:px-5">
+        <Navbar />
+      </div>
+      <div className="max-w-5xl mx-auto bg-white shadow-2xl xs:shadow-none rounded-lg overflow-y-auto overflow-x-hidden mt-8 xs:mt-0 animate__animated animate__fadeInUp">
         <div className="p-8 xs:p-5">
           {/* 头部信息 */}
           <header className="mb-10 border-b pb-4 xs:mb-5">

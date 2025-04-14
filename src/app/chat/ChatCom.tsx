@@ -101,7 +101,7 @@ export default function ChatCom() {
       {/* 聊天历史 */}
       <div
         ref={chatContainerRef}
-        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32 xs:p-0 xs:flex-1"
+        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32 xs:p-0 xs:flex-1 xs:border-none"
         style={isMobile ? {} : { maxHeight: "calc(100vh - 400px)" }} // 设置最大高度为视口高度减去一些固定高度
       >
         {chatHistory.map((msg, index) => (
@@ -112,7 +112,7 @@ export default function ChatCom() {
             } mb-4`}
           >
             <div
-              className={`px-4 py-2 rounded-lg text-base ${
+              className={`px-4 py-2 rounded-lg text-base max-w-full overflow-x-auto ${
                 msg.role === "user"
                   ? "bg-blue-100 text-blue-900"
                   : "bg-gray-100 text-gray-900"
@@ -138,10 +138,11 @@ export default function ChatCom() {
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         )}
+        {/* <div className="hidden xs:block xs:h-[106px]"></div> */}
       </div>
 
       {/* 输入框和发送按钮 */}
-      <div className="flex mt-4">
+      <div className="flex mt-4 xs:sticky w-full bottom-0 left-0 bg-white pt-3 xs:mt-0">
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}

@@ -47,7 +47,6 @@ const List = () => {
               index={index}
               onChoose={onChoose}
               isActive={chooseData?.title === item.title}
-              isMobile={isMobile}
             />
           ))}
         </div>
