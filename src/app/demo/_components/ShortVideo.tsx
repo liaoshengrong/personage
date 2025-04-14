@@ -11,7 +11,7 @@ const ShortVideo = ({ data }: { data: string[] }) => {
   const [isNext, setIsNext] = useState(true);
   const [active, setActive] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0); // 初始音量设为0，即静音
-
+  const startY = useRef<number | null>(null);
   console.log("videos", videos);
 
   const list = Array(active + 2)
@@ -45,37 +45,61 @@ const ShortVideo = ({ data }: { data: string[] }) => {
     config: { duration: 400 },
     immediate: active === 0,
   });
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    startY.current = e.touches[0].clientY;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (startY.current !== null) {
+      const endY = e.changedTouches[0].clientY;
+      if (endY < startY.current) {
+        next(); // 向上滑动
+      } else if (endY > startY.current) {
+        prev(); // 向下滑动
+      }
+      startY.current = null;
+    }
+  };
 
   return (
-    <div className="bg-gray-100 flex gap-5 h-[785px] mt-8 overflow-hidden rounded-lg animate__animated animate__fadeInUp">
-      <div className="flex-1 overflow-hidden h-full py-2 relative">
-        {transitions((style, i) => (
-          // @ts-expect-error: Include children type
-          <animated.div
-            key={i}
-            style={style}
-            className="flex justify-center items-center w-full h-full absolute left-0 top-0"
-          >
-            {list[i]}
-          </animated.div>
-        ))}
+    <>
+      <div className="hidden xs:block text-xs text-gray-500 mt-3">
+        上下滑动切换视频
       </div>
+      <div className="bg-gray-100 flex gap-5 h-[785px] mt-8 overflow-hidden rounded-lg animate__animated animate__fadeInUp xs:mt-3">
+        <div
+          className="flex-1 overflow-hidden h-full py-2 relative"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          {transitions((style, i) => (
+            // @ts-expect-error: Include children type
+            <animated.div
+              key={i}
+              style={style}
+              className="flex justify-center items-center w-full h-full absolute left-0 top-0"
+            >
+              {list[i]}
+            </animated.div>
+          ))}
+        </div>
 
-      <div className="flex flex-col gap-4 justify-center px-8">
-        <Image
-          src={arrowPrev}
-          alt=""
-          className="cursor-pointer w-16 object-cover"
-          onClick={prev}
-        />
-        <Image
-          src={arrowNext}
-          alt=""
-          className="cursor-pointer w-16 object-cover"
-          onClick={next}
-        />
+        <div className="flex flex-col gap-4 justify-center px-8 xs:hidden">
+          <Image
+            src={arrowPrev}
+            alt=""
+            className="cursor-pointer w-16 object-cover"
+            onClick={prev}
+          />
+          <Image
+            src={arrowNext}
+            alt=""
+            className="cursor-pointer w-16 object-cover"
+            onClick={next}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

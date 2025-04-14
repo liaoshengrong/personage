@@ -16,7 +16,7 @@ const Index = () => {
   return (
     <PageContainer>
       <Navbar />
-      <List isUaMobile={isMobile} />
+      <List />
     </PageContainer>
   );
 };

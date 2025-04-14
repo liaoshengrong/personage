@@ -2,6 +2,7 @@
 import dayjs from "dayjs";
 import React, { useEffect } from "react";
 import Link from "next/link";
+import { useMobile } from "../common";
 interface IProps {
   data: DataType;
   index: number;
@@ -9,7 +10,8 @@ interface IProps {
   isActive: boolean;
   isMobile: boolean;
 }
-const Perview = ({ data, index, onChoose, isActive, isMobile }: IProps) => {
+const Perview = ({ data, index, onChoose, isActive }: IProps) => {
+  const isMobile = useMobile();
   const { title, tag, desc, date } = data;
   const animatecss =
     index % 2 === 0 ? "animate__bounceInLeft" : "animate__bounceInRight";
@@ -28,9 +30,12 @@ const Perview = ({ data, index, onChoose, isActive, isMobile }: IProps) => {
       prefetch
     >
       <div className="text-black/60 font-300 flex-shrink-0 text-lg w-[110px] xs:w-[52px] xs:text-base">
-        {isMobile
-          ? dayjs(date).format("MMM DD")
-          : dayjs(date).format("MMM DD,YYYY")}
+        <span className="block xs:hidden leading-6">
+          {dayjs(date).format("MMM DD,YYYY")}
+        </span>
+        <span className="hidden xs:block leading-6">
+          {dayjs(date).format("MMM DD")}
+        </span>
         <p className="hidden xs:block mt-2">{dayjs(date).format("YYYY")}</p>
       </div>
       <div className="flex flex-col gap-2">

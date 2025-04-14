@@ -19,8 +19,8 @@ const Tabs = ({ children, titles, defalultTab }: IProps) => {
     setActive(index);
   };
   return (
-    <div className="mt-8 max-w-5xl w-full mx-auto flex flex-col flex-1">
-      <div className="flex bg-white rounded-md animate__animated animate__fadeInUp">
+    <div className="mt-8 max-w-5xl w-full mx-auto flex flex-col flex-1 xs:mt-0">
+      <div className="flex bg-white rounded-md animate__animated animate__fadeInUp xs:hidden">
         {titles.map((item, index) => (
           <div
             className="flex-1 py-5 text-gray-400 text-center cursor-pointer rounded-lg"

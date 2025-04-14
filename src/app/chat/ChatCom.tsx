@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import MDRender from "../_components/MDRender";
+import { useMobile } from "../common";
 
 interface Message {
   role: "user" | "system";
@@ -92,15 +93,16 @@ export default function ChatCom() {
         chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory, isLoading, streamingMessage]);
+  const isMobile = useMobile();
 
   return (
-    <div className="w-full p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 animate__animated animate__fadeInUp">
+    <div className="w-full xs:flex-1 p-8 xs:p-4 xs:flex xs:flex-col max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 xs:mt-0 animate__animated animate__fadeInUp">
       <GradientText text="个人AI大模型，欢迎体验" />
       {/* 聊天历史 */}
       <div
         ref={chatContainerRef}
-        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32"
-        style={{ maxHeight: "calc(100vh - 400px)" }} // 设置最大高度为视口高度减去一些固定高度
+        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32 xs:p-0 xs:flex-1"
+        style={isMobile ? {} : { maxHeight: "calc(100vh - 400px)" }} // 设置最大高度为视口高度减去一些固定高度
       >
         {chatHistory.map((msg, index) => (
           <div
@@ -144,8 +146,8 @@ export default function ChatCom() {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="输入你的消息..."
-          className="flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+          placeholder="有问题尽管问我，按回车键发送"
+          className="flex-1 p-4 xs:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
           rows={4}
         />
         <button
@@ -161,8 +163,12 @@ export default function ChatCom() {
 
 const GradientText = ({ text }: { text: string }) => {
   return (
-    <div className="mb-4">
-      <svg width="100%" height="30px" preserveAspectRatio="xMidYMid meet">
+    <div className="mb-4 xs:mb-5 flex justify-center">
+      <svg
+        height="30px"
+        preserveAspectRatio="xMidYMid meet"
+        className="w-[217px]"
+      >
         <defs>
           <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop
@@ -175,7 +181,7 @@ const GradientText = ({ text }: { text: string }) => {
             />
           </linearGradient>
         </defs>
-        <text fill="url(#grad1)" fontSize={20} x="35%" y="80%">
+        <text fill="url(#grad1)" fontSize={20} y="80%">
           {text}
         </text>
       </svg>
