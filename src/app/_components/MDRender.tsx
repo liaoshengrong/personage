@@ -25,9 +25,8 @@ const Markdown = ({ content }: { content: string }) => {
                 style={props.style}
                 src={props.src || ""}
                 alt=""
-                width={900}
-                height={600}
-                quality={100}
+                width={700}
+                height={400}
                 onClick={() => {
                   setPreviewSrc(props.src || "");
                   setVisible(true);
