@@ -18,7 +18,7 @@ const Index = ({ params }: Props) => {
   return (
     <PageContainer>
       <Navbar />
-      <div className="max-w-screen-xl w-full mx-auto">
+      <div className="max-w-screen-xl w-full mx-auto animate__animated animate__fadeInUp">
         <h2 className="text-2xl font-600 py-5  text-[#6c32fe]">{title}</h2>
         <MDRender content={content} />
       </div>

@@ -9,14 +9,14 @@
 
 ### 这是 React SPA 请求下来的 html(CSR)
 
-<img src="/img/engineer/next-1.png" alt="1" style="max-width: 100%;">
+<img src="/img/engineer/next-1.png"  style="max-width: 100%;">
 只有一个元素 div#root，里面的内容是由浏览器执行 bundle.js 文件生成的。  
 如果有很多 js 代码，浏览器的执行 js 的时间就会很长，所以为什么 SPA 讨论最多的就是 **首屏优化**  
 首屏优化手段可以看下 `前端知识散点` 那篇，简单概括为文件压缩、代码分割、TreeShaking,cache,web worker。其实都是在减少js代码的执行时间，和执行体积。
 
 ### 这是 Next MPA 请求下来的 html(SSR)
 
-<img src="/img/engineer/next-2.png" alt="1" style="max-width: 100%;">
+<img src="/img/engineer/next-2.png"  style="max-width: 100%;">
 html拿到手动的时候，dom结构就是拼接好的，浏览器负责渲染html结构就行，就算有js代码，也得等用户点击执行，或者你手动写的useEffect等触发。  这大大的在根本上就减少了js代码的执行时间。
 
 ## 支持服务端渲染（SSR）和静态站点生成（SSG）
@@ -39,4 +39,4 @@ Next.js 提供了多种优化功能，包括图片优化（自动调整大小和
 ### 你的 SPA 应用真的有这么快吗？
 
 这不是一个 demo，这是沉淀了一年多的老项目了，这是 performance 显示的结果。
-<img src="/img/engineer/next-3.png" alt="1" style="max-width: 100%;">
+<img src="/img/engineer/next-3.png"  style="max-width: 100%;">

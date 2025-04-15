@@ -39,6 +39,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.xxapi.cn",
       },
+      {
+        protocol: "http",
+        hostname: "mdrs.yuanjin.tech",
+      },
     ],
   },
 
