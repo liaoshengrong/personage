@@ -77,13 +77,13 @@ export default function ChatCom() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
       if (e.shiftKey || e.altKey) {
         // 如果按下了 Shift 或 Alt 键，则允许换行
         return;
       }
       e.preventDefault(); // 阻止默认的换行行为
-      sendMessage();
+      sendMessage(); // 调用发送消息的函数
     }
   };
 
@@ -140,24 +140,24 @@ export default function ChatCom() {
         )}
         {/* <div className="hidden xs:block xs:h-[106px]"></div> */}
       </div>
-
-      {/* 输入框和发送按钮 */}
-      <div className="flex mt-4 xs:sticky w-full bottom-0 left-0 bg-white pt-3 xs:mt-0">
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="有问题尽管问我，按回车键发送"
-          className="flex-1 p-4 xs:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
-          rows={4}
-        />
-        <button
-          onClick={sendMessage}
-          className="ml-2 bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition duration-300"
-        >
-          发送
-        </button>
-      </div>
+      <form onSubmit={sendMessage}>
+        {/* 输入框和发送按钮 */}
+        <div className="flex mt-4 xs:sticky w-full bottom-0 left-0 bg-white pt-3 xs:mt-0">
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="有问题尽管问我，按回车键发送"
+            className="flex-1 p-4 xs:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+            rows={4}
+          />
+          <input
+            type="submit"
+            className="ml-2 bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition duration-300"
+            value="发送"
+          />
+        </div>
+      </form>
     </div>
   );
 }
