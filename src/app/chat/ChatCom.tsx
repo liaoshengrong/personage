@@ -96,14 +96,18 @@ export default function ChatCom() {
   const isMobile = useMobile();
 
   return (
-    <div className="w-full xs:flex-1 p-8 xs:p-4 xs:flex xs:flex-col max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 xs:mt-0 animate__animated animate__fadeInUp">
-      <GradientText text="个人AI大模型，欢迎体验" />
+    <div className="w-full xs:flex-1 p-8 xs:p-4 xs:flex xs:flex-col max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 xs:mt-0 animate__animated animate__fadeInUp xs:overflow-y-auto xs:rounded-none">
+      {!isMobile && (
+        <GradientText text="个人AI大模型，欢迎体验" className="xs:hidden" />
+      )}
       {/* 聊天历史 */}
       <div
         ref={chatContainerRef}
-        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32 xs:p-0 xs:flex-1 xs:border-none"
-        style={isMobile ? {} : { maxHeight: "calc(100vh - 400px)" }} // 设置最大高度为视口高度减去一些固定高度
+        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32 xs:p-0 xs:border-none xs:flex-1"
+        style={isMobile ? {} : { maxHeight: "calc(100vh - 480px)" }} // 设置最大高度为视口高度减去一些固定高度
       >
+        {isMobile && <GradientText text="个人AI大模型，欢迎体验" />}
+
         {chatHistory.map((msg, index) => (
           <div
             key={index}
@@ -140,31 +144,38 @@ export default function ChatCom() {
         )}
         {/* <div className="hidden xs:block xs:h-[106px]"></div> */}
       </div>
-      <form onSubmit={sendMessage}>
+      <form
+        onSubmit={sendMessage}
+        className="w-full bottom-0 left-0 flex mt-4  bg-white pt-3 xs:mt-0"
+      >
         {/* 输入框和发送按钮 */}
-        <div className="flex mt-4 xs:sticky w-full bottom-0 left-0 bg-white pt-3 xs:mt-0">
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="有问题尽管问我，按回车键发送"
-            className="flex-1 p-4 xs:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
-            rows={4}
-          />
-          <input
-            type="submit"
-            className="ml-2 bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition duration-300"
-            value="发送"
-          />
-        </div>
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="有问题尽管问我，按回车键发送"
+          className="flex-1 p-4 xs:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+          rows={4}
+        />
+        <input
+          type="submit"
+          className="ml-2 bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition duration-300"
+          value="发送"
+        />
       </form>
     </div>
   );
 }
 
-const GradientText = ({ text }: { text: string }) => {
+const GradientText = ({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) => {
   return (
-    <div className="mb-4 xs:mb-5 flex justify-center">
+    <div className={`mb-4 xs:mb-5 flex justify-center ${className}`}>
       <svg
         height="30px"
         preserveAspectRatio="xMidYMid meet"
