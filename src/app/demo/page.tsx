@@ -6,6 +6,7 @@ import Tabs from "./_components/Tabs";
 import ShortVideo from "./_components/ShortVideo";
 import { getVideoData, getWallpaper } from "./api";
 import Wallpaper from "./_components/Wallpaper";
+import ReactSpring from "./_components/ReactSpring";
 
 const Index = ({
   searchParams,
@@ -23,6 +24,7 @@ const Index = ({
         <ShortVideo data={[video]} />
         <Drag />
         <Wallpaper data={wallpapers} />
+        <ReactSpring />
       </Tabs>
     </PageContainer>
   );
@@ -30,4 +32,4 @@ const Index = ({
 
 export default Index;
 
-const tabs = ["刷短视频", "文件解析", "精选壁纸"];
+const tabs = ["刷短视频", "文件解析", "精选壁纸", "React-spring"];

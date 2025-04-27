@@ -94,6 +94,7 @@ export default function ChatCom() {
     }
   }, [chatHistory, isLoading, streamingMessage]);
   const isMobile = useMobile();
+  const isUser = (item: Message) => item.role === "user";
 
   return (
     <div className="w-full xs:flex-1 p-8 xs:p-4 xs:flex xs:flex-col max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 xs:mt-0 animate__animated animate__fadeInUp xs:overflow-y-auto xs:rounded-none">
@@ -111,22 +112,17 @@ export default function ChatCom() {
         {chatHistory.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${
-              msg.role === "user" ? "justify-end" : "justify-start"
-            } mb-4`}
+            className={`flex mb-4`}
+            style={{ justifyContent: isUser(msg) ? "flex-end" : "flex-start" }}
           >
             <div
-              className={`px-4 py-2 rounded-lg text-base max-w-full overflow-x-auto ${
-                msg.role === "user"
-                  ? "bg-blue-100 text-blue-900"
-                  : "bg-gray-100 text-gray-900"
-              } max-w-3xl inline-block`}
+              className="px-4 py-2 rounded-lg text-base overflow-x-auto max-w-3xl inline-block"
+              style={{
+                backgroundColor: isUser(msg) ? "#dbeafe" : "#f3f4f6",
+                color: isUser(msg) ? "#1e3a8a" : "#111827",
+              }}
             >
-              {msg.role === "user" ? (
-                msg.content
-              ) : (
-                <MDRender content={msg.content} />
-              )}
+              {isUser(msg) ? msg.content : <MDRender content={msg.content} />}
             </div>
           </div>
         ))}
@@ -142,7 +138,6 @@ export default function ChatCom() {
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         )}
-        {/* <div className="hidden xs:block xs:h-[106px]"></div> */}
       </div>
       <form
         onSubmit={sendMessage}

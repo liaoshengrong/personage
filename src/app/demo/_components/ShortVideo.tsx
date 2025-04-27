@@ -12,7 +12,6 @@ const ShortVideo = ({ data }: { data: string[] }) => {
   const [active, setActive] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0); // 初始音量设为0，即静音
   const startY = useRef<number | null>(null);
-  console.log("videos", videos);
 
   const list = Array(active + 2)
     .fill(null)

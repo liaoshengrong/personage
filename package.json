@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@netlify/functions": "^3.0.0",
-    "@react-spring/web": "9.7.4",
+    "@react-spring/web": "^9.7.4",
     "animate.css": "^4.1.1",
     "critters": "^0.0.25",
     "dayjs": "^1.11.13",
