@@ -47,7 +47,11 @@ const ReactSpring = () => {
     }, getTime());
   };
 
-  console.log(count, "countcount");
+  useEffect(() => {
+    return () => {
+      clearInterval(timer.current);
+    };
+  }, []);
 
   return (
     <div className="mt-8 xs:mt-3 animate__animated animate__fadeInUp grid grid-cols-2 gap-3">
@@ -58,8 +62,9 @@ const ReactSpring = () => {
             <span>我的余额：</span>
             {/* @ts-expect-error: Include children type */}
             <animated.span ref={ref}>
-              {lastMoney.number.to((n) => n.toFixed(0))}
+              {lastMoney.number.to((n) => n.toFixed(2))}
             </animated.span>
+            <span>元</span>
           </div>
           <span className="text-sm text-black/60">每次抽奖消耗5元</span>
         </div>
