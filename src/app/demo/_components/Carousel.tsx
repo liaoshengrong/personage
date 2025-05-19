@@ -38,7 +38,7 @@ const Carousel = ({ data }: { data: string[] }) => {
             className="w-full object-cover rounded-lg"
             placeholder="blur"
             blurDataURL={blurImage.src}
-            priority={index === 0}
+            priority
             quality={40}
           />
         ))}
