@@ -38,6 +38,8 @@ const Carousel = ({ data }: { data: string[] }) => {
             className="w-full object-cover rounded-lg"
             placeholder="blur"
             blurDataURL={blurImage.src}
+            priority
+            quality={60}
           />
         ))}
       </Swiper>
