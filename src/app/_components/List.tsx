@@ -1,10 +1,10 @@
 "use client";
 import data from "@/config/data.json";
 import { useEffect, useRef, useState } from "react";
-import { useMobile } from "../common";
 import MDRender from "./MDRender";
 import Perview from "./Perview";
 import { useRouter } from "next/navigation";
+import { useMobile } from "../hooks/useMobile";
 
 const List = () => {
   const isMobile = useMobile();

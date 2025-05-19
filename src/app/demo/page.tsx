@@ -18,13 +18,13 @@ const Index = ({
   const { tab } = searchParams ? use(searchParams) : {};
 
   return (
-    <PageContainer>
+    <PageContainer className={tab === "3" ? "xs:px-0" : ""}>
       <Navbar />
       <Tabs titles={tabs} defalultTab={tab}>
         <ShortVideo data={[video]} />
         <Drag />
         <Wallpaper data={wallpapers} />
-        <ReactSpring />
+        <ReactSpring carousel={wallpapers} />
       </Tabs>
     </PageContainer>
   );

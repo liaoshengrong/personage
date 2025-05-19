@@ -2,7 +2,7 @@
 import dayjs from "dayjs";
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { useMobile } from "../common";
+import { useMobile } from "../hooks/useMobile";
 interface IProps {
   data: DataType;
   index: number;

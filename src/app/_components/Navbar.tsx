@@ -13,7 +13,7 @@ import listIcon from "../_images/list.svg";
 import parseIcon from "../_images/parse.svg";
 import aiIcon from "../_images/ai.svg";
 import Link from "next/link";
-import { useMobile } from "../common";
+import { useMobile } from "../hooks/useMobile";
 const Navbar = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [visble, setVisible] = useState(true);

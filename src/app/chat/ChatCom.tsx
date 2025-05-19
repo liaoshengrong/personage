@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import MDRender from "../_components/MDRender";
-import { useMobile } from "../common";
+import { useMobile } from "../hooks/useMobile";
 
 interface Message {
   role: "user" | "system";
