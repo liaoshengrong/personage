@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import refreshIcon from "@/app/_images/refresh.svg";
 import { getWallpaper } from "../api";
+import blurImage from "@/app/_images/blur-image.png";
 
 const Wallpaper = ({ data: _data }: { data: string[] }) => {
   const [data, setData] = useState(_data);
@@ -51,6 +52,9 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
             height={540}
             className="w-full  object-cover cursor-pointer"
             onClick={onDownload}
+            priority
+            placeholder="blur"
+            blurDataURL={blurImage.src}
           />
         )}
       </div>
@@ -71,6 +75,8 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
                 width={240}
                 height={180}
                 className="h-full object-cover rounded-lg"
+                placeholder="blur"
+                blurDataURL={blurImage.src}
               />
             )}
           </div>
