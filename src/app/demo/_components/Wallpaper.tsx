@@ -79,6 +79,7 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
                 placeholder="blur"
                 blurDataURL={blurImage.src}
                 quality={20}
+                priority
               />
             )}
           </div>
@@ -93,6 +94,7 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
             width={240}
             height={180}
             className="w-16 object-cover rounded-lg"
+            priority
           />
           <p className="text-xl">换一批</p>
         </div>
