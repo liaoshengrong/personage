@@ -55,6 +55,7 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
             priority
             placeholder="blur"
             blurDataURL={blurImage.src}
+            quality={60}
           />
         )}
       </div>
@@ -77,6 +78,7 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
                 className="h-full object-cover rounded-lg"
                 placeholder="blur"
                 blurDataURL={blurImage.src}
+                quality={20}
               />
             )}
           </div>
