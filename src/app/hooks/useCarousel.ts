@@ -12,7 +12,6 @@ const useCarousel = ({ data, onNext, onPrev, isAuto = true }: IProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const timer = useRef<NodeJS.Timeout>(null);
-  console.log(isAuto, "isAutoisAuto");
 
   const transitions = useTransition(page, {
     from: { opacity: 0, transform: `translateX(${isPrev ? "-" : ""}100%)` },

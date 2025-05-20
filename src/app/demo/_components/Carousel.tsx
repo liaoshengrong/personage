@@ -8,13 +8,15 @@ import { useMobile } from "@/app/hooks/useMobile";
 import { Paging } from "@/app/_components/Paging";
 const Carousel = ({ data }: { data: string[] }) => {
   const isMobile = useMobile();
-  console.log(isMobile, "isMobile");
-
+  const [isAuto, setIsAuto] = useState(false);
   const { page, next, prev, transitions, ref } = useCarousel({
     data,
-    isAuto: !isMobile,
+    isAuto,
   });
 
+  // useEffect(() => {
+  //   setIsAuto(!isMobile);
+  // }, [isMobile]);
   return (
     <div className="border rounded-lg pb-4 xs:h-fit xs:pb-3 border-gray-400 overflow-hidden">
       <div className="py-4 xs:py-3">
@@ -39,7 +41,13 @@ const Carousel = ({ data }: { data: string[] }) => {
             placeholder="blur"
             blurDataURL={blurImage.src}
             priority
-            quality={40}
+            quality={100}
+            onLoad={(e) => {
+              if (index === 0) {
+                setIsAuto(!isMobile);
+                // console.log(e.target, "onLoad");
+              }
+            }}
           />
         ))}
       </Swiper>
