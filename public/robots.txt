@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://shengrong.netlify.com
+
+# Sitemaps
+Sitemap: https://shengrong.netlify.com/sitemap.xml
