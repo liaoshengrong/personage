@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createBrowserHistory } from "history";
+import Link from "next/link";
 
 const history = createBrowserHistory();
 const StopBack = () => {
@@ -74,7 +75,7 @@ const StopBack = () => {
       >
         跳转
       </button>
-      <a href="/">跳转2222</a>
+      <Link href="/">跳转2222</Link>
       {showConfirm && (
         <div
           className="text-red-500 border p-4 cursor-pointer"

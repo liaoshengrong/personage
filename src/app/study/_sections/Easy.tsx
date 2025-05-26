@@ -2,7 +2,7 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import React from "react";
 import { create } from "zustand";
-let value = 1;
+const value = 1;
 
 const store = create(() => ({ value: 1, num: 100 }));
 
