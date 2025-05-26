@@ -140,7 +140,10 @@ export default function ChatCom() {
         )}
       </div>
       <form
-        onSubmit={sendMessage}
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
         className="w-full bottom-0 left-0 flex mt-4  bg-white pt-3 xs:mt-0"
       >
         {/* 输入框和发送按钮 */}
