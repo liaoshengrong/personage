@@ -7,7 +7,7 @@ const logo = "https://cdn-digital.ssv.qq.com/upload//s2024/s-logo.png";
 export const metadata: Metadata = {
   title: "Mark's space",
   description: "Mark的个人博客",
-  keywords: "Mark的个人博客",
+  keywords: "shengrong,blog,前端,博客,shengrong的个人博客,Mark的个人博客",
   openGraph: {
     type: "website",
     url: "https://shengrong.netlify.app",
