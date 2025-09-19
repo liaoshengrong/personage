@@ -3,6 +3,7 @@ import List from "./_components/List";
 
 import Navbar from "./_components/Navbar";
 import PageContainer from "./_components/PageContainer";
+import FloatingToc from "./_components/FloatingToc";
 import { headers } from "next/headers";
 
 const Index = () => {
@@ -17,6 +18,7 @@ const Index = () => {
     <PageContainer>
       <Navbar />
       <List />
+      <FloatingToc />
     </PageContainer>
   );
 };

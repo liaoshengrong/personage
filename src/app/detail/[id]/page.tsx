@@ -1,6 +1,7 @@
 import React, { use } from "react";
 import PageContainer from "../../_components/PageContainer";
 import Navbar from "../../_components/Navbar";
+import FloatingToc from "../../_components/FloatingToc";
 import data from "@/config/data.json";
 import { getDetail } from "../../common/api";
 import MDRender from "@/app/_components/MDRender";
@@ -21,6 +22,7 @@ const Index = ({ params }: Props) => {
           <h2 className="text-2xl font-600 py-5  text-[#6c32fe] border-b-2 border-[#6c32fe] mb-5">{title}</h2>
           <MDRender content={content} />
         </div>
+        <FloatingToc currentId={+id} />
       </PageContainer>
     </>
   );
