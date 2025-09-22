@@ -68,7 +68,7 @@ export default async (event) => {
       throw new Error("No stream available");
     }
 
-    return new Response(res,{
+    return new Response(res.body,{
       statusCode: 200,
       headers: {
         ...CORS_HEADERS,
@@ -90,13 +90,21 @@ export default async (event) => {
 
     
   } catch (error) {
-    return {
+
+    return new Response(JSON.stringify({
+      error: "Internal Server Error",
+      details: error.message,
+    }),{
       statusCode: 500,
       headers: CORS_HEADERS,
-      body: JSON.stringify({
-        error: "Internal Server Error",
-        details: error.message,
-      }),
-    };
+    })
+    // return {
+    //   statusCode: 500,
+    //   headers: CORS_HEADERS,
+    //   body: JSON.stringify({
+    //     error: "Internal Server Error",
+    //     details: error.message,
+    //   }),
+    // };
   }
 };
