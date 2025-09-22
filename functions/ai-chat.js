@@ -1,7 +1,7 @@
 import { CORS_HEADERS } from "./utils/common";
 import { stream } from "@netlify/functions";
 
-export const handler = stream(async (event) => {
+export default async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -68,6 +68,14 @@ export const handler = stream(async (event) => {
       throw new Error("No stream available");
     }
 
+    return new Response(response.body,{
+      statusCode: 200,
+      headers: {
+        ...CORS_HEADERS,
+        "Content-Type": "text/event-stream",
+      },
+    })
+
     return {
       statusCode: 200,
       headers: {
@@ -76,6 +84,8 @@ export const handler = stream(async (event) => {
       },
       body: response.body,
     };
+
+    
   } catch (error) {
     return {
       statusCode: 500,
@@ -86,4 +96,4 @@ export const handler = stream(async (event) => {
       }),
     };
   }
-});
+};
