@@ -10,7 +10,6 @@ interface FloatingTocProps {
 
 const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
   const isMobile = useMobile();
@@ -18,28 +17,28 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
 
   // 滚动时自动隐藏/显示目录
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
+    // let lastScrollY = window.scrollY;
+    // let ticking = false;
 
-    const updateVisibility = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 200) {
-        // 向下滚动，隐藏目录
-        setIsVisible(false);
-      } else {
-        // 向上滚动，显示目录
-        setIsVisible(true);
-      }
-      lastScrollY = currentScrollY;
-      ticking = false;
-    };
+    // const updateVisibility = () => {
+    //   const currentScrollY = window.scrollY;
+    //   if (currentScrollY > lastScrollY && currentScrollY > 200) {
+    //     // 向下滚动，隐藏目录
+    //     setIsVisible(false);
+    //   } else {
+    //     // 向上滚动，显示目录
+    //     setIsVisible(true);
+    //   }
+    //   lastScrollY = currentScrollY;
+    //   ticking = false;
+    // };
 
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateVisibility);
-        ticking = true;
-      }
-    };
+    // const handleScroll = () => {
+    //   if (!ticking) {
+    //     requestAnimationFrame(updateVisibility);
+    //     ticking = true;
+    //   }
+    // };
 
     // ESC键关闭目录
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -60,11 +59,11 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    // window.addEventListener("scroll", handleScroll);
     window.addEventListener("keydown", handleKeyDown);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      // window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -108,10 +107,8 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
   return (
     <div
       ref={tocRef}
-      className={`fixed right-4 top-1/2 z-[9999] transition-all duration-300 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
-      }`}
-      style={{ pointerEvents: 'auto', transform: 'translateY(-50%)' }}
+      className='fixed right-4 top-1/3 z-[9999] transition-all duration-300'
+      style={{ pointerEvents: 'auto' }}
     >
       {/* 悬浮按钮 */}
       <div className="relative group">
@@ -129,17 +126,26 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
           title="文章目录"
         >
           <svg
-            className={`w-6 h-6 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+            className={`w-6 h-6 transition-all duration-200 ${isOpen ? "rotate-90 scale-110" : ""}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
+            {isOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
           </svg>
         </button>
         <div className="absolute right-14 top-1/2 transform -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
