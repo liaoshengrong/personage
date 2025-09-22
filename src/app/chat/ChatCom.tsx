@@ -8,8 +8,8 @@ interface Message {
   content: string;
 }
 
-const url = "https://shengrong.netlify.app/.netlify/functions/ai-chat";
-// const url = "http://localhost:8888/.netlify/functions/ai-chat";
+// const url = "https://shengrong.netlify.app/.netlify/functions/ai-chat";
+const url = "http://localhost:8888/.netlify/functions/ai-chat";
 // http://localhost:8888/.netlify/functions/hello
 
 export default function ChatCom() {

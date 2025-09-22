@@ -1,24 +1,54 @@
 import { CORS_HEADERS } from "./utils/common";
-import { stream } from "@netlify/functions";
+// import { stream } from "@netlify/functions";
 
 export default async (event) => {
-  if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
+
+  if (event.method === "OPTIONS") {
+    return new Response("", {
+      status: 200,
       headers: CORS_HEADERS,
-      body: "",
-    };
-  }
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ error: "Method Not Allowed" }),
-    };
+    });
   }
 
+  if (event.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method Not Allowed" }), {
+      status: 405,
+      headers: CORS_HEADERS,
+    });
+  }
+
+
   try {
-    const requestBody = JSON.parse(event.body);
+    let requestBody;
+    
+    // 解析请求体 - 处理ReadableStream
+    if (event.body) {
+      if (typeof event.body === 'string') {
+        // 如果body已经是字符串，直接解析
+        requestBody = JSON.parse(event.body);
+      } else if (event.body instanceof ReadableStream || typeof event.body.getReader === 'function') {
+        // 如果是ReadableStream，读取内容
+        const reader = event.body.getReader();
+        const chunks = [];
+        
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+        
+        const bodyBuffer = Buffer.concat(chunks);
+        const bodyString = bodyBuffer.toString('utf-8');
+        requestBody = JSON.parse(bodyString);
+      } else {
+        // 其他情况，尝试直接解析
+        requestBody = JSON.parse(event.body);
+      }
+    } else {
+      throw new Error('No request body provided');
+    }
+
+    console.log('Request body parsed:', requestBody);
 
     const res = await fetch(
       "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
@@ -68,43 +98,26 @@ export default async (event) => {
       throw new Error("No stream available");
     }
 
-    return new Response(res.body,{
+    return new Response(res.body, {
       statusCode: 200,
       headers: {
         ...CORS_HEADERS,
         "Content-Type": "text/event-stream",
       },
-    })
+    });
 
     // "NetlifyUserError: Function returned an unsupported value. Accepted types are 'Response' or 'undefined'"
 
-
-    return {
-      statusCode: 200,
-      headers: {
-        ...CORS_HEADERS,
-        "Content-Type": "text/event-stream",
-      },
-      body: res.body,
-    };
-
-    
   } catch (error) {
-
-    return new Response(JSON.stringify({
-      error: "Internal Server Error",
-      details: error.message,
-    }),{
-      statusCode: 500,
-      headers: CORS_HEADERS,
-    })
-    // return {
-    //   statusCode: 500,
-    //   headers: CORS_HEADERS,
-    //   body: JSON.stringify({
-    //     error: "Internal Server Error",
-    //     details: error.message,
-    //   }),
-    // };
+    return new Response(
+      JSON.stringify({
+        error: "Internal Server Error",
+        details: error.message,
+      }),
+      {
+        statusCode: 500,
+        headers: CORS_HEADERS,
+      }
+    );
   }
 };
