@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import MDRender from "../_components/MDRender";
 import { useMobile } from "../hooks/useMobile";
+import { sendToAiChat } from "../common/api";
 
 interface Message {
   role: "user" | "system";
@@ -34,56 +35,24 @@ export default function ChatCom() {
     setStreamingMessage("");
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newChatHistory }),
+
+      const response = await sendToAiChat({
+        messages: newChatHistory,
+        renderItemCallback: (s) => {
+          console.log("renderItemCallback:", s);
+          
+          setStreamingMessage(s);
+        },
+        finishCallback: (s) => {
+          // setStreamingMessage(s);
+          const finalMessage: Message = {
+            role: "system",
+            content: s || "No response",
+          };
+          setChatHistory((prev) => [...prev, finalMessage]);
+        },
       });
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("No reader available");
-
-      let fullResponse = "";
-      let buffer = "";
       
-      while (true) {
-        const { done, value } = await reader.read();
-        console.log("Read chunk:", done, value);
-        
-        if (done) break;
-
-        const text = new TextDecoder().decode(value);
-        buffer += text;
-        console.log("Received chunk:", text);
-        
-        // 处理完整的SSE消息
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || ""; // 保留最后一行不完整的数据
-        
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const content = line.slice(6);
-            if (content === "[DONE]") continue;
-            
-            try {
-              const msg = JSON.parse(content);
-              const deltaContent = msg.choices?.[0]?.delta?.content || "";
-              fullResponse += deltaContent;
-              
-              // 立即更新UI，实现真正的流式效果
-              setStreamingMessage(fullResponse);
-            } catch (e) {
-              console.warn("Failed to parse SSE data:", content);
-            }
-          }
-        }
-      }
-
-      const finalMessage: Message = {
-        role: "system",
-        content: fullResponse || "No response",
-      };
-      setChatHistory((prev) => [...prev, finalMessage]);
     } catch (error) {
       setChatHistory((prev) => [
         ...prev,
@@ -167,8 +136,14 @@ export default function ChatCom() {
           <div className="flex justify-center py-2">
             <div className="flex space-x-1">
               <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+              <div
+                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.4s" }}
+              ></div>
             </div>
           </div>
         )}
@@ -206,13 +181,38 @@ export default function ChatCom() {
             }`}
           >
             {isLoading ? (
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
             )}
           </button>
@@ -237,8 +237,6 @@ const GradientText = ({
     </div>
   );
 };
-
-
 
 const GradientTextOrigin = ({
   text,

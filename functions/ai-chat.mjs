@@ -1,20 +1,14 @@
-import { CORS_HEADERS } from "./utils/common";
+import { CORS_HEADERS, createResponse, createJsonResponse } from "./utils/common";
 // import { stream } from "@netlify/functions";
 
 export default async (event) => {
 
   if (event.method === "OPTIONS") {
-    return new Response("", {
-      status: 200,
-      headers: CORS_HEADERS,
-    });
+    return createResponse("", 200);
   }
 
   if (event.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method Not Allowed" }), {
-      status: 405,
-      headers: CORS_HEADERS,
-    });
+    return createJsonResponse({ error: "Method Not Allowed" }, 405);
   }
 
 
@@ -98,26 +92,19 @@ export default async (event) => {
       throw new Error("No stream available");
     }
 
-    return new Response(res.body, {
-      statusCode: 200,
-      headers: {
-        ...CORS_HEADERS,
-        "Content-Type": "text/event-stream",
-      },
+    return createResponse(res.body, 200, {
+      "Content-Type": "text/event-stream",
     });
 
     // "NetlifyUserError: Function returned an unsupported value. Accepted types are 'Response' or 'undefined'"
 
   } catch (error) {
-    return new Response(
-      JSON.stringify({
+    return createJsonResponse(
+      {
         error: "Internal Server Error",
         details: error.message,
-      }),
-      {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-      }
+      },
+      500
     );
   }
 };

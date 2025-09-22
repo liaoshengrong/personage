@@ -61,14 +61,10 @@ const arr = [
     height: 1100,
   },
 ];
-import { CORS_HEADERS } from "./utils/common";
+import { CORS_HEADERS, createResponse, createJsonResponse } from "./utils/common";
 exports.handler = async function (event, context) {
   if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
-      headers: CORS_HEADERS,
-      body: "",
-    };
+    return createResponse("", 200);
   }
 
   // const res = await fetch(`https://api.hn/acg.php?zd=pc&return=jsonpro`);
@@ -87,14 +83,10 @@ exports.handler = async function (event, context) {
   }));
   const paginatedData = _data?.slice(0, pageSize);
 
-  return {
-    statusCode: 200,
-    headers: CORS_HEADERS,
-    body: JSON.stringify({
-      data: paginatedData,
-      total: 96,
-      page,
-      pageSize,
-    }),
-  };
+  return createJsonResponse({
+    data: paginatedData,
+    total: 96,
+    page,
+    pageSize,
+  });
 };
