@@ -19,3 +19,7 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[dev]
+  targetPort = 8200
+  autoLaunch = true

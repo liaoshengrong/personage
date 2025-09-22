@@ -68,45 +68,13 @@ export const handler = stream(async (event) => {
       throw new Error("No stream available");
     }
 
-    // 创建转换流来处理SSE数据
-    const { Readable } = require('stream');
-    const reader = response.body.getReader();
-    
-    const stream = new Readable({
-      read() {
-        reader.read().then(({ done, value }) => {
-          if (done) {
-            this.push(null);
-          } else {
-            // 将原始数据转换为SSE格式
-            const text = new TextDecoder().decode(value);
-            const lines = text.split('\n').filter(line => line.trim());
-            
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                // 已经是SSE格式的数据，直接转发
-                this.push(line + '\n\n');
-              } else if (line.trim() && !line.startsWith(':')) {
-                // 如果不是注释且不是空行，包装成SSE格式
-                this.push('data: ' + line + '\n\n');
-              }
-            }
-          }
-        }).catch(error => {
-          this.destroy(error);
-        });
-      }
-    });
-
     return {
       statusCode: 200,
       headers: {
         ...CORS_HEADERS,
         "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
       },
-      body: stream,
+      body: response.body,
     };
   } catch (error) {
     return {

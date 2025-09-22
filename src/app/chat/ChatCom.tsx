@@ -9,6 +9,8 @@ interface Message {
 }
 
 const url = "https://shengrong.netlify.app/.netlify/functions/ai-chat";
+// const url = "http://localhost:8888/.netlify/functions/ai-chat";
+// http://localhost:8888/.netlify/functions/hello
 
 export default function ChatCom() {
   const [message, setMessage] = useState<string>("");
@@ -42,20 +44,37 @@ export default function ChatCom() {
       if (!reader) throw new Error("No reader available");
 
       let fullResponse = "";
+      let buffer = "";
+      
       while (true) {
         const { done, value } = await reader.read();
+        console.log("Read chunk:", done, value);
+        
         if (done) break;
 
         const text = new TextDecoder().decode(value);
-        const lines = text.split("\n");
-
+        buffer += text;
+        console.log("Received chunk:", text);
+        
+        // 处理完整的SSE消息
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || ""; // 保留最后一行不完整的数据
+        
         for (const line of lines) {
           if (line.startsWith("data: ")) {
             const content = line.slice(6);
             if (content === "[DONE]") continue;
-            const msg = JSON.parse(content);
-            fullResponse += msg.choices[0].delta.content || "";
-            setStreamingMessage(fullResponse);
+            
+            try {
+              const msg = JSON.parse(content);
+              const deltaContent = msg.choices?.[0]?.delta?.content || "";
+              fullResponse += deltaContent;
+              
+              // 立即更新UI，实现真正的流式效果
+              setStreamingMessage(fullResponse);
+            } catch (e) {
+              console.warn("Failed to parse SSE data:", content);
+            }
           }
         }
       }
