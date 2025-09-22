@@ -40,7 +40,7 @@ const Navbar = () => {
 
   return (
     <div className="relative w-full">
-      <div className="h-12" ref={ref} />
+      <div className="hidden h-12 xs:block" ref={ref} />
       <div
         className="xs:flex xs:h-12 xs:justify-between xs:items-center xs:absolute z-50 w-full top-0 left-0"
         style={isMobile ? fixedStyles : {}}

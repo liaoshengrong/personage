@@ -97,75 +97,131 @@ export default function ChatCom() {
   const isUser = (item: Message) => item.role === "user";
 
   return (
-    <div className="w-full xs:flex-1 p-8 xs:p-4 xs:flex xs:flex-col max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-16 xs:mt-0 animate__animated animate__fadeInUp xs:overflow-y-auto xs:rounded-none">
-      {!isMobile && (
-        <GradientText text="个人AI大模型，欢迎体验" className="xs:hidden" />
-      )}
+    <div className="flex flex-col w-full xs:h-full max-w-4xl mx-auto bg-white rounded-xl shadow-lg mt-5 xs:mt-0 animate__animated animate__fadeInUp xs:rounded-none min-h-[calc(100vh-300px)] max-h-[calc(100vh-140px)] xs:max-h-full xs:flex-1">
+      {/* 头部 */}
+      <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-xl xs:rounded-none">
+        <div className="flex items-center justify-center">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-gray-700 font-medium">AI 助手在线</span>
+          </div>
+        </div>
+        <div className="mt-2 text-center">
+          <GradientText text="个人AI大模型，欢迎体验" />
+        </div>
+      </div>
+
       {/* 聊天历史 */}
       <div
         ref={chatContainerRef}
-        className="hide-scrollbar overflow-y-auto p-4 border-b border-gray-200 min-h-32 xs:p-0 xs:border-none xs:flex-1"
-        style={isMobile ? {} : { maxHeight: "calc(100vh - 480px)" }} // 设置最大高度为视口高度减去一些固定高度
+        className="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar bg-gray-50"
+        style={isMobile ? {} : { maxHeight: "calc(100vh - 280px)" }}
       >
-        {isMobile && <GradientText text="个人AI大模型，欢迎体验" />}
-
         {chatHistory.map((msg, index) => (
           <div
             key={index}
-            className={`flex mb-4`}
-            style={{ justifyContent: isUser(msg) ? "flex-end" : "flex-start" }}
+            className={`flex ${isUser(msg) ? "justify-end" : "justify-start"}`}
           >
             <div
-              className="px-4 py-2 rounded-lg text-base overflow-x-auto max-w-3xl inline-block"
-              style={{
-                backgroundColor: isUser(msg) ? "#dbeafe" : "#f3f4f6",
-                color: isUser(msg) ? "#1e3a8a" : "#111827",
-              }}
+              className={`max-w-[80%] xs:max-w-[90%] rounded-2xl px-4 py-3 shadow-sm ${
+                isUser(msg)
+                  ? "bg-blue-500 text-white rounded-br-none"
+                  : "bg-white text-gray-800 rounded-bl-none border border-gray-100"
+              }`}
             >
-              {isUser(msg) ? msg.content : <MDRender content={msg.content} />}
+              {isUser(msg) ? (
+                <div className="whitespace-pre-wrap">{msg.content}</div>
+              ) : (
+                <MDRender content={msg.content} />
+              )}
             </div>
           </div>
         ))}
         {streamingMessage && (
-          <div className="flex justify-start mb-4">
-            <div className="px-4 py-2 rounded-lg text-base bg-gray-100 text-gray-900 max-w-3xl inline-block">
+          <div className="flex justify-start">
+            <div className="max-w-[80%] xs:max-w-[90%] bg-white text-gray-800 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm border border-gray-100">
               <MDRender content={streamingMessage} />
             </div>
           </div>
         )}
         {isLoading && !streamingMessage && (
-          <div className="flex justify-center mt-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="flex justify-center py-2">
+            <div className="flex space-x-1">
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+            </div>
           </div>
         )}
       </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendMessage();
-        }}
-        className="w-full bottom-0 left-0 flex mt-4  bg-white pt-3 xs:mt-0"
-      >
-        {/* 输入框和发送按钮 */}
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="有问题尽管问我，按回车键发送"
-          className="flex-1 p-4 xs:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
-          rows={4}
-        />
-        <input
-          type="submit"
-          className="ml-2 bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition duration-300"
-          value="发送"
-        />
-      </form>
+
+      {/* 输入区域 */}
+      <div className="p-4 border-t border-gray-200 bg-white rounded-b-xl xs:rounded-none">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            sendMessage();
+          }}
+          className="flex items-end space-x-2"
+        >
+          <div className="flex-1 relative">
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="有问题尽管问我，按回车键发送..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition duration-200"
+              rows={2}
+            />
+            <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+              Enter 发送 · Shift+Enter 换行
+            </div>
+          </div>
+          <button
+            type="submit"
+            disabled={!message.trim() || isLoading}
+            className={`px-5 py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center ${
+              !message.trim() || isLoading
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+            }`}
+          >
+            {isLoading ? (
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
 
 const GradientText = ({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) => {
+  return (
+    <div className={`flex justify-center ${className}`}>
+      <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+        {text}
+      </h2>
+    </div>
+  );
+};
+
+
+
+const GradientTextOrigin = ({
   text,
   className,
 }: {
