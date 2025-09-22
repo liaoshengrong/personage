@@ -20,7 +20,7 @@ export default async (event) => {
   try {
     const requestBody = JSON.parse(event.body);
 
-    const response = await fetch(
+    const res = await fetch(
       "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
       {
         method: "POST",
@@ -64,11 +64,11 @@ export default async (event) => {
       }
     );
 
-    if (!response.body) {
+    if (!res.body) {
       throw new Error("No stream available");
     }
 
-    return new Response(response.body,{
+    return new Response(res,{
       statusCode: 200,
       headers: {
         ...CORS_HEADERS,
@@ -76,13 +76,16 @@ export default async (event) => {
       },
     })
 
+    // "NetlifyUserError: Function returned an unsupported value. Accepted types are 'Response' or 'undefined'"
+
+
     return {
       statusCode: 200,
       headers: {
         ...CORS_HEADERS,
         "Content-Type": "text/event-stream",
       },
-      body: response.body,
+      body: res.body,
     };
 
     
