@@ -2,15 +2,18 @@ import { SkillItem, WorkExperience, Project, Education } from "./types";
 
 // 个人技能数据
 export const skillsData: SkillItem[] = [
-  { text: "熟练掌握 React/Vue2/Vue3/Taro 小程序的开发使用。" },
-  { text: "熟练掌握 HTML/Css/Javascript/TypeScript 等常用语法。" },
+  { text: "熟练掌握 React/Vue2/Vue3/Taro 小程序的开发使用，具备Nextjs、Umijs等主流框架实战经验。" },
+  { text: "熟练掌握 HTML/Css/Javascript/TypeScript 等常用语法，精通Tailwind Css、Less等CSS预处理技术。" },
   {
     text: "熟悉微信小程序原生开发，具备AI图像识别、地图SDK集成、消息推送等能力。",
   },
-  { text: "熟悉使用 jest 编写 vm 层的 unit test。" },
+  { text: "熟悉Server-Sent Events(SSE)流式传输技术，实现双通道数据渲染和实时进度展示，优化页面响应时间至2秒内。" },
+  { text: "熟悉使用 jest 编写 vm 层的 unit test，保障代码质量和项目稳定性。" },
   {
     text: "熟悉使用 Webpack、Vite 工具做项目工程化，能不依赖官方脚手架搭建项目基础框架，熟练开发自定义 plugins 做自动化程序，以提高开发效率。",
   },
+  { text: "熟练使用 framer-motion、@react-spring/web 实现复杂动画效果，提升用户交互体验。" },
+  { text: "熟练使用 SEO 优化技术，通过语义化标签、meta(og协议)等手段提升搜索引擎收录率40%。" },
   { text: "熟练使用 git 等常用操作和 git hooks 进行代码和自动化管理。" },
   {
     text: "熟练使用 eslint 把控质量，使用 perttier 代码风格，使用 husky 做提交规范。",
@@ -18,6 +21,7 @@ export const skillsData: SkillItem[] = [
   {
     text: "了解 react 源码，fiber 对象，scheduler，reconciler，commit，diff 算法。",
   },
+  { text: "具备微前端架构设计能力，熟悉多语言国际化、BFF层开发等高级技术方案。" },
 ];
 
 // 工作经历数据
