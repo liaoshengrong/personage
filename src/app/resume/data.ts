@@ -1,133 +1,190 @@
-import { SkillItem, WorkExperience, Project, Education } from './types';
+import { SkillItem, WorkExperience, Project, Education } from "./types";
 
 // 个人技能数据
 export const skillsData: SkillItem[] = [
-  { text: '熟练掌握 React/Vue2/Vue3/Taro 小程序的开发使用。' },
-  { text: '熟练掌握 HTML/Css/Javascript/TypeScript 等常用语法。' },
-  { text: '熟悉微信小程序原生开发，具备AI图像识别、地图SDK集成、消息推送等能力。' },
-  { text: '熟悉使用 jest 编写 vm 层的 unit test。' },
-  { text: '熟悉使用 Webpack、Vite 工具做项目工程化，能不依赖官方脚手架搭建项目基础框架，熟练开发自定义 plugins 做自动化程序，以提高开发效率。' },
-  { text: '熟练使用 git 等常用操作和 git hooks 进行代码和自动化管理。' },
-  { text: '熟练使用 eslint 把控质量，使用 perttier 代码风格，使用 husky 做提交规范。' },
-  { text: '了解 react 源码，fiber 对象，scheduler，reconciler，commit，diff 算法。' },
+  { text: "熟练掌握 React/Vue2/Vue3/Taro 小程序的开发使用。" },
+  { text: "熟练掌握 HTML/Css/Javascript/TypeScript 等常用语法。" },
+  {
+    text: "熟悉微信小程序原生开发，具备AI图像识别、地图SDK集成、消息推送等能力。",
+  },
+  { text: "熟悉使用 jest 编写 vm 层的 unit test。" },
+  {
+    text: "熟悉使用 Webpack、Vite 工具做项目工程化，能不依赖官方脚手架搭建项目基础框架，熟练开发自定义 plugins 做自动化程序，以提高开发效率。",
+  },
+  { text: "熟练使用 git 等常用操作和 git hooks 进行代码和自动化管理。" },
+  {
+    text: "熟练使用 eslint 把控质量，使用 perttier 代码风格，使用 husky 做提交规范。",
+  },
+  {
+    text: "了解 react 源码，fiber 对象，scheduler，reconciler，commit，diff 算法。",
+  },
 ];
 
 // 工作经历数据
 export const workExperienceData: WorkExperience[] = [
   {
-    company: '深圳志远融通科技',
-    position: '前端开发工程师',
-    duration: '2022.8 - 2024.9',
-    description: '负责项目从 0 到 1 的独立开发搭建、组件/hooks 封装，参与 APP 项目的开发。',
-    techStack: ['React', 'React Native', 'Typescript', 'Jotai', 'Webpack', 'Jest']
+    company: "深圳华云中盛科技股份有限公司",
+    position: "前端开发工程师",
+    duration: "2024.9.18 - 至今",
+    description:
+      "主导负责腾讯SSV官网、腾讯技术公益和小程序项目的开发和维护，参与项目从需求评审到上线的全流程。",
+    techStack: [
+      "Nextjs",
+      "微信原生",
+      "React",
+      "Typescript",
+      "Tailwind Css",
+      "SSE",
+      "Less",
+      "Vue2",
+    ],
   },
   {
-    company: '中电金信软件',
-    position: '前端开发工程师',
-    duration: '2020.5 - 2022.8',
-    description: '前期负责数据展示页开发，后期负责需求分配、定制规范及图表组件封装等。',
-    techStack: ['React', 'Umi', 'Echarts', 'Redux']
-  }
+    company: "深圳志远融通科技",
+    position: "前端开发工程师",
+    duration: "2022.8 - 2024.9",
+    description:
+      "负责项目从 0 到 1 的独立开发搭建、组件/hooks 封装，参与 APP 项目的开发。",
+    techStack: [
+      "React",
+      "React Native",
+      "Typescript",
+      "Jotai",
+      "Webpack",
+      "Jest",
+    ],
+  },
+  {
+    company: "中电金信软件",
+    position: "前端开发工程师",
+    duration: "2020.5 - 2022.8",
+    description:
+      "前期负责数据展示页开发，后期负责需求分配、定制规范及图表组件封装等。",
+    techStack: ["React", "Umi", "Echarts", "Redux"],
+  },
 ];
 
 // 项目经验数据
 export const projectsData: Project[] = [
   {
-    title: '腾讯SSV官网&admin',
-    techStack: 'Nextjs、Tailwind Css、zustand、TDesign',
-    description: '项目描述：腾讯SSV官网是给各大机构介绍SSV产品能力的官方门户，主要服务对象是已合作机构和潜在用户群体，涉及产品展示、AI工具、S大会直播等核心功能模块。',
-    demoUrl: 'https://ssv.tencent.com',
+    title: "野朋友计划 小程序&admin",
+    techStack: "微信小程序原生、腾讯地图SDK、AI识别API",
+    description:
+      "项目描述：野朋友计划是给自然教育领域打造的AI识别平台，App同时发布在微信小程序平台，用户可以通过AI识别动植物并在地图上标记分享发现，涉及AI识别、地图定位、社交分享等核心功能模块。",
     points: [
-      '基于Nextjs框架能力，区分服务端渲染和客户端渲染组件，通过SSR/CSR混合模式将首屏加载时间优化至1.5s内。',
-      '利用语义化标签、meta(og协议)和媒体属性等做SEO优化，使搜索引擎收录率提升40%，自然流量增长35%。',
-      '使用framer-motion、@react-spring/web实现队列动画、循环动画等页面过渡效果，提升用户交互体验。',
-      '为解决AI Tools结果页面接口loading缓慢问题，与后端协商使用Server-Sent Events流式传输方案，使页面可以逐个显示AI回复结果，用户等待时间减少60%。',
-      '利用iframe容器特性实现S大会页面的live streaming能力，支持万人同时在线观看，直播延迟控制在3秒以内。',
-    ]
+      "基于微信小程序原生开发，集成AI图像识别能力，通过调用第三方AI服务实现动植物智能识别，识别准确率提升至85%以上。",
+      "接入腾讯地图SDK，实现地图渲染、动态获取和设置point、center、zoom等交互功能，支持10万+标记点同时展示。",
+      "集成地址搜索和经纬度逆解析服务，提供精准的地理位置信息服务，地址解析准确率达到95%。",
+      "利用微信小程序订阅消息能力，实现服务号消息推送功能，支持个性化推送策略，用户打开率提升30%。",
+      "开发配套的管理后台，支持内容审核、用户管理、数据统计等运营功能，为运营团队提供完整的数据支撑。",
+    ],
   },
   {
-    title: '野朋友计划 小程序&admin',
-    techStack: '微信小程序原生、腾讯地图SDK、AI识别API',
-    description: '项目描述：野朋友计划是给自然教育领域打造的AI识别平台，App同时发布在微信小程序平台，用户可以通过AI识别动植物并在地图上标记分享发现，涉及AI识别、地图定位、社交分享等核心功能模块。',
+    title: "腾讯技术公益&admin",
+    techStack: "Umijs、Less、SSE、@react-spring/web、动态弹幕计算组件、admin",
+    description:
+      "项目描述：腾讯技术公益是给技术志愿者和公益机构搭建的协作平台，App涉及志愿项目展示、技术能力匹配、报告结果页渲染、机构管理等核心功能模块，使用前端BFF层做配置区分和数据处理。",
+    demoUrl: "https://techforgood.qq.com/tools",
     points: [
-      '基于微信小程序原生开发，集成AI图像识别能力，通过调用第三方AI服务实现动植物智能识别，识别准确率提升至85%以上。',
-      '接入腾讯地图SDK，实现地图渲染、动态获取和设置point、center、zoom等交互功能，支持10万+标记点同时展示。',
-      '集成地址搜索和经纬度逆解析服务，提供精准的地理位置信息服务，地址解析准确率达到95%。',
-      '利用微信小程序订阅消息能力，实现服务号消息推送功能，支持个性化推送策略，用户打开率提升30%。',
-      '开发配套的管理后台，支持内容审核、用户管理、数据统计等运营功能，为运营团队提供完整的数据支撑。',
-    ]
+      "基于Umijs框架能力，配置多环境变量、动态路由、权限控制等，通过约定式路由将项目初始化时间减少50%。",
+      "使用双通道Server-Sent Events实现报告结果页的流式渲染，第2个SSE接口根据第1个SSE接口的返回结果动态确定响应数据，配合常规API请求渲染柱状图和列表卡片，将页面响应时间优化至2秒以内。",
+      "开发动态弹幕计算组件，使用双跑马灯实现弹幕渲染，通过动态计算Y轴位置实现弹幕的精准布局，支持千人同时在线互动不卡顿。",
+      "利用@react-spring/web实现页面过渡动画和交互效果，通过手势识别和物理引擎提升用户操作体验。",
+      "开发配套的管理后台，支持志愿项目管理、用户权限控制、数据统计分析等运营功能，为运营团队提供完整的数据支撑。",
+    ],
   },
   {
-    title: '8c Game 平台',
-    techStack: 'React + Typescript + Jotai',
-    description: '项目描述：该平台是给海外游戏做入口的 H5 页面，展示游戏部门所开发的项目入口。涉及登录、注册、个人中心、个人钱包、游戏列表、游戏分类、游戏数据、游戏道具以及道具商城等。',
+    title: "腾讯SSV官网&admin",
+    techStack: "Nextjs、Tailwind Css、zustand、TDesign",
+    description:
+      "项目描述：腾讯SSV官网是给各大机构介绍SSV产品能力的官方门户，主要服务对象是已合作机构和潜在用户群体，涉及产品展示、AI工具、S大会直播等核心功能模块。",
+    demoUrl: "https://ssv.tencent.com",
     points: [
-      '基于 react-cli 和 webpack 做基础搭建，环境变量注入、配置 less、文件压缩、组件库按需加载等。开发自定义 plugin，实现静态资源自动化枚举和自动化约定式路由，提高项目开发效率。',
-      '为保证 Mock 数据的时效性，实现自动化更新 Mock，简化流程至一条指令即可开启 Mock 环境。',
-      '通过 React.lazy、prefetch、splitChunks、Tree shaking 等技术做项目加载优化，将首屏时间优化至 1.9s~2.3s 之间。',
-      '利用 fixBabelImports、source map、compression-webpack-plugin 等优化项目体积至 60%。',
-      '使用 thread-loader 和 cache、resolve.modules、noParse 等配置项提高构建效率。',
-      '对 antd 进行二次封装，封装 GameList、HorizontalTabs、CommonModal、FormModal 等组件。',
-    ]
+      "基于Nextjs框架能力，区分服务端渲染和客户端渲染组件，通过SSR/CSR混合模式将首屏加载时间优化至1.5s内。",
+      "利用语义化标签、meta(og协议)和媒体属性等做SEO优化，使搜索引擎收录率提升40%，自然流量增长35%。",
+      "使用framer-motion、@react-spring/web实现队列动画、循环动画等页面过渡效果，提升用户交互体验。",
+      "为解决AI Tools结果页面接口loading缓慢问题，与后端协商使用Server-Sent Events流式传输方案，使页面可以逐个显示AI回复结果，用户等待时间减少60%。",
+      "利用iframe容器特性实现S大会页面的live streaming能力，支持万人同时在线观看，直播延迟控制在3秒以内。",
+    ],
+  },
+
+  {
+    title: "8c Game 平台",
+    techStack: "React + Typescript + Jotai",
+    description:
+      "项目描述：该平台是给海外游戏做入口的 H5 页面，展示游戏部门所开发的项目入口。涉及登录、注册、个人中心、个人钱包、游戏列表、游戏分类、游戏数据、游戏道具以及道具商城等。",
+    points: [
+      "基于 react-cli 和 webpack 做基础搭建，环境变量注入、配置 less、文件压缩、组件库按需加载等。开发自定义 plugin，实现静态资源自动化枚举和自动化约定式路由，提高项目开发效率。",
+      "为保证 Mock 数据的时效性，实现自动化更新 Mock，简化流程至一条指令即可开启 Mock 环境。",
+      "通过 React.lazy、prefetch、splitChunks、Tree shaking 等技术做项目加载优化，将首屏时间优化至 1.9s~2.3s 之间。",
+      "利用 fixBabelImports、source map、compression-webpack-plugin 等优化项目体积至 60%。",
+      "使用 thread-loader 和 cache、resolve.modules、noParse 等配置项提高构建效率。",
+      "对 antd 进行二次封装，封装 GameList、HorizontalTabs、CommonModal、FormModal 等组件。",
+    ],
   },
   {
-    title: 'Wealth',
-    techStack: 'React Native + Typescript + Nestjs + Jest',
-    description: '项目描述：保险公司推出的基金购买平台，App 同时发布在 iOS 和 Android 的应用市场，对于不同国家开发对应的功能模块，使用前端 BFF 层做配置以区分和数据处理。',
+    title: "Wealth",
+    techStack: "React Native + Typescript + Nestjs + Jest",
+    description:
+      "项目描述：保险公司推出的基金购买平台，App 同时发布在 iOS 和 Android 的应用市场，对于不同国家开发对应的功能模块，使用前端 BFF 层做配置以区分和数据处理。",
     points: [
-      '参与使用 React Native 开发 iOS、Android 和 Web 平台，利用 webpack 中的 resolve.extensions 配置项实现动态文件解析，以区分某些 Web 的特殊组件和页面文件。',
-      '为提高代码的可读性、可维护性以及方便书写 unit test，模仿 MVVM 架构模式分割代码层次。',
-      '利用 lokalise 和 git pre commit 实现双向国际化语言同步，以方便客户方修改国际化文案，实现自动化文件同步。',
-      '为减少页面请求以及定制化 API（App/Web、HK/SG），使用 Nestjs + GraphQL 开发 BFF 层。',
-      '配合后台使用双 Token 无感刷新模式，实现（Web）多系统之间的单点登录。',
-    ]
+      "参与使用 React Native 开发 iOS、Android 和 Web 平台，利用 webpack 中的 resolve.extensions 配置项实现动态文件解析，以区分某些 Web 的特殊组件和页面文件。",
+      "为提高代码的可读性、可维护性以及方便书写 unit test，模仿 MVVM 架构模式分割代码层次。",
+      "利用 lokalise 和 git pre commit 实现双向国际化语言同步，以方便客户方修改国际化文案，实现自动化文件同步。",
+      "为减少页面请求以及定制化 API（App/Web、HK/SG），使用 Nestjs + GraphQL 开发 BFF 层。",
+      "配合后台使用双 Token 无感刷新模式，实现（Web）多系统之间的单点登录。",
+    ],
   },
   {
-    title: 'Wealth admin',
-    techStack: 'Vue3、Vite、pinia',
-    description: '项目描述：针对保险的 Wealth 项目的数据，开发的后台管理项目，以便查看/管理用户、收益、偏好等用户信息。',
+    title: "Wealth admin",
+    techStack: "Vue3、Vite、pinia",
+    description:
+      "项目描述：针对保险的 Wealth 项目的数据，开发的后台管理项目，以便查看/管理用户、收益、偏好等用户信息。",
     points: [
-      '增加页面配置，统一管理页面形式，以区分是否需要 keep-alive 做路由状态缓存。',
-      '二次封装 Element UI 基础组件，以统一项目组件的风格和使用。',
-      '配置 run dev:mock，利用 vite-plugin-mock 实现前端 mock 环境和数据。',
-      '利用 vite.config 中 rollupOptions.output.manualChunks 做分包策略，以避免 node_modules 下的文件多次请求和多次打包。',
-    ]
+      "增加页面配置，统一管理页面形式，以区分是否需要 keep-alive 做路由状态缓存。",
+      "二次封装 Element UI 基础组件，以统一项目组件的风格和使用。",
+      "配置 run dev:mock，利用 vite-plugin-mock 实现前端 mock 环境和数据。",
+      "利用 vite.config 中 rollupOptions.output.manualChunks 做分包策略，以避免 node_modules 下的文件多次请求和多次打包。",
+    ],
   },
   {
-    title: 'Ko咖啡小程序',
-    techStack: 'Taro + Typescript',
-    description: '项目描述：给自动咖啡制作设备提供小程序点单功能，使用微信扫码进入小程序，具备基本的点单功能和模块。',
+    title: "Ko咖啡小程序",
+    techStack: "Taro + Typescript",
+    description:
+      "项目描述：给自动咖啡制作设备提供小程序点单功能，使用微信扫码进入小程序，具备基本的点单功能和模块。",
     points: [
-      '基于 Taro 完成项目基本搭建（包含 pages、window、tabBar、permission 等），利用 Taro 内置 API 完成登录、支付和分享等功能。',
-      '因小程序 bundle 体积问题，利用 config subpackages 配置实现主包加载和次包懒加载功能优化。',
-      '利用 Taro 内置 getCurrentPages 和 relaunch 来避开路由栈（最大：10）的限制问题。',
-      '使用 Web API 中的 IntersectionObserver 实现咖啡列表页接口分页请求。',
-    ]
+      "基于 Taro 完成项目基本搭建（包含 pages、window、tabBar、permission 等），利用 Taro 内置 API 完成登录、支付和分享等功能。",
+      "因小程序 bundle 体积问题，利用 config subpackages 配置实现主包加载和次包懒加载功能优化。",
+      "利用 Taro 内置 getCurrentPages 和 relaunch 来避开路由栈（最大：10）的限制问题。",
+      "使用 Web API 中的 IntersectionObserver 实现咖啡列表页接口分页请求。",
+    ],
   },
   {
-    title: '腾讯 Databrain 数据大脑',
-    techStack: 'Umijs + Typescript + Echats',
-    description: '项目描述：腾讯共培项目，打造数据大脑平台，对 Mobile、PC、Console 平台的游戏数据进行经济、舆论、情报分析。利用微前端技术，将其分为情报、经分、舆情、看板系统。',
+    title: "腾讯 Databrain 数据大脑",
+    techStack: "Umijs + Typescript + Echats",
+    description:
+      "项目描述：腾讯共培项目，打造数据大脑平台，对 Mobile、PC、Console 平台的游戏数据进行经济、舆论、情报分析。利用微前端技术，将其分为情报、经分、舆情、看板系统。",
     points: [
-      '基于开发业务需求封装一些公用的 React hook，以便其他开发人员使用。',
-      '因有大量的图表数据展示需要，基于 Echats 封装常用的图表组件。',
-      '利用 umi locale 配置对应的 JSON 文件和内置 setLocale API，以实现多语言国际化。',
-      '重构原有的页面，将逻辑部分进行抽离，封装成可复用组件。',
-    ]
-  }
+      "基于开发业务需求封装一些公用的 React hook，以便其他开发人员使用。",
+      "因有大量的图表数据展示需要，基于 Echats 封装常用的图表组件。",
+      "利用 umi locale 配置对应的 JSON 文件和内置 setLocale API，以实现多语言国际化。",
+      "重构原有的页面，将逻辑部分进行抽离，封装成可复用组件。",
+    ],
+  },
 ];
 
 // 教育经历数据
 export const educationData: Education[] = [
   {
-    school: '西南科技大学',
-    degree: '本科（计算机科学与技术）',
-    duration: '2022.03 - 2024.06',
-    description: '主修课程：数据结构、操作系统、计算机组成原理、计算机网络、Web 开发'
+    school: "西南科技大学",
+    degree: "本科（计算机科学与技术）",
+    duration: "2022.03 - 2024.06",
+    description:
+      "主修课程：数据结构、操作系统、计算机组成原理、计算机网络、Web 开发",
   },
   {
-    school: '南昌教育学院',
-    degree: '大专',
-    duration: '2017.09 - 2020.07'
-  }
+    school: "南昌教育学院",
+    degree: "大专",
+    duration: "2017.09 - 2020.07",
+  },
 ];
