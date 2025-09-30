@@ -26,11 +26,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       </div>
       
       {/* 技术栈标签显示 */}
-      <div className="flex flex-wrap gap-1 mb-4">
+      <div className="flex flex-wrap gap-1 mb-4 leading-relaxed">
         {techStackArray.map((tech, index) => (
           <span 
             key={index} 
-            className="bg-green-50 text-green-700 px-2 py-0.5 rounded-md text-sm whitespace-nowrap"
+            className="bg-green-50 text-green-700 px-2 py-0.5 rounded-md text-sm whitespace-nowrap leading-relaxed"
           >
             {tech}
           </span>
@@ -43,13 +43,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       </p>
       
       {/* 项目亮点 */}
-      <ol className="space-y-2 text-gray-700">
+      <ol className="space-y-2 text-gray-700 leading-relaxed">
         {points.map((point, index) => (
-          <li key={index} className="flex items-start">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs mr-2 mt-0.5">
+          <li key={index} className="flex items-start leading-relaxed">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs mr-2 mt-0.5 leading-relaxed">
               {index + 1}
             </span>
-            <span>{point}</span>
+            <span className="leading-relaxed">{point}</span>
           </li>
         ))}
       </ol>
