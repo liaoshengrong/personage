@@ -36,12 +36,12 @@ const Resume: React.FC = () => {
 
   return (
     <PageContainer className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-      <div className="xs:px-5">
+      <div className="px-4 sm:px-5">
         <Navbar />
       </div>
-      <div className="max-w-5xl mx-auto mt-6 mb-12">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 ease-in-out">
-          <div className="p-8 md:p-10">
+      <div className="max-w-5xl mx-auto mt-4 sm:mt-6 mb-8 sm:mb-12">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden transition-all duration-300 ease-in-out">
+          <div className="p-4 sm:p-6 md:p-10">
             {/* 头部信息 */}
             <Header {...personalInfo} />
 
