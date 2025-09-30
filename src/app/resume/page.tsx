@@ -19,7 +19,7 @@ const Resume: React.FC = () => {
   const personalInfo = {
     name: '廖声荣',
     age: '26岁',
-    experience: '4年前端开发经验',
+    experience: '5年前端开发经验',
     email: '14796743426@163.com',
     website: 'https://shengrong.netlify.app/'
   };

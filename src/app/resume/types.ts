@@ -15,6 +15,7 @@ export interface Project {
   title: string;
   techStack: string;
   description: string;
+  demoUrl?: string;
   points: string[];
 }
 

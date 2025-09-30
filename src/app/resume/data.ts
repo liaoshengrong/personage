@@ -35,6 +35,7 @@ export const projectsData: Project[] = [
     title: '腾讯SSV官网&admin',
     techStack: 'Nextjs、Tailwind Css、zustand、TDesign',
     description: '项目描述：该平台是腾讯ssv用于给各大机构介绍关于ssv的信息、产品、功能等作用，主要服务对象是已和ssv合作的机构和需要该能力的用户群体。',
+    demoUrl: 'https://ssv.tencent.com',
     points: [
       '基于Nextjs框架能力，区分服务端渲染和客户端渲染组件，以提升页面渲染性能',
       '利用语义化标签、meta(og协议)和媒体属性等，做项目seo优化',
