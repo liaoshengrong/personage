@@ -4,6 +4,7 @@ import { SkillItem, WorkExperience, Project, Education } from './types';
 export const skillsData: SkillItem[] = [
   { text: '熟练掌握 React/Vue2/Vue3/Taro 小程序的开发使用。' },
   { text: '熟练掌握 HTML/Css/Javascript/TypeScript 等常用语法。' },
+  { text: '熟悉微信小程序原生开发，具备AI图像识别、地图SDK集成、消息推送等能力。' },
   { text: '熟悉使用 jest 编写 vm 层的 unit test。' },
   { text: '熟悉使用 Webpack、Vite 工具做项目工程化，能不依赖官方脚手架搭建项目基础框架，熟练开发自定义 plugins 做自动化程序，以提高开发效率。' },
   { text: '熟练使用 git 等常用操作和 git hooks 进行代码和自动化管理。' },
@@ -42,6 +43,18 @@ export const projectsData: Project[] = [
       '使用framer-motion,@react-spring/web第三方库，实现队列动画，循环动画等过渡',
       '为解决AI Tools结果页面接口loading缓慢问题，与后端协商使用Server-Sent Events流失传输方案，使页面可以逐个显示AI回复结果',
       '利用iframe的容器特性，实现S大会页面的live streaming能力',
+    ]
+  },
+  {
+    title: '野朋友计划 小程序&admin',
+    techStack: '微信小程序原生、腾讯地图SDK、AI识别API',
+    description: '项目描述：野朋友计划是一个结合AI识别和地图定位的自然教育平台，用户可以通过小程序识别动植物，并在地图上标记和分享发现的自然生物。',
+    points: [
+      '基于微信小程序原生开发，集成AI图像识别能力，实现动植物智能识别功能',
+      '接入腾讯地图SDK，实现地图渲染、动态获取和设置point、center、zoom等交互功能',
+      '集成地址搜索和经纬度逆解析服务，提供精准的地理位置信息服务',
+      '利用微信小程序订阅消息能力，实现服务号消息推送功能，及时通知用户相关动态',
+      '开发配套的管理后台，支持内容审核、用户管理、数据统计等运营功能',
     ]
   },
   {
