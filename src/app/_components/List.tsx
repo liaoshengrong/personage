@@ -25,7 +25,7 @@ const List = () => {
       setIsChoose(false);
       setTimeout(() => {
         setChooseData(undefined);
-      }, 1000);
+      }, 200);
     } else {
       setChooseData(item);
       setIsChoose(true);
