@@ -15,6 +15,7 @@ const List = () => {
   const [mdContent, setMdContent] = useState<string>("");
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
   const onChoose = (item: DataType, index: number) => {
     if (isMobile) {
       router.push(`/detail/${index}`);
@@ -39,10 +40,21 @@ const List = () => {
   }, [chooseData]);
 
   return (
-    <div className="max-w-screen-lg p-6 flex flex-col mx-auto xs:w-full xs:p-0 xs:m-0 xs:block">
-      <div className="flex flex-1 justify-center gap-7 pb-8 items-start">
+    <div className="max-w-7xl mx-auto px-6 py-12 xs:px-4 xs:py-6">
+      {/* Section Header */}
+      <div className="text-center mb-16 xs:mb-8">
+        <h1 className="text-5xl xs:text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 neon-text">
+          Latest Articles
+        </h1>
+        <p className="text-xl xs:text-lg text-medium-contrast max-w-2xl mx-auto font-medium">
+          Exploring the frontiers of technology and creativity through code
+        </p>
+      </div>
+
+      <div className="flex flex-1 justify-center gap-8 pb-8 items-start">
+        {/* Articles List */}
         <div
-          className="flex flex-col gap-4 transition-all h-fit xs:w-full xs:overflow-hidden xs:gap-0"
+          className="flex flex-col gap-6 transition-all h-fit xs:w-full xs:overflow-hidden xs:gap-4"
           ref={ref}
         >
           {data.map((item, index) => (
@@ -55,16 +67,30 @@ const List = () => {
             />
           ))}
         </div>
+
+        {/* Article Preview Panel */}
         <div
-          className="rounded-lg flex-shrink-0 transition-all duration-1000 overflow-y-auto p-5 sticky top-0 max-h-screen xs:hidden"
+          className="rounded-2xl flex-shrink-0 transition-all duration-1000 overflow-y-auto p-8 max-h-screen xs:hidden glass hover-lift"
           style={{
-            width: isChoose ? "750px" : 0,
+            width: isChoose ? "800px" : 0,
             height: isChoose ? height + "px" : 0,
             opacity: isChoose ? 1 : 0,
+            transform: isChoose ? "scale(1)" : "scale(0.95)",
           }}
         >
-          <MDRender content={mdContent} />
+          <div className="relative">
+            <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full blur-2xl opacity-30"></div>
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full blur-2xl opacity-20"></div>
+            <MDRender content={mdContent} />
+          </div>
         </div>
+      </div>
+
+      {/* Background Elements */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/10 to-blue-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/10 to-pink-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-to-r from-blue-500/10 to-cyan-600/10 rounded-full blur-2xl"></div>
       </div>
     </div>
   );
