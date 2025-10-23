@@ -9,16 +9,17 @@ import Image from "next/image";
 
 import "highlight.js/styles/atom-one-dark.css";
 
-const Markdown = ({ content }: { content: string }) => {
+const Markdown = ({ content, theme }: { content: string; theme?: "dark" | "white" }) => {
   const [visible, setVisible] = useState(false);
   const [previewSrc, setPreviewSrc] = useState("");
+  const className = theme === "white" ? "prose prose-invert max-w-none text-gray-100" : "prose prose-zinc max-w-none";
 
   return (
     <div>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
-        className="prose prose-zinc max-w-none"
+        className={className}
         components={{
           img: ({ node, ...props }) => (
             <Tooltip content="点击预览图片">
@@ -39,18 +40,17 @@ const Markdown = ({ content }: { content: string }) => {
           code: ({ node, className, children, ...props }: any) => {
             const isInline = !className || !className.includes('language-');
             if (isInline) {
-              // 内联代码样式 - 只用字体颜色，无背景
-              // 去掉反引号
+              // 内联代码样式 - 改为白色主题
               return (
                 <span
-                  className="text-blue-600 font-mono text-sm font-medium"
+                  className="text-cyan-300 font-mono text-sm font-medium bg-gray-800/50 px-1 py-0.5 rounded"
                   {...props}
                 >
                   {children}
                 </span>
               );
             }
-            // 代码块样式保持不变
+            // 代码块样式 - 使用深色主题
             return (
               <code className={className} {...props}>
                 {children}
@@ -80,12 +80,12 @@ const Markdown = ({ content }: { content: string }) => {
             </tr>
           ),
           th: ({ children }) => (
-            <th className="px-4 py-3 text-left text-sm font-medium text-black border-b border-black">
+            <th className="px-4 py-3 text-left text-sm font-medium text-gray-100 border-b border-gray-300">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="px-4 py-3 text-sm text-black border-b border-black border-opacity-20">
+            <td className="px-4 py-3 text-sm text-gray-200 border-b border-gray-300 border-opacity-30">
               {children}
             </td>
           ),

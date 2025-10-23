@@ -69,7 +69,7 @@ const List = () => {
         </div>
 
         {/* Article Preview Panel */}
-        <div
+         <div
           className="rounded-2xl flex-shrink-0 transition-all duration-1000 overflow-y-auto p-8 max-h-screen xs:hidden glass hover-lift"
           style={{
             width: isChoose ? "800px" : 0,
@@ -81,7 +81,7 @@ const List = () => {
           <div className="relative">
             <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full blur-2xl opacity-30"></div>
             <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full blur-2xl opacity-20"></div>
-            <MDRender content={mdContent} />
+            <MDRender content={mdContent} theme="white" />
           </div>
         </div>
       </div>
