@@ -16,7 +16,7 @@ const url = "http://localhost:8888/.netlify/functions/ai-chat";
 export default function ChatCom() {
   const [message, setMessage] = useState<string>("");
   const [chatHistory, setChatHistory] = useState<Message[]>([
-    { role: "system", content: "你好，我是Mark的AI大模型。" },
+    { role: "system", content: "你好，我是你的AI智能助手。" },
   ]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [streamingMessage, setStreamingMessage] = useState<string>("");
@@ -85,99 +85,105 @@ export default function ChatCom() {
   const isUser = (item: Message) => item.role === "user";
 
   return (
-    <div className="flex flex-col w-full xs:h-full max-w-4xl mx-auto bg-white rounded-xl shadow-lg mt-5 xs:mt-0 animate__animated animate__fadeInUp xs:rounded-none min-h-[calc(100vh-300px)] max-h-[calc(100vh-140px)] xs:max-h-full xs:flex-1">
-      {/* 头部 */}
-      <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-xl xs:rounded-none">
-        <div className="flex items-center justify-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-gray-700 font-medium">AI 助手在线</span>
+    <div className="flex flex-col w-full xs:h-full max-w-4xl mx-auto rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-slate-900/80 to-slate-800/80 border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 mt-5 xs:mt-0 animate__animated animate__fadeInUp xs:rounded-none min-h-[calc(100vh-300px)] max-h-[calc(100vh-140px)] xs:max-h-full xs:flex-1">
+      {/* Header with Glassmorphism Effect */}
+      <div className="w-full p-6 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-600/20 backdrop-blur-sm border-b border-cyan-500/30 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 via-blue-400/10 to-purple-400/10 animate-pulse"></div>
+        <div className="relative z-10">
+          <div className="flex items-center justify-center space-x-2 mb-2">
+            <div className="w-3 h-3 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(56,189,248,0.8)]"></div>
+            <span className="text-cyan-200 font-medium">AI助手在线</span>
           </div>
-        </div>
-        <div className="mt-2 text-center">
-          <GradientText text="个人AI大模型，欢迎体验" />
+          <GradientText text="个人AI模型，欢迎体验" />
+          <div className="mt-2 text-sm text-cyan-300/80 font-medium">随时为您提供智能对话服务</div>
         </div>
       </div>
 
-      {/* 聊天历史 */}
+      {/* Chat History Container */}
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar bg-gray-50"
+        className="flex-1 overflow-y-auto p-6 space-y-6 hide-scrollbar bg-gradient-to-b from-slate-900/50 to-slate-800/30"
         style={isMobile ? {} : { maxHeight: "calc(100vh - 280px)" }}
       >
         {chatHistory.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${isUser(msg) ? "justify-end" : "justify-start"}`}
+            className={`flex ${isUser(msg) ? "justify-end" : "justify-start"} animate__animated animate__fadeInUp`}
+            style={{animationDelay: `${index * 0.1}s`}}
           >
             <div
-              className={`max-w-[80%] xs:max-w-[90%] rounded-2xl px-4 py-3 shadow-sm ${
+              className={`max-w-[80%] xs:max-w-[90%] rounded-2xl px-6 py-4 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl ${
                 isUser(msg)
-                  ? "bg-blue-500 text-white rounded-br-none"
-                  : "bg-white text-gray-800 rounded-bl-none border border-gray-100"
+                  ? "bg-gradient-to-br from-cyan-500/90 to-blue-600/90 text-white border border-cyan-400/50 shadow-cyan-500/20 hover:shadow-cyan-500/30 rounded-br-none"
+                  : "bg-gradient-to-br from-slate-800/90 to-slate-700/90 text-gray-100 border border-cyan-500/30 shadow-blue-500/10 hover:shadow-blue-500/20 rounded-bl-none"
               }`}
             >
+              <div className={`mb-2 text-xs font-semibold ${
+                isUser(msg) ? "text-cyan-200" : "text-blue-300"
+              }`}>
+                {isUser(msg) ? "您" : "AI助手"}
+              </div>
               {isUser(msg) ? (
                 <div className="whitespace-pre-wrap">{msg.content}</div>
               ) : (
-                <MDRender content={msg.content} />
+                <MDRender content={msg.content} theme="white" />
               )}
             </div>
           </div>
         ))}
         {streamingMessage && (
-          <div className="flex justify-start">
-            <div className="max-w-[80%] xs:max-w-[90%] bg-white text-gray-800 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm border border-gray-100">
-              <MDRender content={streamingMessage} />
+          <div className="flex justify-start animate__animated animate__fadeIn">
+            <div className="max-w-[80%] xs:max-w-[90%] bg-gradient-to-br from-slate-800/90 to-slate-700/90 text-gray-100 rounded-2xl rounded-bl-none px-6 py-4 shadow-lg backdrop-blur-sm border border-cyan-500/30 shadow-blue-500/10">
+              <MDRender content={streamingMessage} theme="white" />
             </div>
           </div>
         )}
         {isLoading && !streamingMessage && (
-          <div className="flex justify-center py-2">
-            <div className="flex space-x-1">
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-              <div
-                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                style={{ animationDelay: "0.2s" }}
-              ></div>
-              <div
-                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                style={{ animationDelay: "0.4s" }}
-              ></div>
+          <div className="flex justify-start mb-4 animate__animated animate__fadeIn">
+            <div className="bg-gradient-to-r from-slate-800/90 to-slate-700/90 border border-cyan-500/30 rounded-2xl px-6 py-4 backdrop-blur-sm shadow-lg shadow-blue-500/10">
+              <div className="flex items-center space-x-3">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce shadow-[0_0_4px_rgba(56,189,248,0.8)]"></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                </div>
+                <span className="text-sm text-gray-300">AI正在思考中...</span>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* 输入区域 */}
-      <div className="p-4 border-t border-gray-200 bg-white rounded-b-xl xs:rounded-none">
+      {/* Input Area with Glassmorphism */}
+      <div className="p-6 border-t border-cyan-500/20 bg-gradient-to-t from-slate-900/50 to-transparent backdrop-blur-sm">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             sendMessage();
           }}
-          className="flex items-end space-x-2"
+          className="flex items-end space-x-4"
         >
           <div className="flex-1 relative">
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="有问题尽管问我，按回车键发送..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition duration-200"
+              placeholder="输入您的问题，按Enter发送..."
+              className="w-full px-4 py-3 bg-slate-800/50 border border-cyan-500/30 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none transition-all duration-300 backdrop-blur-sm"
               rows={2}
             />
-            <div className="absolute bottom-2 right-2 text-xs text-gray-400">
-              Enter 发送 · Shift+Enter 换行
+            <div className="absolute bottom-3 right-4 text-xs text-gray-400">
+              按Enter发送 · Shift+Enter换行
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
           </div>
           <button
             type="submit"
             disabled={!message.trim() || isLoading}
-            className={`px-5 py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center ${
+            className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center transform hover:scale-105 active:scale-95 shadow-lg ${
               !message.trim() || isLoading
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                ? "bg-gray-600/50 text-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500 shadow-cyan-500/25 hover:shadow-cyan-500/40"
             }`}
           >
             {isLoading ? (

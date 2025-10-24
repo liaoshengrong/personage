@@ -41,17 +41,7 @@ const List = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 xs:px-4 xs:py-6">
-      {/* Section Header */}
-      <div className="text-center mb-16 xs:mb-8">
-        <h1 className="text-5xl xs:text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 neon-text">
-          Latest Articles
-        </h1>
-        <p className="text-xl xs:text-lg text-medium-contrast max-w-2xl mx-auto font-medium">
-          Exploring the frontiers of technology and creativity through code
-        </p>
-      </div>
-
-      <div className="flex flex-1 justify-center gap-8 pb-8 items-start">
+      <div className="flex flex-1 justify-center gap-8 pb-8 items-start" style={{gap:isChoose?"32px":"0"}}>
         {/* Articles List */}
         <div
           className="flex flex-col gap-6 transition-all h-fit xs:w-full xs:overflow-hidden xs:gap-4"
@@ -76,6 +66,7 @@ const List = () => {
             height: isChoose ? height + "px" : 0,
             opacity: isChoose ? 1 : 0,
             transform: isChoose ? "scale(1)" : "scale(0.95)",
+            padding: isChoose ? "32px" : "0",
           }}
         >
           <div className="relative">

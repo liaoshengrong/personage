@@ -61,7 +61,7 @@ const Perview = ({ data, index, onChoose, isActive }: IProps) => {
             </div>
             
             {/* Tag */}
-              <span className="text-xs text-medium-contrast font-medium bg-gray-800/80 px-3 py-1 rounded-full border border-cyan-500/30 backdrop-blur-sm">
+              <span className={`text-xs text-medium-contrast font-medium px-3 py-1 rounded-full border backdrop-blur-sm ${getTagColor(tag)}`}>
                 {tag}
               </span>
           </div>
@@ -84,7 +84,7 @@ const Perview = ({ data, index, onChoose, isActive }: IProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-400">Click to read</span>
+              <span className="text-xs text-gray-400">点击阅读</span>
             </div>
             
             {isActive && !isMobile && (
@@ -94,7 +94,7 @@ const Perview = ({ data, index, onChoose, isActive }: IProps) => {
                 onClick={(e) => e.stopPropagation()}
                 prefetch
               >
-                Read More
+                阅读更多
               </Link>
             )}
           </div>

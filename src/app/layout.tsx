@@ -6,27 +6,27 @@ import "tdesign-react/dist/tdesign.css";
 const logo = "https://cdn-digital.ssv.qq.com/upload//s2024/s-logo.png";
 
 export const metadata: Metadata = {
-  title: "Mark's Digital Space - Future of Technology",
-  description: "Exploring the frontiers of technology and creativity through code. A modern tech blog by Mark Liao featuring AI, frontend development, and digital innovation.",
-  keywords: "Mark Liao, tech blog, AI, frontend development, React, TypeScript, JavaScript, web development, programming, digital innovation, technology",
-  authors: [{ name: "Mark Liao", url: "https://shengrong.netlify.app" }],
+  title: "廖声荣的数字空间 - 技术未来",
+  description: "通过代码探索技术与创意的边界。廖声荣的现代技术博客，涵盖AI、前端开发和数字创新。",
+  keywords: "廖声荣, 技术博客, AI, 前端开发, React, TypeScript, JavaScript, 网页开发, 编程, 数字创新, 技术",
+  authors: [{ name: "廖声荣", url: "https://shengrong.netlify.app" }],
   openGraph: {
     type: "website",
     url: "https://shengrong.netlify.app",
-    title: "Mark's Digital Space - Future of Technology",
-    description: "Exploring the frontiers of technology and creativity through code. A modern tech blog featuring AI, frontend development, and digital innovation.",
-    siteName: "Mark's Digital Space",
+    title: "廖声荣的数字空间 - 技术未来",
+    description: "通过代码探索技术与创意的边界。现代技术博客，涵盖AI、前端开发和数字创新。",
+    siteName: "廖声荣的数字空间",
     images: [{ 
       url: logo,
       width: 1200,
       height: 630,
-      alt: "Mark's Digital Space"
+      alt: "廖声荣的数字空间"
     }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mark's Digital Space - Future of Technology",
-    description: "Exploring the frontiers of technology and creativity through code.",
+    title: "廖声荣的数字空间 - 技术未来",
+    description: "通过代码探索技术与创意的边界。",
     images: [logo],
   },
   robots: {
@@ -51,7 +51,7 @@ type Props = Readonly<{
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

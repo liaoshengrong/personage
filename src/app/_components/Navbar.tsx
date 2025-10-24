@@ -64,7 +64,7 @@ const Navbar = () => {
             href="/" 
             className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 hover:from-cyan-300 hover:via-blue-400 hover:to-purple-500 transition-all duration-300 neon-text"
           >
-            MARK LIAO
+            廖声荣
           </Link>
         </div>
 

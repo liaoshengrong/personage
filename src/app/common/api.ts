@@ -38,7 +38,7 @@ export const sendToAiChat = async ({
   });
 
   const reader = response.body?.getReader();
-  if (!reader) throw new Error("No reader available");
+  if (!reader) throw new Error("无法获取数据读取器");
 
   let fullResponse = "";
   let buffer = "";

@@ -93,7 +93,29 @@
 import React from "react";
 
 const StopBack = () => {
-  return <div>StopBack</div>;
+  return (
+    <div className="text-center py-8">
+      {/* Section Header */}
+      <div className="text-center mb-8 xs:mb-6">
+        <div className="relative inline-block mb-3 xs:mb-4">
+          <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-2xl blur-lg opacity-60"></div>
+          <h2 className="relative text-3xl xs:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 neon-text tracking-wide">
+            路由拦截演示
+          </h2>
+        </div>
+        <p className="text-base xs:text-sm text-medium-contrast max-w-xl mx-auto font-medium leading-relaxed">
+          浏览器历史记录管理和路由拦截技术展示
+        </p>
+        <div className="flex justify-center mt-4 xs:mt-3">
+          <div className="h-1 w-16 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full"></div>
+        </div>
+      </div>
+      
+      <div className="text-2xl font-bold text-gray-700">
+        StopBack
+      </div>
+    </div>
+  );
 };
 
 export default StopBack;

@@ -8,16 +8,6 @@ const Index = () => {
     <PageContainer>
       <Navbar />
       <div className="min-h-screen px-6 py-12 xs:px-4 xs:py-6">
-        {/* Page Header */}
-        <div className="text-center mb-16 xs:mb-8">
-          <h1 className="text-5xl xs:text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 neon-text">
-            Technical Skills
-          </h1>
-          <p className="text-xl xs:text-lg text-medium-contrast max-w-2xl mx-auto font-medium">
-            Proficiency levels across various technologies and frameworks
-          </p>
-        </div>
-
         {/* Skills Progress Section */}
         <div className="max-w-4xl mx-auto">
           <div className="glass rounded-2xl p-8 xs:p-6 backdrop-blur-lg border border-white/10 hover-lift">

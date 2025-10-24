@@ -78,38 +78,56 @@ const DragMouse = () => {
   };
 
   return (
-    <div className="border rounded-lg relative w-[800px] h-[550px] bg-white mt-5 mx-auto overflow-hidden xs:w-full">
-      <div
-        ref={ref}
-        className="absolute top-0 left-0 h-full bg-gray-100 opacity-50 flex py-4"
-        style={{
-          transform: `translateX(${translateX}px)`,
-          transition: isNeedDur ? "transform 0.3s ease" : "none",
-        }}
-        onMouseDown={(e) => {
-          mouseRef.current.isDown = true;
-          mouseRef.current.startX = e.clientX;
-        }}
-        onTouchStart={(e) => {
-          mouseRef.current.isDown = true;
-          mouseRef.current.startX = e.touches[0].clientX;
-        }}
-        onMouseMove={(e) => onMove(e.clientX)}
-        onTouchMove={(e) => onMove(e.touches[0].clientX)}
-        onTouchEnd={onEnd}
-        onMouseUp={onEnd}
-        onMouseLeave={onEnd}
-      >
-        {arr.map((item) => (
-          <div
-            className="w-[800px] xs:w-[400px] h-full flex-shrink-0  border-r px-4 cursor-grab active:cursor-grabbing"
-            key={item}
-          >
-            <span className="flex justify-center items-center h-full bg-pink-300 rounded-lg text-2xl select-none">
-              {item}
-            </span>
-          </div>
-        ))}
+    <div className="relative">
+      {/* Section Header */}
+      <div className="text-center mb-8 xs:mb-6">
+        <div className="relative inline-block mb-3 xs:mb-4">
+          <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-2xl blur-lg opacity-60"></div>
+          <h2 className="relative text-3xl xs:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 neon-text tracking-wide">
+            拖拽滑动体验
+          </h2>
+        </div>
+        <p className="text-base xs:text-sm text-medium-contrast max-w-xl mx-auto font-medium leading-relaxed">
+          鼠标拖拽或触摸滑动，体验流畅的交互效果
+        </p>
+        <div className="flex justify-center mt-4 xs:mt-3">
+          <div className="h-1 w-16 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full"></div>
+        </div>
+      </div>
+      
+      <div className="border rounded-lg relative w-[800px] h-[550px] bg-white mt-5 mx-auto overflow-hidden xs:w-full">
+        <div
+          ref={ref}
+          className="absolute top-0 left-0 h-full bg-gray-100 opacity-50 flex py-4"
+          style={{
+            transform: `translateX(${translateX}px)`,
+            transition: isNeedDur ? "transform 0.3s ease" : "none",
+          }}
+          onMouseDown={(e) => {
+            mouseRef.current.isDown = true;
+            mouseRef.current.startX = e.clientX;
+          }}
+          onTouchStart={(e) => {
+            mouseRef.current.isDown = true;
+            mouseRef.current.startX = e.touches[0].clientX;
+          }}
+          onMouseMove={(e) => onMove(e.clientX)}
+          onTouchMove={(e) => onMove(e.touches[0].clientX)}
+          onTouchEnd={onEnd}
+          onMouseUp={onEnd}
+          onMouseLeave={onEnd}
+        >
+          {arr.map((item) => (
+            <div
+              className="w-[800px] xs:w-[400px] h-full flex-shrink-0  border-r px-4 cursor-grab active:cursor-grabbing"
+              key={item}
+            >
+              <span className="flex justify-center items-center h-full bg-pink-300 rounded-lg text-2xl select-none">
+                {item}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
