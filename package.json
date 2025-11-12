@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 8200",
+    "api": "netlify dev",
     "build": "node scripts/handXlsxToJson.js && next build",
     "start": "next start",
     "lint": "next lint"

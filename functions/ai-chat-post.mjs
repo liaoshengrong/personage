@@ -15,18 +15,31 @@ export default async (event) => {
   try {
     let requestBody;
     
-    // 解析请求体
-    if (!event.body) {
+    // 解析请求体 - 处理ReadableStream
+    if (event.body) {
+      if (typeof event.body === 'string') {
+        // 如果body已经是字符串，直接解析
+        requestBody = JSON.parse(event.body);
+      } else if (event.body instanceof ReadableStream || typeof event.body.getReader === 'function') {
+        // 如果是ReadableStream，读取内容
+        const reader = event.body.getReader();
+        const chunks = [];
+        
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+        
+        const bodyBuffer = Buffer.concat(chunks);
+        const bodyString = bodyBuffer.toString('utf-8');
+        requestBody = JSON.parse(bodyString);
+      } else {
+        // 其他情况，尝试直接解析
+        requestBody = JSON.parse(event.body);
+      }
+    } else {
       throw new Error('No request body provided');
-    }
-    
-    try {
-      // 简化请求体解析，在非stream模式下，body通常是字符串或可以直接转换
-      requestBody = typeof event.body === 'string' 
-        ? JSON.parse(event.body) 
-        : JSON.parse(JSON.stringify(event.body));
-    } catch (parseError) {
-      throw new Error(`Invalid JSON in request body: ${parseError.message}`);
     }
 
     console.log('Request body parsed:', requestBody);
@@ -51,9 +64,17 @@ export default async (event) => {
 
     // 获取完整响应数据
     const responseData = await res.json();
+
+    console.log(responseData,'responseDataresponseData');
+
+    const resMessages = [
+      ...requestBody.messages,
+      responseData.choices[0].message,
+    ]
+    
     
     // 返回JSON格式响应
-    return createJsonResponse(responseData, 200);
+    return createJsonResponse({messages:resMessages,code:0}, 200);
 
     // "NetlifyUserError: Function returned an unsupported value. Accepted types are 'Response' or 'undefined'"
 
