@@ -32,7 +32,10 @@ const Index = () => {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageSchema, null, 0),
+        }}
+        suppressHydrationWarning
       />
       <PageContainer>
         <Navbar />

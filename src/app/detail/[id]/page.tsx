@@ -35,11 +35,17 @@ const Index = ({ params }: Props) => {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(blogPostSchema, null, 0),
+        }}
+        suppressHydrationWarning
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema, null, 0),
+        }}
+        suppressHydrationWarning
       />
       <PageContainer>
         <Navbar />
