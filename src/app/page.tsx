@@ -3,7 +3,6 @@ import List from "./_components/List";
 import Navbar from "./_components/Navbar";
 import PageContainer from "./_components/PageContainer";
 import FloatingToc from "./_components/FloatingToc";
-import StructuredDataServer from "./_components/StructuredDataServer";
 import { headers } from "next/headers";
 import { generateCollectionPageSchema } from "@/utils/seo";
 import { Metadata } from "next";
@@ -31,7 +30,10 @@ const Index = () => {
 
   return (
     <>
-      <StructuredDataServer data={collectionPageSchema} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageSchema) }}
+      />
       <PageContainer>
         <Navbar />
         <List />

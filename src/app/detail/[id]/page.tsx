@@ -5,7 +5,6 @@ import FloatingToc from "../../_components/FloatingToc";
 import data from "@/config/data.json";
 import { getDetail } from "../../common/api";
 import MDRender from "@/app/_components/MDRender";
-import StructuredDataServer from "@/app/_components/StructuredDataServer";
 import { Metadata } from "next";
 import { generateBlogPostSchema, generateBreadcrumbSchema } from "@/utils/seo";
 
@@ -34,7 +33,14 @@ const Index = ({ params }: Props) => {
 
   return (
     <>
-      <StructuredDataServer data={[blogPostSchema, breadcrumbSchema]} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <PageContainer>
         <Navbar />
         <div className="max-w-screen-xl w-full mx-auto animate__animated animate__fadeInUp">

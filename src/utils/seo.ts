@@ -65,21 +65,27 @@ export function generateBlogPostSchema({
   date: string;
   url: string;
 }) {
+  // 解析日期字符串，支持 "YYYY/M/D" 格式
+  const [year, month, day] = date.split("/").map(Number);
+  const publishedDate = new Date(year, month - 1, day);
+  
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: title,
     description: description,
-    datePublished: new Date(date).toISOString(),
-    dateModified: new Date(date).toISOString(),
+    datePublished: publishedDate.toISOString(),
+    dateModified: publishedDate.toISOString(),
     author: {
       "@type": "Person",
       name: AUTHOR_NAME,
       email: AUTHOR_EMAIL,
+      url: SITE_URL,
     },
     publisher: {
       "@type": "Person",
       name: AUTHOR_NAME,
+      url: SITE_URL,
     },
     mainEntityOfPage: {
       "@type": "WebPage",
@@ -87,6 +93,10 @@ export function generateBlogPostSchema({
     },
     url: url,
     inLanguage: "zh-CN",
+    image: {
+      "@type": "ImageObject",
+      url: "https://cdn-digital.ssv.qq.com/upload//s2024/s-logo.png",
+    },
   };
 }
 
