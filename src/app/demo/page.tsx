@@ -13,15 +13,15 @@ const Index = ({
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) => {
+  const { tab } = use(searchParams);
   const video = use(getVideoData());
   const wallpapers = use(getWallpaper());
-  const { tab } = searchParams ? use(searchParams) : {};
 
   return (
     <PageContainer className={tab === "3" ? "xs:px-0" : ""}>
       <Navbar />
       <Tabs titles={tabs} defalultTab={tab}>
-        <ShortVideo data={[video]} />
+        <ShortVideo data={video ? [video] : []} />
         <Drag />
         <Wallpaper data={wallpapers} />
         <ReactSpring carousel={wallpapers} />
