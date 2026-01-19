@@ -6,6 +6,7 @@ import rehypeRaw from "rehype-raw";
 import { ImageViewer, Tooltip } from "tdesign-react";
 import { useState } from "react";
 import Image from "next/image";
+import { DEFAULT_BLUR_DATA_URL, getResponsiveImageSizes, getImageQuality } from "@/utils/image";
 
 import "highlight.js/styles/atom-one-dark.css";
 
@@ -20,22 +21,36 @@ const Markdown = ({ content }: { content: string }) => {
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
         className="prose prose-zinc max-w-none"
         components={{
-          img: ({ node, ...props }) => (
-            <Tooltip content="点击预览图片">
-              <Image
-                className="max-w-full cursor-pointer hover:opacity-90 transition-opacity"
-                style={props.style}
-                src={props.src || ""}
-                alt=""
-                width={700}
-                height={400}
-                onClick={() => {
-                  setPreviewSrc(props.src || "");
-                  setVisible(true);
-                }}
-              />
-            </Tooltip>
-          ),
+          img: ({ node, ...props }) => {
+            const src = props.src || "";
+            
+            return (
+              <div className="my-4">
+                <Tooltip content="点击预览图片">
+                  <Image
+                    className="max-w-full cursor-pointer hover:opacity-90 transition-opacity rounded-lg"
+                    src={src}
+                    alt={props.alt || "文章配图"}
+                    width={700}
+                    height={400}
+                    sizes={getResponsiveImageSizes(700)}
+                    quality={getImageQuality('normal')}
+                    loading="lazy"
+                    placeholder="blur"
+                    blurDataURL={DEFAULT_BLUR_DATA_URL}
+                    onClick={() => {
+                      setPreviewSrc(src);
+                      setVisible(true);
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                </Tooltip>
+              </div>
+            );
+          },
           code: ({ node, className, children, ...props }: any) => {
             const isInline = !className || !className.includes('language-');
             if (isInline) {

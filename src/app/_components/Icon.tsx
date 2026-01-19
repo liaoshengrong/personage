@@ -8,6 +8,7 @@ interface IProps {
   direction: string;
   path?: string;
   stop?: boolean;
+  alt?: string;
 }
 const config = {
   left: "animate__backInLeft",
@@ -15,14 +16,18 @@ const config = {
   top: "animate__backInUp",
 };
 const Icon = (props: IProps) => {
-  const { src, direction, path, stop } = props;
+  const { src, direction, path, stop, alt = "导航图标" } = props;
   const cssname = stop ? "" : config[direction as keyof typeof config];
   return (
     <Link href={path ?? "/"} prefetch>
       <Image
         src={src}
-        alt=""
-        className={`w-6 cursor-pointer object-cover  animate__animated ${cssname}`}
+        alt={alt}
+        width={24}
+        height={24}
+        className={`w-6 h-6 cursor-pointer object-cover animate__animated ${cssname}`}
+        loading="eager"
+        quality={90}
       />
     </Link>
   );

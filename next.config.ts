@@ -44,6 +44,16 @@ const nextConfig: NextConfig = {
         hostname: "mdrs.yuanjin.tech",
       },
     ],
+    // 图片格式优化
+    formats: ['image/avif', 'image/webp'],
+    // 图片尺寸配置
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // 最小化图片优化
+    minimumCacheTTL: 60,
+    // 禁用静态图片导入优化（如果需要）
+    // dangerouslyAllowSVG: true,
+    // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   // 自定义 Webpack 配置

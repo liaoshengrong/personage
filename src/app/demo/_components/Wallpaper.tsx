@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import refreshIcon from "@/app/_images/refresh.svg";
 import { getWallpaper } from "../api";
 import blurImage from "@/app/_images/blur-image.png";
+import { getImageQuality } from "@/utils/image";
 
 const Wallpaper = ({ data: _data }: { data: string[] }) => {
   const [data, setData] = useState(_data);
@@ -46,16 +47,21 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
         ) : (
           <Image
             src={big}
-            alt=""
+            alt="壁纸预览"
             title="点击下载"
             width={720}
             height={540}
-            className="w-full  object-cover cursor-pointer"
+            className="w-full object-cover cursor-pointer rounded-lg"
             onClick={onDownload}
             priority
             placeholder="blur"
             blurDataURL={blurImage.src}
-            quality={60}
+            quality={getImageQuality('high')}
+            sizes="(max-width: 768px) 100vw, 720px"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
           />
         )}
       </div>
@@ -71,15 +77,16 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
             ) : (
               <Image
                 src={item}
-                alt=""
+                alt={`壁纸缩略图 ${index + 1}`}
                 title="点击预览"
                 width={240}
                 height={180}
                 className="h-full object-cover rounded-lg"
                 placeholder="blur"
                 blurDataURL={blurImage.src}
-                quality={20}
-                priority
+                quality={getImageQuality('thumbnail')}
+                loading={index < 3 ? "eager" : "lazy"} // 前3张立即加载，其他懒加载
+                sizes="(max-width: 768px) 25vw, 240px"
               />
             )}
           </div>
@@ -90,11 +97,12 @@ const Wallpaper = ({ data: _data }: { data: string[] }) => {
         >
           <Image
             src={refreshIcon}
-            alt=""
-            width={240}
-            height={180}
-            className="w-16 object-cover rounded-lg"
-            priority
+            alt="刷新"
+            width={64}
+            height={64}
+            className="w-16 h-16 object-cover rounded-lg"
+            loading="eager"
+            quality={90}
           />
           <p className="text-xl">换一批</p>
         </div>

@@ -30,20 +30,26 @@ const Carousel = ({ data }: { data: string[] }) => {
         {data.map((item, index) => (
           <Image
             src={item}
-            alt={`Image ${index}`}
+            alt={`轮播图 ${index + 1}`}
             key={index}
             width={506}
             height={316}
             className="w-full object-cover rounded-lg"
             placeholder="blur"
             blurDataURL={blurImage.src}
-            priority
-            quality={40}
+            priority={index === 0} // 只有第一张图片使用 priority
+            loading={index === 0 ? "eager" : "lazy"} // 第一张立即加载，其他懒加载
+            quality={index === 0 ? 75 : 60} // 第一张质量高一些
+            sizes="(max-width: 768px) 100vw, 506px"
             onLoad={(e) => {
               if (index === 0) {
                 setIsAuto(!isMobile);
                 console.log(e.target, "onLoad");
               }
+            }}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
             }}
           />
         ))}
