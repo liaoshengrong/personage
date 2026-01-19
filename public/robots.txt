@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# 禁止爬取 admin 或私有页面（如果有）
+# Disallow: /admin/
+# Disallow: /private/
+
+# Sitemap 位置
+Sitemap: https://shengrong.netlify.app/sitemap.xml
