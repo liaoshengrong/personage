@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "前端技术",
     "前端学习",
   ],
-  authors: [{ name: "廖声荣", nameAlternate: "Mark Liao" }],
+  authors: [{ name: "廖声荣" }],
   creator: "廖声荣",
   publisher: "Mark Liao",
   formatDetection: {

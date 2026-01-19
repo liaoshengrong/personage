@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: title,
     description: desc,
     keywords: [title, tag, "前端", "技术博客", "Mark's space"],
-    authors: [{ name: "廖声荣", nameAlternate: "Mark Liao" }],
+    authors: [{ name: "廖声荣" }],
     openGraph: {
       type: "article",
       locale: "zh_CN",
