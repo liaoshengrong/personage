@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
@@ -30,7 +31,7 @@ const Icon = (props: IProps) => {
 export default Icon;
 export const Tip = ({ title }: { title: string }) => {
   return (
-    <div className="hidden group-hover:block absolute -left-1/2 top-full bg-black text-xs text-white w-20 text-center py-1 rounded flex-shrink-0 -translate-x-3">
+    <div className="hidden group-hover:block absolute -left-1/2 top-full bg-black text-xs text-white w-20 text-center py-1 rounded flex-shrink-0 -translate-x-3 pointer-events-none">
       {title}
     </div>
   );
