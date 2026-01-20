@@ -2,6 +2,10 @@ import React, { use } from "react";
 import PageContainer from "../../_components/PageContainer";
 import Navbar from "../../_components/Navbar";
 import FloatingToc from "../../_components/FloatingToc";
+import ArticleNavigation from "../../_components/ArticleNavigation";
+import RelatedArticles from "../../_components/RelatedArticles";
+import ReadingProgress from "../../_components/ReadingProgress";
+import ArticleMeta from "../../_components/ArticleMeta";
 import data from "@/config/data.json";
 import { getDetail } from "../../common/api";
 import MDRender from "@/app/_components/MDRender";
@@ -49,13 +53,31 @@ const Index = ({ params }: Props) => {
       />
       <PageContainer>
         <Navbar />
+        <ReadingProgress />
         <div className="max-w-screen-xl w-full mx-auto animate__animated animate__fadeInUp">
+          {/* 文章内容 */}
           <article>
             <h1 className="text-2xl font-600 py-5 text-[#6c32fe] border-b-2 border-[#6c32fe] mb-5">
               {title}
             </h1>
-            <MDRender content={content} />
+            
+            {/* 文章元信息 */}
+            <ArticleMeta
+              date={data[+id].date}
+              tag={tag}
+              content={content}
+            />
+            
+              <MDRender content={content} />
           </article>
+          
+          {/* 上一篇/下一篇导航 */}
+          <div className="mt-8">
+            <ArticleNavigation currentId={+id} />
+            
+            {/* 相关文章推荐 */}
+            <RelatedArticles currentId={+id} currentTag={tag} />
+          </div>
         </div>
         <FloatingToc currentId={+id} />
       </PageContainer>

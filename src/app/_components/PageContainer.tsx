@@ -6,7 +6,7 @@ interface IProps {
 const PageContainer = ({ children, className }: IProps) => {
   return (
     <div
-      className={`min-h-screen p-8 bg-gray-200 overflow-y-auto flex flex-col xs:p-5 xs:bg-white ${className}`}
+      className={`min-h-screen p-8 bg-gray-200 flex flex-col xs:p-5 xs:bg-white ${className}`}
     >
       {children}
     </div>
