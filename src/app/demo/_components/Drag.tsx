@@ -26,7 +26,6 @@ const Drag = () => {
       return;
     }
     const tempFile = e.dataTransfer.files[0];
-    console.log(tempFile, "file__file");
 
     setFile(tempFile);
     setSelect({

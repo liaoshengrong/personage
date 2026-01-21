@@ -67,7 +67,7 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
       window.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isOpen]);
 
   const handleNavigate = (index: number) => {
     // 如果点击的是当前文章，直接关闭目录
@@ -116,11 +116,7 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('悬浮按钮被点击，当前状态:', isOpen);
             setIsOpen(!isOpen);
-          }}
-          onMouseDown={(e) => {
-            console.log('悬浮按钮鼠标按下');
           }}
           className="w-12 h-12 bg-[#6c32fe] hover:bg-[#5a29d4] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 mb-3"
           title="文章目录"
@@ -158,7 +154,6 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
         <div className="relative group">
           <button
             onClick={() => {
-              console.log('回到主页按钮被点击');
               router.push('/');
               setIsOpen(false);
             }}
@@ -189,7 +184,6 @@ const FloatingToc: React.FC<FloatingTocProps> = ({ currentId }) => {
       <div className="relative group">
         <button
           onClick={() => {
-            console.log('返回顶部按钮被点击');
             scrollToTop();
           }}
           className="w-12 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"

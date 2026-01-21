@@ -125,7 +125,6 @@ const Item: React.FC<VideoProps> = ({ src, setVolume, volume }) => {
     }
   };
 
-  console.log(volume, "volumevolumevolume");
 
   return (
     <video

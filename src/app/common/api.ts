@@ -45,13 +45,11 @@ export const sendToAiChat = async ({
 
   while (true) {
     const { done, value } = await reader.read();
-    console.log("Read chunk:", done, value);
 
     if (done) break;
 
     const text = new TextDecoder().decode(value);
     buffer += text;
-    console.log("Received chunk:", text);
 
     // 处理完整的SSE消息
     const lines = buffer.split("\n");

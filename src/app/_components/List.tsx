@@ -151,13 +151,13 @@ const List = () => {
             {searchTerm && (
               <span>
                 {" "}
-                关于 "<span className="font-semibold">{searchTerm}</span>"
+                关于 &ldquo;<span className="font-semibold">{searchTerm}</span>&rdquo;
               </span>
             )}
             {selectedTag && (
               <span>
                 {" "}
-                标签为 "<span className="font-semibold">{selectedTag}</span>"
+                标签为 &ldquo;<span className="font-semibold">{selectedTag}</span>&rdquo;
               </span>
             )}
           </div>

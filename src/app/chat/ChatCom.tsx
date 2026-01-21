@@ -39,8 +39,6 @@ export default function ChatCom() {
       const response = await sendToAiChat({
         messages: newChatHistory,
         renderItemCallback: (s) => {
-          console.log("renderItemCallback:", s);
-          
           setStreamingMessage(s);
         },
         finishCallback: (s) => {

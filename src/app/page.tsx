@@ -20,7 +20,6 @@ export const metadata: Metadata = {
 const Index = () => {
   const { get } = use(headers());
   const ua = get("user-agent") ?? "";
-  console.log(ua);
 
   // 判断是否为移动端
   const isMobile = ua.includes("Mobile");

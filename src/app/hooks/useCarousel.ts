@@ -1,5 +1,5 @@
 import { useTransition } from "@react-spring/web";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 interface IProps {
   data: any[];
   onNext?: () => void;
@@ -18,16 +18,18 @@ const useCarousel = ({ data, onNext, onPrev, isAuto = true }: IProps) => {
     enter: { opacity: 1, transform: "translateX(0%)" },
     leave: { opacity: 0, transform: `translateX(${isPrev ? "" : "-"}100%)` },
   });
-  const next = () => {
+  
+  const next = useCallback(() => {
     setPage((prev) => (prev + 1) % data.length);
     setIsPrev(false);
     onNext?.();
-  };
-  const prev = () => {
+  }, [data.length, onNext]);
+  
+  const prev = useCallback(() => {
     setPage((prev) => (prev - 1 + data.length) % data.length);
     setIsPrev(true);
     onPrev?.();
-  };
+  }, [data.length, onPrev]);
 
   const observerScroll = () => {
     const target = ref.current;
@@ -57,7 +59,7 @@ const useCarousel = ({ data, onNext, onPrev, isAuto = true }: IProps) => {
         clearInterval(timer.current);
       }
     };
-  }, [isAuto]);
+  }, [isAuto, next]);
 
   return {
     ref,

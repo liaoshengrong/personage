@@ -41,10 +41,9 @@ const Carousel = ({ data }: { data: string[] }) => {
             loading={index === 0 ? "eager" : "lazy"} // 第一张立即加载，其他懒加载
             quality={index === 0 ? 75 : 60} // 第一张质量高一些
             sizes="(max-width: 768px) 100vw, 506px"
-            onLoad={(e) => {
+            onLoad={() => {
               if (index === 0) {
                 setIsAuto(!isMobile);
-                console.log(e.target, "onLoad");
               }
             }}
             onError={(e) => {
