@@ -5,7 +5,7 @@ import FloatingToc from "../../_components/FloatingToc";
 import ArticleNavigation from "../../_components/ArticleNavigation";
 import RelatedArticles from "../../_components/RelatedArticles";
 import ReadingProgress from "../../_components/ReadingProgress";
-import ArticleMeta from "../../_components/ArticleMeta";
+import ArticleMeta from "@/app/_components/ArticleMeta";
 import Breadcrumb from "../../_components/Breadcrumb";
 import data from "@/config/data.json";
 import { getDetail } from "../../common/api";
@@ -97,22 +97,59 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const articleUrl = `https://shengrong.netlify.app/detail/${id}`;
   const logo = "https://cdn-digital.ssv.qq.com/upload//s2024/s-logo.png";
 
+  // 根据标签生成相关关键词
+  const tagKeywords: Record<string, string[]> = {
+    Taro: ["Taro", "微信小程序", "小程序开发", "小程序组件", "Taro框架"],
+    engineer: ["前端工程化", "工程化", "自动化", "前端工具", "开发效率"],
+    Browser: ["浏览器原理", "浏览器", "浏览器渲染", "浏览器缓存", "事件循环"],
+    ajax: ["Ajax", "HTTP", "请求头", "响应头", "流式传输", "SSE"],
+    download: ["PDF", "图片下载", "文件下载", "HTML转PDF", "HTML转图片"],
+    general: ["前端技术", "前端开发", "前端学习", "技术分享"],
+    TS: ["TypeScript", "TS", "类型系统", "TypeScript语法"],
+  };
+
+  // 从标题中提取关键词
+  const titleKeywords = title
+    .replace(/[的|中|与|和]/g, " ")
+    .split(/\s+/)
+    .filter((word) => word.length > 1);
+
+  // 组合关键词
+  const keywords = [
+    title,
+    ...titleKeywords,
+    tag,
+    ...(tagKeywords[tag] || []),
+    "前端",
+    "前端开发",
+    "前端技术",
+    "技术博客",
+    "Mark's space",
+    "廖声荣",
+    "Next.js",
+    "React",
+    "TypeScript",
+  ];
+
+  // 优化描述：确保包含搜索关键词
+  const enhancedDescription = `${desc} 本文详细讲解${title}的实现原理和最佳实践，适合前端开发者学习和参考。`;
+
   return {
-    title: title,
-    description: desc,
-    keywords: [title, tag, "前端", "技术博客", "Mark's space"],
+    title: `${title} | Mark's space - 前端技术博客`,
+    description: enhancedDescription,
+    keywords: [...new Set(keywords)], // 去重
     authors: [{ name: "廖声荣" }],
     openGraph: {
       type: "article",
       locale: "zh_CN",
       url: articleUrl,
-      title: title,
-      description: desc,
+      title: `${title} | Mark's space`,
+      description: enhancedDescription,
       siteName: "Mark's space",
       publishedTime: new Date(date).toISOString(),
       modifiedTime: new Date(date).toISOString(),
       authors: ["廖声荣"],
-      tags: [tag],
+      tags: [tag, ...titleKeywords],
       images: [
         {
           url: logo,
@@ -124,8 +161,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: title,
-      description: desc,
+      title: `${title} | Mark's space`,
+      description: enhancedDescription,
       images: [logo],
     },
     alternates: {
