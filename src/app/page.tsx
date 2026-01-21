@@ -9,10 +9,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "首页",
-  description: "Mark的个人博客 - 前端技术文章集合，包含 Next.js、React、TypeScript、Taro 等技术分享",
+  description: "Mark的个人技术博客首页 - 精选前端技术文章集合，涵盖 Next.js、React、TypeScript、Taro、前端工程化、浏览器原理、小程序开发等20+篇深度技术文章，5年前端开发实战经验分享。",
   openGraph: {
-    title: "Mark's space - 前端技术博客",
-    description: "前端技术文章集合，包含 Next.js、React、TypeScript、Taro 等技术分享",
+    title: "Mark's space - 前端技术博客 | 技术文章集合",
+    description: "精选前端技术文章集合，涵盖 Next.js、React、TypeScript、Taro、前端工程化、浏览器原理等深度内容，5年前端开发实战经验分享。",
     type: "website",
   },
 };

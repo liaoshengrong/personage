@@ -42,12 +42,20 @@ export function generateWebsiteSchema() {
     "@type": "WebSite",
     name: SITE_NAME,
     url: SITE_URL,
-    description: "Mark的个人博客 - 前端技术分享与学习",
+    description: "5年前端开发工程师的技术博客，分享 Next.js、React、TypeScript、Taro 等前端技术实战经验。涵盖工程化实践、浏览器原理、小程序开发、性能优化等深度内容。",
     author: {
       "@type": "Person",
       name: AUTHOR_NAME,
     },
     inLanguage: "zh-CN",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
   };
 }
 
