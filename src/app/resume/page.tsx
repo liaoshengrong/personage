@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from "../_components/Navbar";
+import Breadcrumb from "../_components/Breadcrumb";
 import PageContainer from "../_components/PageContainer";
 import Header from './Header';
 import SectionHeader from './SectionHeader';
@@ -40,6 +41,9 @@ const Resume: React.FC = () => {
         <Navbar />
       </div>
       <div className="max-w-5xl mx-auto mt-4 sm:mt-6 mb-8 sm:mb-12">
+        <div className="px-4 sm:px-0 mb-4">
+          <Breadcrumb />
+        </div>
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden transition-all duration-300 ease-in-out">
           <div className="p-4 sm:p-6 md:p-10">
             {/* 头部信息 */}

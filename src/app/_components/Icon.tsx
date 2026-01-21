@@ -18,6 +18,22 @@ const config = {
 const Icon = (props: IProps) => {
   const { src, direction, path, stop, alt = "导航图标" } = props;
   const cssname = stop ? "" : config[direction as keyof typeof config];
+  
+  // 如果stop为true，只显示图标，不包裹Link（由父组件处理链接）
+  if (stop) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={24}
+        height={24}
+        className={`w-6 h-6 cursor-pointer object-cover ${cssname}`}
+        loading="eager"
+        quality={90}
+      />
+    );
+  }
+  
   return (
     <Link href={path ?? "/"} prefetch>
       <Image

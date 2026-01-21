@@ -6,6 +6,7 @@ import ArticleNavigation from "../../_components/ArticleNavigation";
 import RelatedArticles from "../../_components/RelatedArticles";
 import ReadingProgress from "../../_components/ReadingProgress";
 import ArticleMeta from "../../_components/ArticleMeta";
+import Breadcrumb from "../../_components/Breadcrumb";
 import data from "@/config/data.json";
 import { getDetail } from "../../common/api";
 import MDRender from "@/app/_components/MDRender";
@@ -55,6 +56,9 @@ const Index = ({ params }: Props) => {
         <Navbar />
         <ReadingProgress />
         <div className="max-w-screen-xl w-full mx-auto animate__animated animate__fadeInUp">
+          {/* 面包屑导航 */}
+          <Breadcrumb articleTitle={title} articleId={+id} />
+          
           {/* 文章内容 */}
           <article>
             <h1 className="text-2xl font-600 py-5 text-[#6c32fe] border-b-2 border-[#6c32fe] mb-5">

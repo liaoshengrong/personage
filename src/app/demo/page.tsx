@@ -1,5 +1,6 @@
 import React, { use } from "react";
 import Navbar from "../_components/Navbar";
+import Breadcrumb from "../_components/Breadcrumb";
 import PageContainer from "../_components/PageContainer";
 import Drag from "./_components/Drag";
 import Tabs from "./_components/Tabs";
@@ -20,6 +21,9 @@ const Index = ({
   return (
     <PageContainer className={tab === "3" ? "xs:px-0" : ""}>
       <Navbar />
+      <div className="max-w-screen-xl mx-auto px-4 mb-4">
+        <Breadcrumb />
+      </div>
       <Tabs titles={tabs} defalultTab={tab}>
         <ShortVideo data={video ? [video] : []} />
         <Drag />
