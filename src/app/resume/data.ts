@@ -2,12 +2,16 @@ import { SkillItem, WorkExperience, Project, Education } from "./types";
 
 // 个人技能数据
 export const skillsData: SkillItem[] = [
-  { text: "熟练掌握 React/Vue2/Vue3/Taro 小程序的开发使用，具备Nextjs、Umijs等主流框架实战经验。" },
+  { text: "熟练掌握 React/Vue2/Vue3/Taro 和微信原生小程序的开发使用，具备Nextjs、Umijs等主流框架实战经验。" },
   { text: "熟练掌握 HTML/Css/Javascript/TypeScript 等常用语法，精通Tailwind Css、Less等CSS预处理技术。" },
   {
-    text: "熟悉微信小程序原生开发，具备AI图像识别、地图SDK集成、消息推送等能力。",
+    text: "熟悉微信小程序原生开发，具备AI聊天功能开发、腾讯地图SDK集成、位置服务API调用等能力。",
   },
   { text: "熟悉Server-Sent Events(SSE)流式传输技术，实现双通道数据渲染和实时进度展示，优化页面响应时间至2秒内。" },
+  { text: "AI辅助开发实践：熟练运用Claude等AI工具进行代码生成、技术方案设计和自动化测试，建立完整的AI驱动开发流程，提升开发效率300%。" },
+  { text: "智能工作流设计：构建基于Agent/Skill的模块化开发体系，设计15+个可复用Skill模块，实现需求到代码的自动化流转，将重复性开发工作减少60%。" },
+  { text: "MCP工具集成：整合Chrome DevTools、TAPD、Figma等MCP工具，集成Chrome DevTools MCP实现真实浏览器环境的自动化E2E测试，代码覆盖率85%+。" },
+  { text: "自动化工程化体系：搭建批量任务执行机制，支持多任务并行实施、统一质检、批量提交，单次需求响应时间从2天缩短到4小时，多任务并行开发效率提升200%。" },
   { text: "熟悉使用 jest 编写 vm 层的 unit test，保障代码质量和项目稳定性。" },
   {
     text: "熟悉使用 Webpack、Vite 工具做项目工程化，能不依赖官方脚手架搭建项目基础框架，熟练开发自定义 plugins 做自动化程序，以提高开发效率。",
@@ -31,7 +35,7 @@ export const workExperienceData: WorkExperience[] = [
     position: "前端开发工程师",
     duration: "2024.9.18 - 至今",
     description:
-      "主导负责腾讯SSV官网、腾讯技术公益和小程序项目的开发和维护，参与项目从需求评审到上线的全流程。",
+      "主导负责腾讯SSV官网、腾讯技术公益和小程序项目的开发和维护，参与项目从需求评审到上线的全流程。实践AI工程化开发模式，构建Skill/Agent体系，集成MCP工具提升开发效率。",
     techStack: [
       "Nextjs",
       "微信原生",
@@ -41,6 +45,8 @@ export const workExperienceData: WorkExperience[] = [
       "SSE",
       "Less",
       "Vue2",
+      "Claude",
+      "MCP",
     ],
   },
   {
@@ -72,13 +78,15 @@ export const workExperienceData: WorkExperience[] = [
 export const projectsData: Project[] = [
   {
     title: "野朋友计划 小程序&admin",
-    techStack: "微信小程序原生、腾讯地图SDK、AI识别API",
+    techStack: "微信小程序原生、腾讯地图SDK、AI识别API、Claude、Chrome DevTools MCP、Figma MCP",
     description:
       "项目描述：野朋友计划是给自然教育领域打造的AI识别平台，App同时发布在微信小程序平台，用户可以通过AI识别动植物并在地图上标记分享发现，涉及AI识别、地图定位、社交分享等核心功能模块。",
     points: [
-      "基于微信小程序原生开发，集成AI图像识别能力，通过调用第三方AI服务实现动植物智能识别，识别准确率提升至85%以上。",
+      "AI工程化实践：设计并实现15+个专业化Skill模块，覆盖需求澄清、方案设计、代码实施到测试验收全流程，构建智能Agent体系，实现从自然语言需求到可运行代码的自动化转化。",
+      "自动化测试体系：集成Chrome DevTools MCP实现真实浏览器环境的自动化E2E测试，建立测试用例生成机制，基于技术方案自动提取核心用户流程，实现代码覆盖率分析和质量门禁。",
+      "实现AI聊天图片上传功能，支持用户在对话中发送图片，通过格式化回复与SSE流式传输相结合，将结构化数据和流式响应合并渲染为一条完整消息，优化用户交互体验。",
       "接入腾讯地图SDK，实现地图渲染、动态获取和设置point、center、zoom等交互功能，支持10万+标记点同时展示。",
-      "集成地址搜索和经纬度逆解析服务，提供精准的地理位置信息服务，地址解析准确率达到95%。",
+      "基于微信小程序原生API（wx.getLocation、wx.chooseLocation）和腾讯地图SDK，集成地址搜索和经纬度逆解析服务，实现地址与坐标的双向转换，支持模糊搜索和精确匹配。",
       "利用微信小程序订阅消息能力，实现服务号消息推送功能，支持个性化推送策略，用户打开率提升30%。",
       "开发配套的管理后台，支持内容审核、用户管理、数据统计等运营功能，为运营团队提供完整的数据支撑。",
     ],

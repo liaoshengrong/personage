@@ -151,7 +151,7 @@ const List = () => {
             {searchTerm && (
               <span>
                 {" "}
-                关于 &ldquo;<span className="font-semibold">{searchTerm}</span>&rdquo;
+                关于 "<span className="font-semibold">{searchTerm}</span>"
               </span>
             )}
             {selectedTag && (
