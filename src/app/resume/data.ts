@@ -30,10 +30,30 @@ export const skillsData: SkillItem[] = [
 
 // 工作经历数据
 export const workExperienceData: WorkExperience[] = [
+ 
   {
     company: "深圳华云中盛科技股份有限公司",
     position: "前端开发工程师",
-    duration: "2024.9.18 - 至今",
+    duration: "2025.8 - 至今",
+    description:
+      "主导负责腾讯SSV官网、腾讯技术公益和小程序项目的开发和维护，参与项目从需求评审到上线的全流程。实践AI工程化开发模式，构建Skill/Agent体系，集成MCP工具提升开发效率。",
+    techStack: [
+      "Nextjs",
+      "微信原生",
+      "React",
+      "Typescript",
+      "Tailwind Css",
+      "SSE",
+      "Less",
+      "Vue2",
+      "Claude",
+      "MCP",
+    ],
+  },
+  {
+    company: "深圳易宝设计有限公司",
+    position: "前端开发工程师",
+    duration: "2024.9 - 2025.8",
     description:
       "主导负责腾讯SSV官网、腾讯技术公益和小程序项目的开发和维护，参与项目从需求评审到上线的全流程。实践AI工程化开发模式，构建Skill/Agent体系，集成MCP工具提升开发效率。",
     techStack: [
