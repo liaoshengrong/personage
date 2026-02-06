@@ -8,7 +8,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { DEFAULT_BLUR_DATA_URL, getResponsiveImageSizes, getImageQuality } from "@/utils/image";
 
-import "highlight.js/styles/atom-one-dark.css";
+import "highlight.js/styles/atom-one-dark-reasonable.css";
 
 const Markdown = ({ content }: { content: string }) => {
   const [visible, setVisible] = useState(false);
@@ -54,11 +54,10 @@ const Markdown = ({ content }: { content: string }) => {
           code: ({ node, className, children, ...props }: any) => {
             const isInline = !className || !className.includes('language-');
             if (isInline) {
-              // 内联代码样式 - 只用字体颜色，无背景
-              // 去掉反引号
+              // 内联代码样式 - 暗色主题
               return (
                 <span
-                  className="text-blue-600 font-mono text-sm font-medium"
+                  className="text-slate-200 font-mono text-sm font-medium bg-slate-700/90 px-1.5 py-0.5 rounded"
                   {...props}
                 >
                   {children}

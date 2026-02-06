@@ -34,6 +34,22 @@ body {
   line-height: 1.5;
 }
 
+/* 博客正文代码块：暗色主题，柔和对比 */
+.prose pre {
+  background: #282c34 !important;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #3e4451;
+}
+.prose pre code,
+.prose pre .hljs {
+  background: #282c34 !important;
+  padding: 0;
+  color: #abb2bf;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
 @media screen and (min-width: 769px) {
   /* 定义滚动条容器 */
   *::-webkit-scrollbar {
