@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 8200",
     "api": "netlify dev",
-    "build": "node scripts/handXlsxToJson.js && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },

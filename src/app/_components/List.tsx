@@ -24,7 +24,7 @@ const List = () => {
     return Array.from(tags).sort();
   }, []);
 
-  // 过滤数据
+  // 过滤数据，并按日期倒序排列
   const filteredData = useMemo(() => {
     return data
       .map((item, index) => ({ ...item, originalIndex: index }))
@@ -43,7 +43,8 @@ const List = () => {
           );
         }
         return true;
-      });
+      })
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [searchTerm, selectedTag]);
 
   const onChoose = (item: DataType, index: number) => {

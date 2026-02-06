@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
-const XlsxWatcherPlugin = require("./plugins/XlsxWatcherPlugin");
+// [已弃用 datalist.xlsx] 不再监听 xlsx 文件变化
+// const XlsxWatcherPlugin = require("./plugins/XlsxWatcherPlugin");
 
 const nextConfig: NextConfig = {
   // 设置 Webpack 内存缓存的最大大小（以字节为单位）
@@ -58,15 +59,16 @@ const nextConfig: NextConfig = {
 
   // 自定义 Webpack 配置
   webpack: (config, options) => {
+    // [已弃用 datalist.xlsx] 不再在开发模式监听 xlsx 热更新
     // 如果当前处于开发模式
-    if (options.dev) {
-      // 添加 XlsxWatcherPlugin 插件以监视 XLSX 文件的变化
-      config.plugins.push(
-        new XlsxWatcherPlugin({
-          filePath: "src/config/datalist.xlsx", // 修改为你的 XLSX 文件路径
-        })
-      );
-    }
+    // if (options.dev) {
+    //   // 添加 XlsxWatcherPlugin 插件以监视 XLSX 文件的变化
+    //   config.plugins.push(
+    //     new XlsxWatcherPlugin({
+    //       filePath: "src/config/datalist.xlsx", // 修改为你的 XLSX 文件路径
+    //     })
+    //   );
+    // }
 
     // 返回修改后的 Webpack 配置
     return config;
