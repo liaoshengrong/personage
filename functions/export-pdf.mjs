@@ -2,11 +2,13 @@ import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { createResponse, createJsonResponse } from "./utils/common";
 
-const launchBrowser = async () => {
-  const isNetlifyRuntime = !!process.env.NETLIFY && !process.env.NETLIFY_DEV;
+const launchBrowser = async ({ origin }) => {
+  const isLocalOrigin =
+    origin?.startsWith("http://localhost") ||
+    origin?.startsWith("http://127.0.0.1");
 
-  // 1) Netlify 线上运行时：始终使用 serverless 版 Chromium
-  if (isNetlifyRuntime) {
+  // 1) 线上（非 localhost）使用 serverless Chromium
+  if (!isLocalOrigin) {
     const executablePath = await chromium.executablePath();
     return puppeteer.launch({
       args: chromium.args,
@@ -16,7 +18,7 @@ const launchBrowser = async () => {
     });
   }
 
-  // 2) 本地（netlify dev / next dev）：使用系统 Chrome/Chromium
+  // 2) 本地（macOS/Windows）：使用系统 Chrome/Chromium
   const candidates = [
     process.env.PUPPETEER_EXECUTABLE_PATH,
     process.env.CHROME_PATH,
@@ -61,7 +63,7 @@ export default async (event) => {
 
     const nameParam = url?.searchParams.get("name") || "resume";
 
-    const browser = await launchBrowser();
+    const browser = await launchBrowser({ origin });
 
     try {
       const page = await browser.newPage();
