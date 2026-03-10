@@ -14,16 +14,35 @@ const ExportPDF: React.FC<ExportPDFProps> = ({ name }) => {
     return `${safeName}-简历-${dayjs().format('YYYYMMDD')}.pdf`;
   }, [name]);
 
+  const getNetlifyFunctionUrl = () => {
+    if (typeof window === 'undefined') {
+      return '/.netlify/functions/export-pdf';
+    }
+    // 相对路径即可，本地使用 `netlify dev` 时也会代理到函数
+    return '/.netlify/functions/export-pdf';
+  };
+
   const handleExportPDF = async () => {
     const resumeContent = document.getElementById('ResumeCardContainer');
     if (!resumeContent || loading) return;
 
     try {
       setLoading(true);
-      const resp = await fetch(
-        `/api/resume/export-pdf?name=${encodeURIComponent(name || 'resume')}`,
-        { method: 'GET' }
-      );
+      const query = `?name=${encodeURIComponent(name || 'resume')}`;
+      let resp = await fetch(`${getNetlifyFunctionUrl()}${query}`, {
+        method: 'GET',
+      });
+
+      // 兜底：如果在纯 next dev 环境下（没有 netlify dev 代理），尝试走本地 Next API
+      if (!resp.ok && typeof window !== 'undefined') {
+        const { hostname, port } = window.location;
+        if (hostname === 'localhost' && port === '8200') {
+          resp = await fetch(`/api/resume/export-pdf${query}`, {
+            method: 'GET',
+          });
+        }
+      }
+
       if (!resp.ok) throw new Error(`export pdf failed: ${resp.status}`);
 
       const blob = await resp.blob();
