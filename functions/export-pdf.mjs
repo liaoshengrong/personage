@@ -78,6 +78,11 @@ export default async (event) => {
         waitUntil: "networkidle0",
       });
       await page.waitForSelector("#ResumeCardContainer", { timeout: 30_000 });
+      // 等待字体就绪，避免 PDF 中中文为空白
+      await page.evaluate(async () => {
+        // eslint-disable-next-line no-undef
+        await document.fonts.ready;
+      });
 
       const pdfBuffer = await page.pdf({
         format: "A4",

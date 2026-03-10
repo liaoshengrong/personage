@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "animate.css/animate.min.css";
 import "tdesign-react/dist/tdesign.css"; // 全局引入所有组件样式代码
+import "@fontsource/noto-sans-sc/400.css";
+import "@fontsource/noto-sans-sc/500.css";
+import "@fontsource/noto-sans-sc/600.css";
+import "@fontsource/noto-sans-sc/700.css";
 import { generatePersonSchema, generateWebsiteSchema } from "@/utils/seo";
 
 const logo = "https://cdn-digital.ssv.qq.com/upload//s2024/s-logo.png";

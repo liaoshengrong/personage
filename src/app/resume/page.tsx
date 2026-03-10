@@ -47,9 +47,11 @@ const Resume = async ({ searchParams }: ResumePageProps) => {
   return (
     <PageContainer
       className={
-        isPrintMode
-          ? 'bg-white min-h-screen'
-          : 'bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen'
+        [
+          isPrintMode
+            ? 'bg-white min-h-screen'
+            : 'bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen',
+        ].join(' ')
       }
     >
       {isPrintMode ? (
@@ -63,6 +65,8 @@ const Resume = async ({ searchParams }: ResumePageProps) => {
             background: #ffffff !important;
             margin: 0;
             padding: 0;
+            font-family: "Noto Sans SC", system-ui, -apple-system, "Segoe UI", Roboto,
+              "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
           }
           #ResumeCardContainer {
             width: 100% !important;
