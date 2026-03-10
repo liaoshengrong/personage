@@ -1,14 +1,30 @@
 import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium";
 import { createResponse, createJsonResponse } from "./utils/common";
 
 const launchBrowser = async () => {
+  const isNetlify = !!process.env.NETLIFY;
+  const context = process.env.CONTEXT;
+
+  // 1. Netlify 线上环境：优先使用 @sparticuz/chromium 提供的无头浏览器
+  if (isNetlify && context && context !== "dev") {
+    const executablePath = await chromium.executablePath();
+    return puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath,
+      headless: chromium.headless,
+    });
+  }
+
+  // 2. 本地 / 其他环境：使用 Puppeteer 自带或系统 Chrome
   try {
     return await puppeteer.launch({
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
   } catch (err) {
-    console.error("Failed to launch bundled Chromium, error:", err);
+    console.error("Failed to launch bundled Chromium locally, error:", err);
 
     const candidates = [
       process.env.PUPPETEER_EXECUTABLE_PATH,
