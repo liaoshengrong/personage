@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>导出为excel</h1>
+    <button id="exportButton">导出为excel</button>
+    <!-- 本地 SheetJS (xlsx) -->
+    <script src="./xlsx.full.min.js"></script>
+    <script>
+        document.getElementById('exportButton').addEventListener('click', function() {
+            const rows = [
+                ['人员信息统计表', null, null, null, null],
+                ['部门', '姓名', '年龄', '职位', '备注'],
+                ['研发部', '张三', 18, '前端工程师', '优秀'],
+                [null, '王五', 25, '后端工程师', '良好'],
+                ['产品部', '李四', 20, '产品经理', '良好'],
+                [null, '赵六', 23, '产品助理', '合格'],
+                ['小计', null, null, null, '共 4 人'],
+            ];
+            exportToExcel(rows);
+        });
+        function exportToExcel(rows) {
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.aoa_to_sheet(rows);
+            worksheet['!merges'] = [
+                // 第一行标题：横向合并 A1:E1
+                { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } },
+                // “研发部” 行合并：A3:A4
+                { s: { r: 2, c: 0 }, e: { r: 3, c: 0 } },
+                // “产品部” 行合并：A5:A6
+                { s: { r: 4, c: 0 }, e: { r: 5, c: 0 } },
+                // 最后一行“小计”：横向合并 A7:D7
+                { s: { r: 6, c: 0 }, e: { r: 6, c: 3 } },
+            ];
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            XLSX.writeFile(workbook, '复杂数据示例-含行合并.xlsx');
+        }
+    </script>
+</body>
+</html>
