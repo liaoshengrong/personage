@@ -1,13 +1,12 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { createResponse, createJsonResponse } from "./utils/common";
 
 const launchBrowser = async () => {
-  const isNetlify = !!process.env.NETLIFY;
-  const context = process.env.CONTEXT;
+  const isNetlifyRuntime = !!process.env.NETLIFY && !process.env.NETLIFY_DEV;
 
-  // 1. Netlify 线上环境：优先使用 @sparticuz/chromium 提供的无头浏览器
-  if (isNetlify && context && context !== "dev") {
+  // 1) Netlify 线上运行时：始终使用 serverless 版 Chromium
+  if (isNetlifyRuntime) {
     const executablePath = await chromium.executablePath();
     return puppeteer.launch({
       args: chromium.args,
@@ -17,43 +16,30 @@ const launchBrowser = async () => {
     });
   }
 
-  // 2. 本地 / 其他环境：使用 Puppeteer 自带或系统 Chrome
-  try {
-    return await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-  } catch (err) {
-    console.error("Failed to launch bundled Chromium locally, error:", err);
+  // 2) 本地（netlify dev / next dev）：使用系统 Chrome/Chromium
+  const candidates = [
+    process.env.PUPPETEER_EXECUTABLE_PATH,
+    process.env.CHROME_PATH,
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+  ].filter(Boolean);
 
-    const candidates = [
-      process.env.PUPPETEER_EXECUTABLE_PATH,
-      process.env.CHROME_PATH,
-      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-      "/Applications/Chromium.app/Contents/MacOS/Chromium",
-    ].filter(Boolean);
-
-    for (const executablePath of candidates) {
-      try {
-        console.log("[export-pdf] trying system Chrome at", executablePath);
-        return await puppeteer.launch({
-          headless: true,
-          executablePath,
-          args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        });
-      } catch (e) {
-        console.error(
-          "[export-pdf] failed to launch Chrome at",
-          executablePath,
-          e
-        );
-      }
+  for (const executablePath of candidates) {
+    try {
+      console.log("[export-pdf] trying system Chrome at", executablePath);
+      return await puppeteer.launch({
+        headless: true,
+        executablePath,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
+    } catch (e) {
+      console.error("[export-pdf] failed to launch Chrome at", executablePath, e);
     }
-
-    throw new Error(
-      "无法启动浏览器：既找不到 Puppeteer 自带的 Chromium，也未能在系统中找到可用的 Chrome。"
-    );
   }
+
+  throw new Error(
+    "无法启动浏览器：本地未配置可用的 Chrome。请安装 Chrome 或设置环境变量 CHROME_PATH / PUPPETEER_EXECUTABLE_PATH。"
+  );
 };
 
 export default async (event) => {
