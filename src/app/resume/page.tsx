@@ -14,8 +14,13 @@ import {
   projectsData, 
   educationData 
 } from './data';
+import ExportPDF from './ExportPDF';
 
-const Resume: React.FC = () => {
+type ResumePageProps = {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+const Resume = async ({ searchParams }: ResumePageProps) => {
   // 配置常量
   const personalInfo = {
     name: '廖声荣',
@@ -35,16 +40,63 @@ const Resume: React.FC = () => {
     }
   };
 
+  const sp = (await searchParams) ?? {};
+  const printParam = Array.isArray(sp.print) ? sp.print[0] : sp.print;
+  const isPrintMode = printParam === '1';
+
   return (
-    <PageContainer className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-      <div className="px-4 sm:px-5">
-        <Navbar />
-      </div>
-      <div className="max-w-5xl mx-auto mt-4 sm:mt-6 mb-8 sm:mb-12">
-        <div className="px-4 sm:px-0 mb-4">
-          <Breadcrumb />
+    <PageContainer
+      className={
+        isPrintMode
+          ? 'bg-white min-h-screen'
+          : 'bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen'
+      }
+    >
+      {isPrintMode ? (
+        <style>{`
+          @page {
+            size: A4 portrait;
+            margin: 5mm;
+          }
+          html,
+          body {
+            background: #ffffff !important;
+            margin: 0;
+            padding: 0;
+          }
+          #ResumeCardContainer {
+            width: 100% !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+          }
+          .fixed {
+            display: none !important;
+          }
+        `}</style>
+      ) : null}
+
+      {!isPrintMode ? (
+        <div className="px-4 sm:px-5">
+          <Navbar />
         </div>
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden transition-all duration-300 ease-in-out">
+      ) : null}
+
+      <div
+        className={
+          isPrintMode
+            ? 'w-full mx-0 mt-0 mb-0'
+            : 'max-w-5xl mx-auto mt-4 sm:mt-6 mb-8 sm:mb-12'
+        }
+      >
+        {!isPrintMode ? (
+          <div className="flex justify-between items-center px-4 sm:px-0 mb-4">
+            <Breadcrumb />
+            <ExportPDF name={personalInfo.name} />
+          </div>
+        ) : null}
+
+        <div id='ResumeCardContainer' className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden transition-all duration-300 ease-in-out">
           <div className="p-4 sm:p-6 md:p-10">
             {/* 头部信息 */}
             <Header {...personalInfo} />
