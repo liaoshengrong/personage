@@ -1,0 +1,133 @@
+---
+description: personage 项目的项目约定与架构规则，供 AI Agent 在本仓库中自动遵守
+alwaysApply: true
+---
+
+## 项目约定
+
+### 代码风格与通用规范
+- **语言与框架**：统一使用 TypeScript + React 19 + Next.js 15（App Router），新增页面放在 `src/app`，优先使用 Server Component，只有需要浏览器 API、事件或状态时才加 `"use client"`。
+- **函数式组件**：所有 React 组件使用函数式组件和 Hooks，不引入 class 组件。
+- **类型约定**：
+  - 新增公共类型放在 `src/app/resume/types.ts` 或就近的 `types.ts` / `type.d.ts` 中。
+  - 优先使用明确的接口 / 类型别名，不使用 `any`，无法避免时使用 `unknown` 并在边界处缩小类型。
+- **命名约定**：
+  - 组件：PascalCase（如 `PageContainer`, `Navbar`）。
+  - 文件：组件文件 `PascalCase.tsx`，工具、Hook 使用 camelCase（如 `useCarousel.ts`, `readingTime.ts`）。
+  - 路由目录：使用小写短横线或语义化单词（如 `resume`, `demo`, `chat`）。
+- **导入顺序**：
+  1. 第三方库（`react`, `next/*`, `tdesign-react` 等）
+  2. 项目内部绝对路径（`@/app/...`, `@/utils/...`）
+  3. 相对路径导入（`./`, `../`）
+
+### 样式与 UI 约定
+- **样式体系**：只使用 Tailwind CSS 原子化类和 `globals.css` 中的全局样式，不再引入额外 CSS 预处理器。
+- **Tailwind 使用规则**：
+  - 优先使用已有断点 `xs`（移动端）、`pc`（桌面端），例如 `xs:hidden`, `pc:flex`。
+  - 字体与字号优先使用 `tailwind.config.ts` 中配置的 `font-en`, `text-xss`, `text-lg` 等预设。
+  - 避免在组件中新增大段自定义 CSS，如果需要复用样式，先尝试用 Tailwind 组合类解决。
+- **响应式与移动端**：
+  - 组件需要根据设备差异调整布局时，结合 `useMobile` Hook 与 Tailwind 响应式类统一处理。
+  - `Navbar`、`PageContainer` 等基础布局组件已有响应式策略，新增页面尽量复用它们。
+
+### 组件与页面组织
+- **页面级组件**：
+  - 放在 `src/app/{route}/page.tsx`，保持页面组件轻量，业务拆分到 `_components` 或领域子组件。
+  - 首页、简历、Demo、Chat 等已有路由结构，新功能优先考虑作为现有路由下的新 Section 或卡片，而不是增加新的顶层路由。
+- **可复用组件**：
+  - 共用 UI 放在 `src/app/_components`，例如 `PageContainer`, `Navbar`, `MDRender`, `List`, `Swiper` 等。
+  - 新增通用组件时，遵循现有组件 Props 设计风格（类型明确、语义化命名，避免过深的可选嵌套）。
+- **内容驱动组件**：
+  - Markdown 内容统一通过 `MDRender` 渲染，新增功能如只涉及内容展示，应优先通过新增 Markdown + 现有渲染能力完成，而不是写死在 JSX 中。
+
+---
+
+## 架构模式
+
+### 应用结构
+- **核心目录**：
+  - `src/app`：Next.js App Router 页面与组件。
+  - `public/files`：Markdown 技术文章与学习笔记（按主题分类：`Browser`, `Taro`, `engineer` 等）。
+  - `functions`：Netlify Serverless 函数（如 `ai-chat.mjs`, `export-pdf.mjs`, `wallpaper.js`）。
+  - `plugins` + `scripts`：XLSX 驱动的数据转换与构建期自动化。
+  - `src/config/data.json`：从 `datalist.xlsx` 转换而来的文章元数据源。
+- **分层思路**：
+  - **视图层**：`src/app/*/page.tsx`，负责页面布局与路由。
+  - **组件层**：`src/app/_components` 与各页面下 `_components` 目录。
+  - **数据与配置层**：`src/config` + `public/files` + `datalist.xlsx`。
+  - **服务层**：`functions` + `src/app/common/api.ts`（封装远程或 Serverless 调用）。
+
+### 状态管理
+- **状态管理库**：项目同时使用 `jotai` 与 `zustand`：
+  - 细粒度 UI 状态（局部开关、动画控制等）优先使用 `jotai`。
+  - 跨页面或跨组件共享的全局状态（例如布局偏好）优先使用 `zustand`。
+- **约定**：
+  - 避免在一个功能点上混用两种状态库，选一种保持一致。
+  - 不在深层子组件中直接创建全局 store，store 定义放在清晰可发现的路径（如 `src/app/hooks` 或 `src/app/common`）。
+
+### 路由与导航
+- 使用 Next.js App Router，页面结构清晰：
+  - `/`：首页聚合。
+  - `/detail/[id]`：文章详情，通过 `data.json` 和 Markdown 驱动。
+  - `/tag`：标签视图。
+  - `/demo`：交互式组件演示集合。
+  - `/resume`：简历与技能展示。
+  - `/chat`：AI 聊天。
+- 新增路由时：
+  - 避免与现有路由命名冲突，遵循语义化命名。
+  - 优先使用文件系统路由，不额外维护手写路由配置。
+
+---
+
+## 内容与数据驱动机制
+
+- **Markdown 内容**：
+  - 所有文章统一放在 `public/files/{category}` 下，新增文章请按现有分类或新增合理分类。
+  - 文件命名使用简洁的中文或英文标题，避免过长路径。
+  - 文章元信息（标题、日期、标签）不要硬编码在页面组件中，由 `data.json` 统一管理。
+- **XLSX → JSON 流程**：
+  - 文章列表等结构化数据来自 `datalist.xlsx`，经 `XlsxWatcherPlugin` 和 `xlsxToJson` 转为 `src/config/data.json`。
+  - 开发时如需新增或修改文章条目，应更新 `datalist.xlsx`，而不是直接手改 `data.json`。
+
+---
+
+## 构建与部署约定
+
+- **开发命令**：
+  - 前端本地开发：`pnpm dev`（Next.js，端口 8200）。
+  - 本地函数/接口：`pnpm api`（Netlify Dev，调试 `functions` 下的 Serverless 函数）。
+- **构建与部署**：
+  - 生产构建：`pnpm build`，由 Netlify 使用 `@netlify/plugin-nextjs` 完成部署。
+  - 构建产物目录：`.next`；Serverless 函数目录：`functions`。
+- **性能与优化**：
+  - 依赖 Next.js 内置优化与 `next.config.ts` 中的实验性配置（CSS 优化、包导入优化、客户端缓存等），不在组件中写自定义的打包相关逻辑。
+
+---
+
+## 外部依赖与约束
+
+- **核心依赖版本（只读约束）**：
+  - Next.js `^15.2.0`，React / React DOM `^19.0.0`。
+  - Tailwind CSS `^3.4.1`，TypeScript `^5`，ESLint `^9`。
+  - UI：`tdesign-react` + `tdesign-icons-react`。
+  - 内容：`react-markdown` + `remark-gfm` + `rehype-raw` + `rehype-highlight`。
+  - 工具：`xlsx`、`dayjs`、`@react-spring/web`、`animate.css`。
+- **AI 相关能力**：
+  - 所有 AI 能力通过 Netlify Functions 暴露（如 `ai-chat.mjs`），前端只通过封装好的 API 调用，不直接在组件中集成第三方 SDK。
+
+---
+
+## AI Agent 使用指引（重要）
+
+- **改动优先级**：
+  - 优先复用现有组件（`PageContainer`, `Navbar`, `MDRender`, `List`, `Swiper` 等）与现有布局模式。
+  - 新特性优先通过「配置 + 内容」（Markdown、XLSX）实现，其次再考虑新增组件，最后才调整底层架构。
+- **代码风格保持一致**：
+  - 遵循现有文件的写法：TypeScript 严格类型、函数式组件、Tailwind 原子类、轻量 Hook。
+  - 不随意引入新大型依赖，如需引入，需在文档和依赖说明中补充原因。
+- **文件落点**：
+  - 页面：`src/app/{route}/page.tsx`。
+  - 通用组件：`src/app/_components`。
+  - 专属组件：对应页面目录下的 `_components` 子目录。
+  - 工具函数：`src/utils` 或对应 feature 下的 `utils.ts`。
+
