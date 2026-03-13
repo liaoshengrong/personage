@@ -1,8 +1,7 @@
 ---
 description: personage 项目的项目约定与架构规则，供 AI Agent 在本仓库中自动遵守
-alwaysApply: true
+alwaysApply: false
 ---
-
 ## 项目约定
 
 ### 代码风格与通用规范
