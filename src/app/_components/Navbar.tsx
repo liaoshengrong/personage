@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import type { StaticImageData } from "next/image";
 import Icon, { Tip } from "./Icon";
 import vitaeIcon from "../_images/vitae.svg";
 import skillIcon from "../_images/skill.svg";
@@ -15,6 +16,15 @@ import aiIcon from "../_images/ai.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMobile } from "../hooks/useMobile";
+
+type MenuItem = {
+  title: string;
+  path: string;
+  icon: string | StaticImageData;
+  direction: string;
+  text: string;
+  pcOnly?: boolean;
+};
 const Navbar = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [visble, setVisible] = useState(true);
@@ -53,8 +63,10 @@ const Navbar = () => {
         <div className="flex gap-2 items-center justify-center xs:hidden">
           {menus.map((v, i) => {
             // 详情页应该高亮"博客"链接
-            const isActive = pathname === v.path || 
-                           (v.path === "/" && (pathname === "/" || pathname.startsWith("/detail")));
+            const isActive =
+              pathname === v.path ||
+              (v.path === "/" &&
+                (pathname === "/" || pathname.startsWith("/detail")));
             return (
               <Link
                 href={v.path}
@@ -77,10 +89,12 @@ const Navbar = () => {
           })}
         </div>
         <div className="hidden xs:flex gap-1 items-center justify-center animate__animated animate__backInUp">
-          {menus.map((item, index) => {
+          {menus.filter((item) => !item.pcOnly).map((item, index) => {
             // 详情页应该高亮"博客"链接
-            const isActive = pathname === item.path || 
-                           (item.path === "/" && (pathname === "/" || pathname.startsWith("/detail")));
+            const isActive =
+              pathname === item.path ||
+              (item.path === "/" &&
+                (pathname === "/" || pathname.startsWith("/detail")));
             return (
               <Link
                 href={item.path}
@@ -103,7 +117,7 @@ const Navbar = () => {
 
 export default Navbar;
 
-const menus = [
+const menus: MenuItem[] = [
   {
     title: "技能标签",
     path: "/tag",
@@ -138,5 +152,21 @@ const menus = [
     icon: parseIcon,
     direction: "right",
     text: "Demo",
+  },
+  {
+    title: "学习计划",
+    path: "/study",
+    icon: skillIcon,
+    direction: "right",
+    text: "学习计划",
+    pcOnly: true,
+  },
+  {
+    title: "对话记录",
+    path: "/study-log",
+    icon: listIcon,
+    direction: "right",
+    text: "对话记录",
+    pcOnly: true,
   },
 ];
