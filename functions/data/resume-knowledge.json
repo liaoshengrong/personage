@@ -1,0 +1,144 @@
+{
+  "profile": {
+    "name": "廖声荣",
+    "englishName": "Mark",
+    "education": "西南科技大学，本科（计算机科学与技术）",
+    "experienceYears": "5年前端开发经验",
+    "jobTarget": "高级前端开发"
+  },
+  "chunks": [
+    {
+      "id": "profile-001",
+      "section": "profile",
+      "title": "基础画像",
+      "tags": ["个人信息", "求职", "人设", "经历年限"],
+      "text": "廖声荣（Mark），5年前端开发经验，目标岗位为高级前端开发。擅长 React 生态与工程化实践，当前持续投入 AI 辅助研发与自动化体系建设。"
+    },
+    {
+      "id": "skill-001",
+      "section": "skills",
+      "title": "前端框架",
+      "tags": ["React", "Vue", "Nextjs", "Taro"],
+      "text": "熟练掌握 React/Vue2/Vue3/Taro 与微信小程序开发，具备 Nextjs、Umijs 实战经验。"
+    },
+    {
+      "id": "skill-002",
+      "section": "skills",
+      "title": "语言与样式",
+      "tags": ["TypeScript", "JavaScript", "Tailwind", "CSS"],
+      "text": "熟练掌握 HTML/CSS/JavaScript/TypeScript，精通 Tailwind CSS、Less 等样式方案。"
+    },
+    {
+      "id": "skill-003",
+      "section": "skills",
+      "title": "流式与实时能力",
+      "tags": ["SSE", "流式响应", "实时渲染"],
+      "text": "熟悉 Server-Sent Events（SSE）流式传输，实现双通道数据渲染与实时进度展示，页面响应可优化到 2 秒内。"
+    },
+    {
+      "id": "skill-004",
+      "section": "skills",
+      "title": "AI工程化",
+      "tags": ["AI", "Agent", "Skill", "MCP", "自动化测试"],
+      "text": "具备 AI 工程化实践经验，构建 Skill/Agent 模块化开发体系，整合 MCP 工具（如 Chrome DevTools、Figma）用于自动化开发与测试。"
+    },
+    {
+      "id": "skill-005",
+      "section": "skills",
+      "title": "工程化与质量",
+      "tags": ["Webpack", "Vite", "Jest", "ESLint", "Git"],
+      "text": "熟悉 Webpack、Vite 工程化体系，具备 Jest 单测、ESLint 质量约束、Git 与 hooks 自动化管理实践。"
+    },
+    {
+      "id": "work-001",
+      "section": "work",
+      "title": "深圳华云中盛科技",
+      "tags": ["腾讯SSV", "Nextjs", "微信小程序", "AI工程化"],
+      "text": "2024.9-至今，在深圳华云中盛科技担任前端开发工程师。主导腾讯 SSV 官网、腾讯技术公益和小程序项目开发维护，参与需求评审到上线全流程，并实践 AI 工程化开发模式。"
+    },
+    {
+      "id": "work-002",
+      "section": "work",
+      "title": "深圳志远融通科技",
+      "tags": ["React Native", "Jotai", "Jest", "0到1"],
+      "text": "2022.8-2024.9，在深圳志远融通科技担任前端开发工程师。负责项目 0 到 1 的独立搭建，完成组件与 hooks 封装，并参与 App 项目开发。"
+    },
+    {
+      "id": "work-003",
+      "section": "work",
+      "title": "中电金信软件",
+      "tags": ["React", "Umi", "Echarts", "Redux"],
+      "text": "2020.5-2022.8，在中电金信软件担任前端开发工程师。前期负责数据展示页开发，后期负责需求分配、规范制定与图表组件封装。"
+    },
+    {
+      "id": "project-001",
+      "section": "projects",
+      "title": "野朋友计划 小程序&admin",
+      "tags": ["微信小程序", "AI识别", "腾讯地图SDK", "SSE"],
+      "text": "自然教育领域 AI 识别平台，覆盖小程序与后台管理。支持 AI 识别动植物、地图标记分享、图片上传对话与 SSE 流式渲染。"
+    },
+    {
+      "id": "project-002",
+      "section": "projects",
+      "title": "腾讯技术公益&admin",
+      "tags": ["Umijs", "SSE", "动态弹幕", "管理后台"],
+      "text": "面向技术志愿者与公益机构的协作平台。通过双通道 SSE 实现报告结果流式渲染，结合动态弹幕计算组件支持高并发互动。"
+    },
+    {
+      "id": "project-003",
+      "section": "projects",
+      "title": "腾讯SSV官网&admin",
+      "tags": ["Nextjs", "Tailwind", "zustand", "SEO", "直播"],
+      "text": "腾讯 SSV 官方门户项目，采用 SSR/CSR 混合渲染，推进 SEO 优化与 AI Tools 流式结果页改造，支持大型直播页面能力。"
+    },
+    {
+      "id": "project-004",
+      "section": "projects",
+      "title": "8c Game 平台",
+      "tags": ["React", "TypeScript", "Jotai", "Webpack"],
+      "text": "海外游戏入口 H5 平台，覆盖登录注册、个人中心、钱包、道具商城等模块；完成工程化搭建、性能优化与组件二次封装。"
+    },
+    {
+      "id": "project-005",
+      "section": "projects",
+      "title": "Wealth",
+      "tags": ["React Native", "Nestjs", "GraphQL", "BFF", "Jest"],
+      "text": "保险基金购买平台，发布于 iOS/Android。参与 React Native 多端开发与 BFF 层建设，支持多国家配置与业务差异化处理。"
+    },
+    {
+      "id": "project-006",
+      "section": "projects",
+      "title": "Wealth admin",
+      "tags": ["Vue3", "Vite", "pinia", "后台管理"],
+      "text": "Wealth 配套管理后台，支持用户、收益、偏好等信息管理；完成组件封装、Mock 机制与分包优化策略。"
+    },
+    {
+      "id": "project-007",
+      "section": "projects",
+      "title": "Ko咖啡小程序",
+      "tags": ["Taro", "TypeScript", "微信小程序", "子包优化"],
+      "text": "自动咖啡设备点单小程序，支持扫码点单与基础支付流程；通过分包与路由栈策略优化加载与体验。"
+    },
+    {
+      "id": "project-008",
+      "section": "projects",
+      "title": "腾讯Databrain数据大脑",
+      "tags": ["Umijs", "TypeScript", "Echarts", "微前端"],
+      "text": "数据分析平台，覆盖经分、舆情、情报、看板系统。参与 hooks 与图表组件封装，以及国际化能力建设。"
+    },
+    {
+      "id": "edu-001",
+      "section": "education",
+      "title": "西南科技大学",
+      "tags": ["本科", "计算机科学与技术"],
+      "text": "西南科技大学，本科（计算机科学与技术），2022.03-2024.06。主修数据结构、操作系统、计算机网络、Web 开发等。"
+    },
+    {
+      "id": "edu-002",
+      "section": "education",
+      "title": "南昌教育学院",
+      "tags": ["大专"],
+      "text": "南昌教育学院，大专，2017.09-2020.07。"
+    }
+  ]
+}

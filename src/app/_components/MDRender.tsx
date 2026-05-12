@@ -103,6 +103,12 @@ const Markdown = ({ content }: { content: string }) => {
               {children}
             </td>
           ),
+          strong: ({ children }) => (
+            <strong className="font-semibold text-gray-900">{children}</strong>
+          ),
+          b: ({ children }) => (
+            <b className="font-semibold text-gray-900">{children}</b>
+          ),
         }}
       >
         {content}

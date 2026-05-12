@@ -9,6 +9,59 @@ interface Message {
   content: string;
 }
 
+// 用于“兜底加粗”的关键词清单：当模型没主动用 Markdown 加粗时，前端会做轻量强化。
+const HIGHLIGHT_KEYWORDS = [
+  "深圳华云中盛科技股份有限公司",
+  "深圳志远融通科技",
+  "中电金信软件",
+  "腾讯SSV官网&admin",
+  "腾讯技术公益&admin",
+  "野朋友计划 小程序&admin",
+  "8c Game 平台",
+  "Wealth admin",
+  "Wealth",
+  "Ko咖啡小程序",
+  "腾讯Databrain数据大脑",
+  "Nextjs",
+  "React Native",
+  "React",
+  "TypeScript",
+  "Vue3",
+  "Taro",
+  "SSE",
+  "Nestjs",
+  "GraphQL",
+  "BFF",
+  "西南科技大学",
+];
+
+const escapeRegExp = (text: string) =>
+  // 转义正则特殊字符，避免关键字中含 +、?、() 等时替换异常。
+  text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const emphasizeAiMessage = (content: string) => {
+  // 1) 空内容直接返回；
+  // 2) 如果模型本身已经写了 **加粗**，不重复处理，避免视觉过重。
+  if (!content || content.includes("**")) return content;
+
+  let output = content;
+  // 长词优先：先替换“React Native”再替换“React”，避免短词提前命中导致嵌套。
+  const keywords = [...HIGHLIGHT_KEYWORDS].sort((a, b) => b.length - a.length);
+
+  keywords.forEach((keyword) => {
+    const pattern = new RegExp(escapeRegExp(keyword), "g");
+    output = output.replace(pattern, `**${keyword}**`);
+  });
+
+  // 时间段也属于面试重点信息（如在职区间），这里统一做轻量加粗。
+  output = output.replace(
+    /(\d{4}\.\d{1,2}\s*-\s*(?:\d{4}\.\d{1,2}|至今))/g,
+    "**$1**"
+  );
+
+  return output;
+};
+
 // const url = "https://shengrong.netlify.app/.netlify/functions/ai-chat";
 const url = "http://localhost:8888/.netlify/functions/ai-chat";
 // http://localhost:8888/.netlify/functions/hello
@@ -16,7 +69,11 @@ const url = "http://localhost:8888/.netlify/functions/ai-chat";
 export default function ChatCom() {
   const [message, setMessage] = useState<string>("");
   const [chatHistory, setChatHistory] = useState<Message[]>([
-    { role: "system", content: "你好，我是Mark的AI大模型。" },
+    {
+      role: "system",
+      content:
+        "你好，我是 Mark 的 AI 助手。你可以问我工作经历、项目细节、技术栈和教育背景。",
+    },
   ]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [streamingMessage, setStreamingMessage] = useState<string>("");
@@ -35,17 +92,17 @@ export default function ChatCom() {
     setStreamingMessage("");
 
     try {
-
+      // streaming 回调里实时做“加粗兜底”，让用户在流式输出阶段也能看到重点。
       const response = await sendToAiChat({
         messages: newChatHistory,
         renderItemCallback: (s) => {
-          setStreamingMessage(s);
+          setStreamingMessage(emphasizeAiMessage(s));
         },
         finishCallback: (s) => {
-          // setStreamingMessage(s);
+          // 完整回复入历史前再处理一次，保证最终消息和流式阶段一致。
           const finalMessage: Message = {
             role: "system",
-            content: s || "No response",
+            content: emphasizeAiMessage(s || "No response"),
           };
           setChatHistory((prev) => [...prev, finalMessage]);
         },

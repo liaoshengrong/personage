@@ -269,12 +269,20 @@ const StudyPage = () => {
             </div>
           </div>
           <div className="mt-5">
-            <Link
-              href="/study-log"
-              className="inline-flex items-center rounded-lg border border-cyan-200 bg-cyan-50 text-cyan-700 text-sm px-3 py-2 hover:bg-cyan-100 transition-colors"
-            >
-              查看学习对话记录页
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/study-log"
+                className="inline-flex items-center rounded-lg border border-cyan-200 bg-cyan-50 text-cyan-700 text-sm px-3 py-2 hover:bg-cyan-100 transition-colors"
+              >
+                查看学习对话记录页
+              </Link>
+              <Link
+                href="/study/cache-lab"
+                className="inline-flex items-center rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm px-3 py-2 hover:bg-indigo-100 transition-colors"
+              >
+                打开缓存实验室 Demo
+              </Link>
+            </div>
           </div>
         </section>
 

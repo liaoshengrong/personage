@@ -1,13 +1,22 @@
-import { CORS_HEADERS, createResponse, createJsonResponse } from "./utils/common";
+import { createResponse, createJsonResponse } from "./utils/common.js";
+import { buildResumeContext } from "./utils/resume-rag.mjs";
 // import { stream } from "@netlify/functions";
 
 export default async (event) => {
+  // 兼容不同运行时字段：Netlify 本地、线上 Lambda、Edge 风格都可能不一致。
+  const method =
+    event?.method ||
+    event?.httpMethod ||
+    event?.requestContext?.http?.method ||
+    "";
 
-  if (event.method === "OPTIONS") {
+  // CORS 预检请求：必须尽快返回 200，否则浏览器会直接拦截。
+  if (method === "OPTIONS") {
     return createResponse("", 200);
   }
 
-  if (event.method !== "POST") {
+  // 当前函数只支持 POST（聊天消息上行）。
+  if (method !== "POST") {
     return createJsonResponse({ error: "Method Not Allowed" }, 405);
   }
 
@@ -15,13 +24,13 @@ export default async (event) => {
   try {
     let requestBody;
     
-    // 解析请求体 - 处理ReadableStream
+    // 解析请求体：兼容 string body 与 stream body（不同 runtime 表现不同）。
     if (event.body) {
       if (typeof event.body === 'string') {
-        // 如果body已经是字符串，直接解析
+        // 1) body 已经是 JSON 字符串，直接 parse。
         requestBody = JSON.parse(event.body);
       } else if (event.body instanceof ReadableStream || typeof event.body.getReader === 'function') {
-        // 如果是ReadableStream，读取内容
+        // 2) body 是 ReadableStream，手动读取并转成字符串。
         const reader = event.body.getReader();
         const chunks = [];
         
@@ -35,15 +44,36 @@ export default async (event) => {
         const bodyString = bodyBuffer.toString('utf-8');
         requestBody = JSON.parse(bodyString);
       } else {
-        // 其他情况，尝试直接解析
+        // 3) 其他情况，仍尝试按 JSON 字符串处理。
         requestBody = JSON.parse(event.body);
       }
     } else {
       throw new Error('No request body provided');
     }
 
-    console.log('Request body parsed:', requestBody);
+    // messages 是前端传来的完整对话历史。
+    const requestMessages = Array.isArray(requestBody?.messages)
+      ? requestBody.messages
+      : [];
+    // 取“最后一条用户消息”作为本次检索 query，避免历史对话干扰召回焦点。
+    const latestUserMessage = [...requestMessages]
+      .reverse()
+      .find((item) => item?.role === "user" && typeof item?.content === "string");
+    const userQuery = latestUserMessage?.content?.trim() || "";
+    // 轻量 RAG：召回简历片段并拼入 system prompt。
+    const retrievedContext = buildResumeContext(userQuery);
+    const dynamicSystemPrompt = `你是人工智能助手，名字是廖声荣，英文名字是Mark。
+你的回答要精准、思维严谨、简洁大气（代码场景除外）。
+你正在求职，用户常是前端面试官或招聘方，请回答贴近真实工作经历。
+当问题涉及经历、项目、技能、教育信息时，优先依据【简历检索片段】回答，不要编造简历之外的信息。
+若简历片段不足以支持回答，请明确说明“简历未覆盖该细节”，并给出可行补充方向。
+回答默认不超过200字（代码场景除外）。
+输出格式使用 Markdown；可适当使用 **加粗** 突出重点（如公司名、项目名、技术栈、时间段），每次回答建议 1-3 处，避免过度加粗。
 
+【简历检索片段】
+${retrievedContext}`;
+
+    // 继续走原有 SSE 模式，保证聊天页流式体验不变。
     const res = await fetch(
       "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
       {
@@ -57,37 +87,16 @@ export default async (event) => {
           messages: [
             {
               role: "system",
-              content: `你是人工智能助手，名字是廖声荣，英文名字是Mark。毕业于西南科技大学（本科），目前是一名工作了5年的高级前端开发，框架更倾向于NextJs。
-                你的回答要要精准，思维严谨，简洁大气。回答最多200字，写代码除外。
-                你的用户一般都是需要寻找前端开发的面试官，而你正在找工作，所以你的回答要尽量贴近工作。
-                下面是你的前置知识：
-                1. 该个人网站是自己开发的，用的是NextJs框架，后端是NodeJs，部署在netlify平台。
-                2. 任职过中电金信公司，志远融通公司，易宝软件公司的前端开发。
-                3. 做过的项目有
-                  - 腾讯ssv官网
-                    技术栈：NextJs + Typescript + zustand + tailwindcss + Tdesign
-                    项目描述：该项目是腾讯旗下的一个产品，主要是为了帮助C端用户更好的了解腾讯的产品和服务，同时也为用户提供一些帮助和支持。
-                  - 8c Game 平台
-                    技术栈：React + Typescript + Jotai
-                    项目描述：该平台是给海外游戏做入口的 H5 页面，展示游戏部门所开发的项目入口。涉及登录、注册、个人中心、个人钱包、游戏列表、游戏分类、游戏数据、游戏道具以及道具商城等。
-                  - Wealth
-                    技术栈：React Native + Typescript + Nestjs + Jest
-                    项目描述：保险公司推出的基金购买平台，App 同时发布在 iOS 和 Android 的应用市场，对于不同国家开发对应的功能模块，使用前端 BFF 层做配置以区分和数据处理。
-                  - Wealth admin
-                    技术栈：Vue3、Vite、pinia
-                    项目描述：针对保险的 Wealth 项目的数据，开发的后台管理项目，以便查看/管理用户、收益、偏好等用户信息。
-                  - Ko咖啡小程序
-                    技术栈：Taro + Typescript
-                    项目描述：给自动咖啡制作设备提供小程序点单功能，使用微信扫码进入小程序，具备基本的点单功能和模块。
-                `,
+              content: dynamicSystemPrompt,
             },
-            ...requestBody.messages,
+            ...requestMessages,
           ],
           stream: true,
         }),
       }
     );
 
+    // 模型若未返回可读流，直接抛错让前端展示失败提示。
     if (!res.body) {
       throw new Error("No stream available");
     }
