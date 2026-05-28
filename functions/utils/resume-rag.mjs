@@ -9,11 +9,13 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 const readKnowledge = () => {
   // Netlify 本地调试和源码目录的落盘路径不一致，所以这里准备多套候选路径。
   const candidates = [
-    // 1) 直接从 functions/utils 相对路径回退到 functions/data
+    // 1) Netlify 线上打包：JSON 与入口 ai-chat.mjs 同级放在 data/
+    join(currentDir, "data/resume-knowledge.json"),
+    // 2) 源码目录：functions/utils -> functions/data
     join(currentDir, "../data/resume-knowledge.json"),
-    // 2) 从项目根目录出发的源码路径（本地直接运行时常见）
+    // 3) 从项目根目录出发（本地直接运行时常见）
     resolve(process.cwd(), "functions/data/resume-knowledge.json"),
-    // 3) Netlify dev 打包后函数目录（.netlify/functions-serve）
+    // 4) Netlify dev 打包后函数目录（.netlify/functions-serve）
     resolve(process.cwd(), ".netlify/functions-serve/data/resume-knowledge.json"),
   ];
 
