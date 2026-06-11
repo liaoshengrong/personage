@@ -3,12 +3,7 @@ const FREE_USAGE_STORAGE = 'agnes_free_usage';
 export const FREE_USAGE_LIMIT = 20;
 const AGNES_API_HOST = 'https://apihub.agnes-ai.com';
 const AGNES_API_BASE = `${AGNES_API_HOST}/v1`;
-
-const envApiKey = process.env.NEXT_PUBLIC_AGNES_API_KEY || '';
-
-if (typeof window !== 'undefined' && envApiKey && localStorage.getItem(API_KEY_STORAGE) === envApiKey) {
-  localStorage.removeItem(API_KEY_STORAGE);
-}
+const AGNES_PROXY_BASE = '/api/agnes';
 
 export function getUserApiKey() {
   if (typeof window === 'undefined') return '';
@@ -25,17 +20,13 @@ export function setUserApiKey(key: string) {
   window.dispatchEvent(new Event('agnes-api-key-update'));
 }
 
-export function getStoredApiKey() {
-  return getUserApiKey() || envApiKey;
-}
-
-export function hasConfiguredKey() {
-  return Boolean(getStoredApiKey());
-}
-
-/** 未填写个人 Key 时，使用 .env 中的共享 Key */
+/** 未填写个人 Key 时，走服务端代理使用共享 Key */
 export function isUsingSharedKey() {
-  return Boolean(envApiKey) && !getUserApiKey();
+  return !getUserApiKey();
+}
+
+function shouldUseProxy() {
+  return isUsingSharedKey();
 }
 
 export function getFreeUsageCount() {
@@ -65,14 +56,22 @@ function recordFreeUsage() {
 }
 
 function resolveUrl(path: string) {
+  if (shouldUseProxy()) return `${AGNES_PROXY_BASE}${path}`;
   return `${AGNES_API_BASE}${path}`;
+}
+
+function resolveAgnesApiUrl(query: string) {
+  if (shouldUseProxy()) return `${AGNES_PROXY_BASE}/agnesapi?${query}`;
+  return `${AGNES_API_HOST}/agnesapi?${query}`;
 }
 
 function headers() {
   const h: Record<string, string> = { 'Content-Type': 'application/json' };
-  const key = getStoredApiKey();
-  if (!key) throw new Error('服务暂不可用，请联系管理员配置 API Key');
-  h.Authorization = `Bearer ${key}`;
+  if (!shouldUseProxy()) {
+    const key = getUserApiKey();
+    if (!key) throw new Error('请先设置 API Key');
+    h.Authorization = `Bearer ${key}`;
+  }
   return h;
 }
 
@@ -252,8 +251,8 @@ function extractVideoUrl(data: Record<string, unknown>) {
 
 /** 推荐方式：用 video_id 查询（/agnesapi，不在 /v1 下） */
 export async function getVideoByVideoId(videoId: string) {
-  const url = `${AGNES_API_HOST}/agnesapi?video_id=${encodeURIComponent(videoId)}&model_name=agnes-video-v2.0`;
-  const res = await fetch(url, { headers: headers() });
+  const query = `video_id=${encodeURIComponent(videoId)}&model_name=agnes-video-v2.0`;
+  const res = await fetch(resolveAgnesApiUrl(query), { headers: headers() });
   const data = await res.json();
   if (res.status === 429) {
     throw new Error('轮询过于频繁（RPM 限制 20 次/分钟），请稍后再试');
