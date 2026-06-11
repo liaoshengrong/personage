@@ -1,26 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getUserApiKey, setUserApiKey } from '../_lib/api/client';
 
 type ApiKeyModalProps = {
-  open: boolean;
   onClose: () => void;
   onSaved: () => void;
 };
 
-export default function ApiKeyModal({ open, onClose, onSaved }: ApiKeyModalProps) {
-  const [inputKey, setInputKey] = useState('');
+export default function ApiKeyModal({ onClose, onSaved }: ApiKeyModalProps) {
+  const [inputKey, setInputKey] = useState(() => getUserApiKey());
   const [showKey, setShowKey] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setInputKey(getUserApiKey());
-      setShowKey(false);
-    }
-  }, [open]);
-
-  if (!open) return null;
 
   const hasCustomKey = Boolean(getUserApiKey());
 

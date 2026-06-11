@@ -39,8 +39,8 @@ function Panel({ model }: { model: Model }) {
 export default function AgnesPlayground() {
   const [activeView, setActiveView] = useState('create');
   const [activeModel, setActiveModel] = useState(DEFAULT_MODEL);
-  const [freeRemaining, setFreeRemaining] = useState(FREE_USAGE_LIMIT);
-  const [usingSharedKey, setUsingSharedKey] = useState(true);
+  const [freeRemaining, setFreeRemaining] = useState(() => getFreeUsageRemaining());
+  const [usingSharedKey, setUsingSharedKey] = useState(() => isUsingSharedKey());
   const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false);
   const { selectedWork, closeWork } = useWorks();
 
@@ -52,7 +52,6 @@ export default function AgnesPlayground() {
   };
 
   useEffect(() => {
-    syncKeyState();
     window.addEventListener('agnes-free-usage-update', syncKeyState);
     window.addEventListener('agnes-api-key-update', syncKeyState);
     return () => {
@@ -130,11 +129,12 @@ export default function AgnesPlayground() {
       </div>
 
       <WorkDetailModal work={selectedWork} onClose={closeWork} />
-      <ApiKeyModal
-        open={apiKeyModalOpen}
-        onClose={() => setApiKeyModalOpen(false)}
-        onSaved={syncKeyState}
-      />
+      {apiKeyModalOpen && (
+        <ApiKeyModal
+          onClose={() => setApiKeyModalOpen(false)}
+          onSaved={syncKeyState}
+        />
+      )}
     </div>
   );
 }
