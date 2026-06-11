@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import PromptComposer, { PromptChip, RandomIcon } from './PromptComposer';
 import { createVideoTask, pollVideoTask } from '../_lib/api/client';
 import { useWorks } from '../_context/WorksContext';
 import { createWorkId, WORK_STATUS } from '../_lib/store/works';
@@ -172,24 +173,22 @@ export default function VideoPanel({ model }: { model: Model }) {
 
       <div className="panel-body">
         <div className="form-section">
-          <label htmlFor="vid-prompt">视频描述 Prompt</label>
-          <textarea
+          <PromptComposer
             id="vid-prompt"
+            label="视频描述 Prompt"
+            tip="描述场景、运动与镜头感"
+            variant="video"
+            badgeLabel="视频"
             value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
+            onChange={setPrompt}
             placeholder="描述视频场景与运动，例如：一只猫在海滩日落时分漫步，柔和海浪，温暖金色光线…"
-            rows={4}
+            actions={
+              <PromptChip disabled={loading} onClick={() => setPrompt(pickRandomPrompt())}>
+                <RandomIcon />
+                随机
+              </PromptChip>
+            }
           />
-          <div className="prompt-actions">
-            <button
-              type="button"
-              className="btn-ghost btn-random"
-              onClick={() => setPrompt(pickRandomPrompt())}
-              disabled={loading}
-            >
-              随机
-            </button>
-          </div>
 
           <div className="form-row">
             <div className="form-field">

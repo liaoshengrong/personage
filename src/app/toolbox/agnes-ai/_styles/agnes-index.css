@@ -42,7 +42,10 @@
 .agnes-playground input,
 .agnes-playground select,
 .agnes-playground textarea {
-  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
 }
 
 .agnes-playground input,
