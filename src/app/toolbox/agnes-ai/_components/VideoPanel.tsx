@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import PromptComposer, { PromptChip, RandomIcon } from './PromptComposer';
+import { useMemo, useRef, useState } from 'react';
+import PromptComposer, { OptimizeIcon, PromptChip, RandomIcon } from './PromptComposer';
 import { createVideoTask, pollVideoTask } from '../_lib/api/client';
+import { optimizeVideoPrompt } from '../_lib/optimizePrompt';
 import { useWorks } from '../_context/WorksContext';
 import { createWorkId, WORK_STATUS } from '../_lib/store/works';
 import {
@@ -28,18 +29,26 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const RANDOM_VIDEO_PROMPTS = [
-  '电影感慢镜头，清晨薄雾笼罩的江南水乡，一行白鹭低掠水面，乌篷船从古朴石桥下缓缓驶过，船娘摇橹划开层层涟漪，两岸垂柳随风轻摆，远处粉墙黛瓦在暖色晨光中逐渐清晰，水面倒映天光云影，偶尔有炊烟从屋顶升起，整体氛围宁静诗意，色调偏青绿与暖金，镜头平稳向前推进，主体运动舒缓自然，细节层次丰富写实，适合用作文旅宣传短片开场。',
-  '黄昏时分的海滨栈道，一位穿白色长裙的女孩背对镜头缓步前行，海风拂动发丝与裙摆，脚下老旧木栈道延伸至远方海平线，右侧深蓝海浪有节奏地拍打礁石溅起细碎浪花，天空由橙金渐变为紫红，远处灯塔亮起暖光，海鸥掠过画面，画面温暖浪漫富有电影质感，镜头跟随人物缓慢移动，光影过渡柔和细腻，情绪舒缓治愈。',
-  '雨后的东京涩谷十字路口，地面如镜倒映霓虹招牌与车灯，行人撑透明雨伞匆匆穿行，红绿灯交替闪烁，蒸汽从路边小吃摊袅袅升起，湿润路面反射出蓝紫粉交织的赛博朋克色调，远处列车驶过高架桥带起轻微震动，城市节奏感强烈却带一丝雨夜静谧，镜头从高处缓缓下降俯拍，光影层次丰富，街景细节清晰。',
-  '秋日午后金色麦田，一只柴犬欢快奔跑其间，耳朵随步伐上下弹动，麦浪在风中起伏如海，阳光从侧后方打来形成轮廓光，远处可见红色风车缓慢转动，偶尔有落叶与草籽飘入画面，空气里仿佛带着麦香，色调饱和温暖，镜头低角度跟拍宠物视角，运动轨迹连贯流畅，充满治愈、自由与乡村田园气息。',
-  '深夜赛博朋克风格的城市小巷，两侧墙面布满发光涂鸦与全息广告，地面潮湿反光，薄雾在巷口弥漫，一只机械猫从阴影中走出，眼睛发出幽蓝光芒，远处传来隐约警笛与电流嗡鸣，偶有行人撑伞匆匆经过，蓝紫霓虹主导色调对比强烈，镜头缓慢推进营造悬疑科幻氛围，雨雾与灯光交织，适合科幻短片氛围铺垫。',
-  '雪山脚下清澈湖泊的黎明，湖面平静如镜倒映巍峨雪峰与朝霞，一只天鹅优雅滑过水面留下长长水痕，岸边松林覆着薄霜，第一缕阳光照亮山尖染成金色，空气清冽通透可见呼吸白雾，远处山谷有薄云流动，镜头从湖面低位缓慢抬升展现壮阔全景，风格写实圣洁，画面通透富有层次，适合自然风光纪录片风格。',
-  '复古蒸汽火车穿越深秋山林，车头喷出浓厚白色蒸汽，铁轨两旁枫叶火红与金黄交织，落叶被气流卷起在空中飞旋，阳光穿过林间形成丁达尔光束，车厢窗户映出暖色灯光与乘客剪影，伴随车轮与铁轨的节奏感与汽笛回响，镜头侧面跟拍，怀旧胶片质感浓郁，运动与光影富有韵律，充满公路旅行与时代变迁感。',
-  '繁忙咖啡馆的午后窗边，一杯拿铁热气缓缓升腾，奶泡拉花细微颤动，窗外行人模糊走过带起光影流动，雨滴轻敲玻璃形成水珠滑落轨迹，室内暖黄灯光柔和，背景隐约可见咖啡机蒸汽与低语交谈，桌上摊开一本旧书与眼镜，浅景深特写，镜头极缓推近杯面，氛围慵懒惬意，蒸汽与光影细节动人，适合生活方式短片。',
-  '广袤沙漠日落时分，驼队剪影在金色沙丘脊线上缓缓前行，风吹起细沙如薄雾流动，太阳接近地平线将天空染成橙红至靛蓝渐变，沙丘表面光影明暗交错纹理细腻，远处偶尔可见枯木与风蚀岩石，驼铃仿佛可闻，镜头航拍缓慢环绕，史诗感与孤独感并存，沙粒飞扬质感真实，适合冒险题材电影片头氛围。',
-  '春日樱花盛开的公园小径，花瓣随风密集飘落如雪，一对母女牵手漫步其间，女孩伸手试图接住花瓣，阳光透过花枝洒下斑驳光点，草地新绿柔软，远处有野餐人群虚化，粉白与嫩绿主色调清新明亮，镜头手持轻微晃动增强真实感，人物动作轻柔自然，温馨治愈，适合家庭主题短片或日系文艺风格视频。',
-  '水下珊瑚礁世界，阳光从海面穿透形成摇曳光柱，热带鱼群穿梭游动闪烁蓝黄条纹，海龟从容划水前进，珊瑚随水流轻微摇曳，气泡缓缓上升，海水清澈透亮带蓝绿渐变，远处隐约可见潜水员身影，镜头缓慢平移跟随鱼群，纪录片风格，色彩鲜艳生机勃勃，水体通透光影灵动，适合海洋科普或治愈系自然视频。',
-  '冬夜北欧小镇街道，鹅毛大雪静静飘落，路灯投下暖黄光圈，烟囱冒出袅袅白烟，橱窗内陈列圣诞装饰闪烁微光，一串脚印深浅延伸向远处，积雪覆盖屋顶、长椅与红色邮筒，偶尔有孩童跑过留下笑声虚化，整体冷暖对比柔和，镜头从街角缓慢横移，雪花飘落轨迹清晰，童话般宁静祥和，适合节日氛围短片。',
+  '国漫风格，电影感慢镜头，25岁御姐站在落地窗边，黑色大波浪长发随空调微风轻轻飘动，她缓缓转身面向镜头，眼神从疏离到微微撩人，城市夜景霓虹在玻璃上流动反光，深V黑色吊带裙，侧光勾勒肩线与锁骨，镜头从中景缓慢推近至面部特写，现代中国审美，色调冷蓝与暖金交织',
+  '国漫恋爱番风格，20岁少女站在校园公寓阳台，齐肩黑直发与空气刘海被晚风拂起，她低头害羞后又抬眼望向镜头，白色针织短上衣，背景是渐变的橙紫晚霞，镜头固定机位浅景深，花瓣或光斑偶尔飘过画面前景，清新治愈，动作轻柔连贯',
+  '现代国风国漫，御姐穿改良旗袍在中式酒吧中缓缓穿行，高开衩随步伐若隐若现，盘发配金簪，她停步侧身回眸，眼尾微挑，暖色顶光与冷色霓虹交替扫过面庞，镜头侧面跟拍后环绕至正面，丝绸质感在光下流动，性感有品位',
+  '国漫男主禁欲系，28岁男性靠坐书房皮沙发，解开两颗扣的白衬衫，窗外雨丝滑落玻璃，他缓慢抬眼望向镜头，黑色碎发微动，小臂线条在冷色台灯光下清晰，镜头从全景推至中景，侧脸轮廓光，国产都市剧男主动漫化，雨夜氛围',
+  '国漫痞帅男主，黄昏公路边，微卷中分男生倚靠复古摩托，他拿起头盔转头对镜头坏笑，皮夹克被晚风吹动，金色逆光勾勒下颌线，远处公路延伸消失于地平线，镜头低角度缓慢环绕半圈，公路电影调色，动感自然',
+  '新中式国漫男主，竹林晨雾中持折扇缓步前行，改良汉服衣摆随步伐轻摆，长发半束，他停步展开折扇遮半面，桃花眼透过扇缘看镜头，水墨晕染背景中雾气流动，镜头平稳向前推进，清冷贵气，天官赐福类画风',
+  '超写实摄影风格，25岁中国都市女性在咖啡馆落地窗前，她端起咖啡杯轻抿一口后放下，抬眼对镜头浅笑，黑色长发滑落肩侧，米色针织开衫，午后柔光透过玻璃，浅景深，85mm 质感，镜头极缓推近，现代中国审美，高级松弛感',
+  '电影级写实，御姐气质中国女生穿红色缎面晚礼服，在上海外滩夜景中缓步向前，盘发露出颈肩线条，霓虹 bokeh 在身后流动，她走到栏杆边停下回望镜头，伦勃朗光，镜头跟拍后轻微环绕，像国产都市电影女主角片段',
+  '写实时尚街拍，22岁中国女生在武康路梧桐街道自然行走，牛仔外套与阔腿裤随步伐摆动，她转头看向镜头，清透裸妆，阳光穿过树叶形成斑驳光点，镜头手持轻微跟拍，胶片色调，Vogue 中文版街拍视频感',
+  '写实商业风，30岁中国男性在玻璃幕墙办公室整理领带后走向落地窗，深灰定制西装，城市天际线在背后延伸，他停步侧脸望向窗外再转向镜头，冷调精英感，镜头从背后跟拍绕至侧面中景，国产都市剧男主宣传质感',
+  '三亚泳池写实，中国年轻女性从水中缓缓起身，湿发贴颈，白色连体泳衣外搭亚麻衬衫，水珠沿锁骨滑落，金色日落逆光，她抬手撩发望向海平线，镜头低角度缓慢上升，运动画报风格，活力健康性感',
+  '电影感慢镜头，清晨薄雾中的江南水乡，乌篷船从石桥下缓缓驶过，船娘摇橹划开涟漪，两岸垂柳轻摆，白鹭低掠水面，粉墙黛瓦在暖色晨光中逐渐清晰，镜头平稳向前推进，青绿与暖金色调，宁静诗意',
+  '黄昏海滨栈道，穿白色长裙的中国女孩背对镜头缓步前行，海风拂动发丝与裙摆，脚下木栈道延伸向海平线，海浪有节奏拍打礁石，天空由橙金渐变为紫红，镜头缓慢跟随，温暖浪漫，电影质感',
+  '雨夜赛博朋克都市，中国年轻女性撑透明伞穿行霓虹街道，地面如镜倒映蓝紫粉招牌，湿润路面反射车灯，她停步抬头看全息广告，发丝与伞沿水珠滑落，镜头从高处缓降跟拍，光影层次丰富，现代中国夜生活审美',
+  '秋日金色麦田，柴犬在麦浪中欢快奔跑，耳朵随步伐弹动，侧后方阳光形成轮廓光，远处红色风车缓慢转动，镜头低角度跟拍，色调饱和温暖，治愈自由，乡村田园气息',
+  '深夜赛博朋克小巷，机械猫从阴影走出，幽蓝眼睛闪烁，墙面发光涂鸦与全息广告流动，地面潮湿反光薄雾弥漫，镜头缓慢推进，蓝紫霓虹对比强烈，悬疑科幻氛围',
+  '雪山黎明湖泊，湖面如镜倒映雪峰与朝霞，天鹅优雅滑过留下水痕，岸边薄霜松林，第一缕阳光染金山尖，镜头从湖面低位缓慢抬升，写实圣洁，纪录片风格',
+  '复古蒸汽火车穿越深秋山林，白色蒸汽喷涌，枫叶被气流卷起飞旋，丁达尔光束穿过林间，镜头侧面跟拍，怀旧胶片质感，韵律感强',
+  '繁忙咖啡馆午后，拿铁热气缓缓升腾，奶泡拉花细微颤动，窗外行人模糊走过，雨滴轻敲玻璃，镜头极缓推近杯面，暖黄灯光，慵懒惬意',
+  '春日樱花公园，花瓣随风密集飘落，母女牵手漫步，女孩伸手接花瓣，阳光透过花枝洒下光点，镜头手持轻微晃动，粉白与嫩绿，温馨治愈',
 ];
 
 function pickRandomPrompt() {
@@ -54,11 +63,44 @@ export default function VideoPanel({ model }: { model: Model }) {
   const [resolution, setResolution] = useState(RESOLUTIONS[0]);
   const [referenceImage, setReferenceImage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [optimizing, setOptimizing] = useState(false);
   const [progress, setProgress] = useState<{ status: string; progress: number; videoId?: string } | null>(null);
   const [result, setResult] = useState<{ url: string; videoId: string } | null>(null);
   const [error, setError] = useState('');
+  const promptInputRef = useRef<HTMLTextAreaElement>(null);
 
   const frameOptions = useMemo(() => getFrameOptionsForFps(frameRate), [frameRate]);
+
+  const scrollPromptToBottom = () => {
+    const el = promptInputRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  };
+
+  const optimizePrompt = async () => {
+    const text = prompt.trim();
+    if (!text || optimizing || loading) return;
+
+    setOptimizing(true);
+    setError('');
+
+    try {
+      const optimized = await optimizeVideoPrompt(text, {
+        onDelta: (content) => {
+          setPrompt(content);
+          requestAnimationFrame(scrollPromptToBottom);
+        },
+      });
+      setPrompt(optimized);
+      requestAnimationFrame(scrollPromptToBottom);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '未知错误';
+      setError(message);
+      setPrompt(text);
+    } finally {
+      setOptimizing(false);
+    }
+  };
 
   const handleFrameRateChange = (nextFrameRate: number) => {
     const options = getFrameOptionsForFps(nextFrameRate);
@@ -176,17 +218,32 @@ export default function VideoPanel({ model }: { model: Model }) {
           <PromptComposer
             id="vid-prompt"
             label="视频描述 Prompt"
-            tip="描述场景、运动与镜头感"
+            tip="描述运动、镜头与时间变化 · 中英文均可"
             variant="video"
             badgeLabel="视频"
             value={prompt}
             onChange={setPrompt}
-            placeholder="描述视频场景与运动，例如：一只猫在海滩日落时分漫步，柔和海浪，温暖金色光线…"
+            placeholder="描述视频场景、主体动作与镜头运动，例如：女孩在樱花树下缓步前行，花瓣飘落，镜头缓慢跟随…"
+            inputRef={promptInputRef}
+            readOnly={optimizing}
             actions={
-              <PromptChip disabled={loading} onClick={() => setPrompt(pickRandomPrompt())}>
-                <RandomIcon />
-                随机
-              </PromptChip>
+              <>
+                <PromptChip
+                  accent
+                  disabled={loading || optimizing || !prompt.trim()}
+                  onClick={optimizePrompt}
+                >
+                  <OptimizeIcon />
+                  {optimizing ? '优化中…' : '优化'}
+                </PromptChip>
+                <PromptChip
+                  disabled={loading || optimizing}
+                  onClick={() => setPrompt(pickRandomPrompt())}
+                >
+                  <RandomIcon />
+                  随机
+                </PromptChip>
+              </>
             }
           />
 
@@ -258,7 +315,7 @@ export default function VideoPanel({ model }: { model: Model }) {
             type="button"
             className="btn-primary"
             onClick={generate}
-            disabled={loading || !prompt.trim()}
+            disabled={loading || optimizing || !prompt.trim()}
           >
             {loading ? '生成中…' : '生成视频'}
           </button>
