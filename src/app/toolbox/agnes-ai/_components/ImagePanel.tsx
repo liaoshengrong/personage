@@ -4,17 +4,18 @@ import { useState } from 'react';
 import { generateImage } from '../_lib/api/client';
 import { useWorks } from '../_context/WorksContext';
 import { createWorkId, WORK_STATUS } from '../_lib/store/works';
+import type { Model } from '../_lib/models';
 
 const SIZES = ['1024x1024', '1024x768', '768x1024', '1152x768'];
 
-export default function ImagePanel({ model }) {
+export default function ImagePanel({ model }: { model: Model }) {
   const { addWork, updateWork } = useWorks();
   const [prompt, setPrompt] = useState('');
   const [size, setSize] = useState('1024x1024');
   const [referenceImage, setReferenceImage] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<{ url: string; revisedPrompt?: string } | null>(null);
   const [error, setError] = useState('');
 
   const generate = async () => {
@@ -60,10 +61,11 @@ export default function ImagePanel({ model }) {
         completedAt: Date.now(),
       });
     } catch (err) {
-      setError(err.message);
+      const message = err instanceof Error ? err.message : '未知错误';
+      setError(message);
       updateWork(workId, {
         status: WORK_STATUS.FAILED,
-        error: err.message,
+        error: message,
         completedAt: Date.now(),
       });
     } finally {
@@ -127,7 +129,9 @@ export default function ImagePanel({ model }) {
                 if (!file) return;
                 setImageUrl('');
                 const reader = new FileReader();
-                reader.onload = () => setReferenceImage(reader.result);
+                reader.onload = () => {
+                  if (typeof reader.result === 'string') setReferenceImage(reader.result);
+                };
                 reader.readAsDataURL(file);
               }}
             />

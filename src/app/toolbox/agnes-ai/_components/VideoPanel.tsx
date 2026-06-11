@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { createVideoTask, pollVideoTask } from '../_lib/api/client';
 import { useWorks } from '../_context/WorksContext';
 import { createWorkId, WORK_STATUS } from '../_lib/store/works';
@@ -10,6 +10,7 @@ import {
   getVideoDuration,
   validateVideoParams,
 } from '../_lib/utils/videoParams';
+import type { Model } from '../_lib/models';
 
 const RESOLUTIONS = [
   { width: 1152, height: 768, label: '1152 × 768' },
@@ -17,7 +18,7 @@ const RESOLUTIONS = [
   { width: 1024, height: 576, label: '1024 × 576' },
 ];
 
-const STATUS_LABEL = {
+const STATUS_LABEL: Record<string, string> = {
   queued: '排队中',
   in_progress: '生成中',
   processing: '处理中',
@@ -44,7 +45,7 @@ function pickRandomPrompt() {
   return RANDOM_VIDEO_PROMPTS[Math.floor(Math.random() * RANDOM_VIDEO_PROMPTS.length)];
 }
 
-export default function VideoPanel({ model }) {
+export default function VideoPanel({ model }: { model: Model }) {
   const { addWork, updateWork } = useWorks();
   const [prompt, setPrompt] = useState('');
   const [frameRate, setFrameRate] = useState(24);
@@ -52,23 +53,27 @@ export default function VideoPanel({ model }) {
   const [resolution, setResolution] = useState(RESOLUTIONS[0]);
   const [referenceImage, setReferenceImage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(null);
-  const [result, setResult] = useState(null);
+  const [progress, setProgress] = useState<{ status: string; progress: number; videoId?: string } | null>(null);
+  const [result, setResult] = useState<{ url: string; videoId: string } | null>(null);
   const [error, setError] = useState('');
 
   const frameOptions = useMemo(() => getFrameOptionsForFps(frameRate), [frameRate]);
 
-  useEffect(() => {
-    if (!frameOptions.some((f) => f.value === numFrames)) {
-      setNumFrames(frameOptions[frameOptions.length - 1]?.value ?? 121);
+  const handleFrameRateChange = (nextFrameRate: number) => {
+    const options = getFrameOptionsForFps(nextFrameRate);
+    setFrameRate(nextFrameRate);
+    if (!options.some((f) => f.value === numFrames)) {
+      setNumFrames(options[options.length - 1]?.value ?? 121);
     }
-  }, [frameOptions, numFrames]);
+  };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => setReferenceImage(reader.result);
+    reader.onload = () => {
+      if (typeof reader.result === 'string') setReferenceImage(reader.result);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -141,10 +146,11 @@ export default function VideoPanel({ model }) {
         completedAt: Date.now(),
       });
     } catch (err) {
-      setError(err.message);
+      const message = err instanceof Error ? err.message : '未知错误';
+      setError(message);
       updateWork(workId, {
         status: WORK_STATUS.FAILED,
-        error: err.message,
+        error: message,
         subStatus: 'failed',
         completedAt: Date.now(),
       });
@@ -191,7 +197,7 @@ export default function VideoPanel({ model }) {
               <select
                 id="vid-fps"
                 value={frameRate}
-                onChange={(e) => setFrameRate(Number(e.target.value))}
+                onChange={(e) => handleFrameRateChange(Number(e.target.value))}
               >
                 {FPS_OPTIONS.map((f) => (
                   <option key={f.value} value={f.value}>{f.label}</option>

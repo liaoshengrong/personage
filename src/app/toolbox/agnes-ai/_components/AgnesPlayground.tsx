@@ -11,11 +11,9 @@ import WorkDetailModal from './WorkDetailModal';
 import WorksCardList from './WorksCardList';
 import { useWorks } from '../_context/WorksContext';
 import { useResumeVideoWorks } from '../_hooks/useResumeVideoWorks';
-import { MODEL_CATEGORIES, DEFAULT_MODEL, UNIVERSAL_MODEL } from '../_lib/models';
+import { MODEL_CATEGORIES, DEFAULT_MODEL, UNIVERSAL_MODEL, type Model } from '../_lib/models';
 import { setUserApiKey, isEnvKeyActive } from '../_lib/api/client';
 import '../_styles/agnes-app.css';
-
-type Model = (typeof MODEL_CATEGORIES)[number]['models'][number] | typeof UNIVERSAL_MODEL;
 
 function Panel({ model }: { model: Model }) {
   switch (model.type) {
@@ -96,7 +94,7 @@ export default function AgnesPlayground() {
           activeModel={activeModel}
           activeView={activeView}
           onViewChange={setActiveView}
-          onSelect={(model) => {
+          onSelect={(model: Model) => {
             setActiveModel(model);
             setActiveView('create');
           }}

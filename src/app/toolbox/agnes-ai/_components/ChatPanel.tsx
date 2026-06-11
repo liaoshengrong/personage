@@ -2,18 +2,26 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { chatCompletion } from '../_lib/api/client';
+import type { Model } from '../_lib/models';
 
-export default function ChatPanel({ model }) {
-  const [messages, setMessages] = useState([
+type ChatMessage = {
+  role: string;
+  content: string;
+  attachment?: { url: string; type: 'video' | 'image' };
+  isError?: boolean;
+};
+
+export default function ChatPanel({ model }: { model: Model }) {
+  const [messages, setMessages] = useState<ChatMessage[]>([
     { role: 'assistant', content: `你好！当前使用 **${model.name}**，有什么可以帮你的？` },
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [temperature, setTemperature] = useState(0.7);
   const [enableThinking, setEnableThinking] = useState(false);
-  const [attachment, setAttachment] = useState(null);
-  const bottomRef = useRef(null);
-  const fileRef = useRef(null);
+  const [attachment, setAttachment] = useState<{ url: string; type: 'video' | 'image' } | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const supportsThinking = model.id === 'agnes-2.0-flash';
   const supportsVision = model.id === 'agnes-2.0-flash';
@@ -21,12 +29,6 @@ export default function ChatPanel({ model }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
-
-  useEffect(() => {
-    setMessages([
-      { role: 'assistant', content: `已切换至 **${model.name}**，开始新的对话吧。` },
-    ]);
-  }, [model.id]);
 
   const send = async () => {
     const text = input.trim();
@@ -72,11 +74,12 @@ export default function ChatPanel({ model }) {
         return updated;
       });
     } catch (err) {
+      const message = err instanceof Error ? err.message : '未知错误';
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {
           role: 'assistant',
-          content: `❌ ${err.message}`,
+          content: `❌ ${message}`,
           isError: true,
         };
         return updated;
@@ -86,7 +89,7 @@ export default function ChatPanel({ model }) {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       send();
@@ -171,6 +174,7 @@ export default function ChatPanel({ model }) {
                 if (!file) return;
                 const reader = new FileReader();
                 reader.onload = () => {
+                  if (typeof reader.result !== 'string') return;
                   setAttachment({
                     url: reader.result,
                     type: file.type.startsWith('video/') ? 'video' : 'image',

@@ -14,7 +14,11 @@ interface IProps {
 const Perview = ({ data, index, onChoose, isActive }: IProps) => {
   const isMobile = useMobile();
   const { title, tag, desc, date } = data;
-  const [readingTime, setReadingTime] = useState<number | null>(null);
+  const [readingTime, setReadingTime] = useState<number | null>(() => {
+    if (typeof window === "undefined") return null;
+    const cachedContent = localStorage.getItem(title);
+    return cachedContent ? calculateReadingTime(cachedContent) : null;
+  });
   const animatecss =
     index % 2 === 0 ? "animate__bounceInLeft" : "animate__bounceInRight";
   
@@ -22,23 +26,16 @@ const Perview = ({ data, index, onChoose, isActive }: IProps) => {
     getFiles(tag, title);
   }, [tag, title]);
 
-  // 计算阅读时间
+  // 内容未缓存时异步拉取并计算阅读时间
   useEffect(() => {
-    const cachedContent = localStorage.getItem(title);
-    if (cachedContent) {
-      const time = calculateReadingTime(cachedContent);
-      setReadingTime(time);
-    } else {
-      // 如果内容还没加载，尝试获取
-      getFiles(tag, title).then(() => {
-        const content = localStorage.getItem(title);
-        if (content) {
-          const time = calculateReadingTime(content);
-          setReadingTime(time);
-        }
-      });
-    }
-  }, [title, tag]);
+    if (readingTime !== null) return;
+    getFiles(tag, title).then(() => {
+      const content = localStorage.getItem(title);
+      if (content) {
+        setReadingTime(calculateReadingTime(content));
+      }
+    });
+  }, [title, tag, readingTime]);
 
   const titlecss = isActive
     ? "text-[#FF0000] text-nowrap text-lg"

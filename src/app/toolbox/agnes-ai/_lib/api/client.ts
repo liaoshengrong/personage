@@ -34,17 +34,30 @@ export function isEnvKeyActive() {
   return Boolean(envApiKey) && !getUserApiKey();
 }
 
-function resolveUrl(path) {
+function resolveUrl(path: string) {
   return `${AGNES_API_BASE}${path}`;
 }
 
 function headers() {
-  const h = { 'Content-Type': 'application/json' };
+  const h: Record<string, string> = { 'Content-Type': 'application/json' };
   const key = getStoredApiKey();
   if (!key) throw new Error('请先在顶部填写 API Key');
   h.Authorization = `Bearer ${key}`;
   return h;
 }
+
+type ChatMessageContent =
+  | string
+  | Array<{ type: string; text?: string; image_url?: { url: string } }>;
+
+type ChatCompletionOptions = {
+  model: string;
+  messages: Array<{ role: string; content: ChatMessageContent }>;
+  stream?: boolean;
+  temperature?: number;
+  maxTokens?: number;
+  enableThinking?: boolean;
+};
 
 export async function chatCompletion({
   model,
@@ -53,8 +66,8 @@ export async function chatCompletion({
   temperature = 0.7,
   maxTokens = 2048,
   enableThinking = false,
-}) {
-  const body = {
+}: ChatCompletionOptions) {
+  const body: Record<string, unknown> = {
     model,
     messages,
     stream,
@@ -82,7 +95,7 @@ export async function chatCompletion({
     return data.choices?.[0]?.message?.content ?? '';
   }
 
-  const reader = res.body.getReader();
+  const reader = res.body!.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
   let fullText = '';
@@ -113,8 +126,20 @@ export async function chatCompletion({
   return fullText;
 }
 
-export async function generateImage({ model, prompt, size = '1024x1024', n = 1, image }) {
-  const body = { model, prompt, size, n };
+export async function generateImage({
+  model,
+  prompt,
+  size = '1024x1024',
+  n = 1,
+  image,
+}: {
+  model: string;
+  prompt: string;
+  size?: string;
+  n?: number;
+  image?: string;
+}) {
+  const body: Record<string, unknown> = { model, prompt, size, n };
   if (image) {
     body.extra_body = { image: [image] };
   }
@@ -140,8 +165,16 @@ export async function createVideoTask({
   numFrames = 121,
   frameRate = 24,
   image,
+}: {
+  model: string;
+  prompt: string;
+  width?: number;
+  height?: number;
+  numFrames?: number;
+  frameRate?: number;
+  image?: string;
 }) {
-  const body = {
+  const body: Record<string, unknown> = {
     model,
     prompt,
     width,
@@ -167,12 +200,18 @@ export async function createVideoTask({
   return data;
 }
 
-function extractVideoUrl(data) {
-  return data.remixed_from_video_id || data.video_url || data.url || data.output?.url;
+function extractVideoUrl(data: Record<string, unknown>) {
+  const output = data.output as { url?: string } | undefined;
+  return (
+    data.remixed_from_video_id ||
+    data.video_url ||
+    data.url ||
+    output?.url
+  ) as string | undefined;
 }
 
 /** 推荐方式：用 video_id 查询（/agnesapi，不在 /v1 下） */
-export async function getVideoByVideoId(videoId) {
+export async function getVideoByVideoId(videoId: string) {
   const url = `${AGNES_API_HOST}/agnesapi?video_id=${encodeURIComponent(videoId)}&model_name=agnes-video-v2.0`;
   const res = await fetch(url, { headers: headers() });
   const data = await res.json();
@@ -186,7 +225,7 @@ export async function getVideoByVideoId(videoId) {
 }
 
 /** @deprecated 用 task_id 查询会导致长时间 queued，仅作兜底 */
-export async function getVideoByTaskId(taskId) {
+export async function getVideoByTaskId(taskId: string) {
   const res = await fetch(resolveUrl(`/videos/${taskId}`), { headers: headers() });
   const data = await res.json();
   if (res.status === 429) {
@@ -198,8 +237,22 @@ export async function getVideoByTaskId(taskId) {
   return data;
 }
 
+type PollVideoOptions = {
+  onProgress?: (payload: {
+    status: string;
+    progress: number;
+    data?: Record<string, unknown>;
+    videoId: string;
+  }) => void;
+  interval?: number;
+  maxAttempts?: number;
+};
+
 /** 视频异步轮询：必须用 video_id，间隔 5s，最长等待 30 分钟 */
-export async function pollVideoTask(videoId, { onProgress, interval = 5000, maxAttempts = 360 } = {}) {
+export async function pollVideoTask(
+  videoId: string,
+  { onProgress, interval = 5000, maxAttempts = 360 }: PollVideoOptions = {},
+) {
   if (!videoId) {
     throw new Error('未返回 video_id，无法查询视频结果');
   }

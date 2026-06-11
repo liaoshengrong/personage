@@ -14,16 +14,16 @@ export const FPS_OPTIONS = [
   { value: 60, label: '60 FPS（最长 5s）' },
 ];
 
-export function getVideoDuration(numFrames, frameRate) {
+export function getVideoDuration(numFrames: number, frameRate: number) {
   return numFrames / frameRate;
 }
 
-export function getMaxDuration(frameRate) {
-  return FPS_MAX_DURATION[frameRate] ?? 15;
+export function getMaxDuration(frameRate: number) {
+  return FPS_MAX_DURATION[frameRate as keyof typeof FPS_MAX_DURATION] ?? 15;
 }
 
 /** 根据帧率过滤合法帧数选项 */
-export function getFrameOptionsForFps(frameRate) {
+export function getFrameOptionsForFps(frameRate: number) {
   const maxDuration = getMaxDuration(frameRate);
   return ALLOWED_FRAME_COUNTS.filter((frames) => getVideoDuration(frames, frameRate) <= maxDuration)
     .map((frames) => {
@@ -35,7 +35,13 @@ export function getFrameOptionsForFps(frameRate) {
     });
 }
 
-export function validateVideoParams({ numFrames, frameRate }) {
+export function validateVideoParams({
+  numFrames,
+  frameRate,
+}: {
+  numFrames: number;
+  frameRate: number;
+}) {
   if (!ALLOWED_FRAME_COUNTS.includes(numFrames)) {
     return `帧数必须为 ${ALLOWED_FRAME_COUNTS.join('、')} 之一`;
   }

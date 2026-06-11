@@ -1,6 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import type { Model } from '../_lib/models';
+
+type Category = {
+  id: string;
+  label: string;
+  models: Model[];
+};
+
+type SidebarProps = {
+  universalModel: Model;
+  categories: Category[];
+  activeModel: Model;
+  activeView: string;
+  onViewChange: (view: string) => void;
+  onSelect: (model: Model) => void;
+};
 
 export default function Sidebar({
   universalModel,
@@ -9,12 +25,12 @@ export default function Sidebar({
   activeView,
   onViewChange,
   onSelect,
-}) {
+}: SidebarProps) {
   const [expanded, setExpanded] = useState(() =>
     Object.fromEntries(categories.map((c) => [c.id, true])),
   );
 
-  const toggle = (id) => {
+  const toggle = (id: string) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 

@@ -14,7 +14,7 @@ export function useResumeVideoWorks() {
     const pending = getGeneratingVideos();
 
     pending.forEach((work) => {
-      if (running.current.has(work.id)) return;
+      if (!work.videoId || running.current.has(work.id)) return;
       running.current.add(work.id);
 
       pollVideoTask(work.videoId, {
@@ -32,10 +32,11 @@ export function useResumeVideoWorks() {
             error: null,
           });
         })
-        .catch((err) => {
+        .catch((err: unknown) => {
+          const message = err instanceof Error ? err.message : '未知错误';
           updateWork(work.id, {
             status: WORK_STATUS.FAILED,
-            error: err.message,
+            error: message,
             subStatus: 'failed',
             completedAt: Date.now(),
           });

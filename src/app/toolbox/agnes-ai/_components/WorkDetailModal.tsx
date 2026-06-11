@@ -1,8 +1,13 @@
 'use client';
 
-import { STATUS_LABELS } from '../_lib/store/works';
+import { STATUS_LABELS, type Work } from '../_lib/store/works';
 
-export default function WorkDetailModal({ work, onClose }) {
+type WorkDetailModalProps = {
+  work: Work | null;
+  onClose: () => void;
+};
+
+export default function WorkDetailModal({ work, onClose }: WorkDetailModalProps) {
   if (!work) return null;
 
   const statusLabel = STATUS_LABELS[work.status] || work.status;

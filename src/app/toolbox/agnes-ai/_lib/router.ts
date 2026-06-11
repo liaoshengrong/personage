@@ -1,5 +1,15 @@
 import { chatCompletion } from './api/client';
-import { ALL_MODELS, DEFAULT_ROUTE_MODELS, ROUTER_MODEL_ID } from './models';
+import { ALL_MODELS, DEFAULT_ROUTE_MODELS, ROUTER_MODEL_ID, type Model } from './models';
+
+export type RouteTarget = 'text' | 'image' | 'video';
+
+export type RouteResult = {
+  target: RouteTarget;
+  modelId: string;
+  model?: Model;
+  prompt: string;
+  reply: string;
+};
 
 const MODEL_CATALOG = ALL_MODELS.map((m) => `- ${m.id}（${m.name}，${m.type}）`).join('\n');
 
@@ -21,7 +31,7 @@ ${MODEL_CATALOG}
 只输出 JSON，不要 markdown，格式：
 {"target":"text|image|video","modelId":"模型id","prompt":"生成提示词","reply":"text时的完整回复"}`;
 
-export function parseRouterResponse(raw) {
+export function parseRouterResponse(raw: string): RouteResult {
   const text = (raw || '').trim();
   if (!text) throw new Error('路由器未返回内容');
 
@@ -29,9 +39,14 @@ export function parseRouterResponse(raw) {
   const jsonText = fenced ? fenced[1].trim() : text;
 
   try {
-    const parsed = JSON.parse(jsonText);
+    const parsed = JSON.parse(jsonText) as {
+      target?: string;
+      modelId?: string;
+      prompt?: string;
+      reply?: string;
+    };
     const target = parsed.target;
-    if (!['text', 'image', 'video'].includes(target)) {
+    if (target !== 'text' && target !== 'image' && target !== 'video') {
       throw new Error('无效的路由目标');
     }
 
@@ -65,7 +80,13 @@ export function parseRouterResponse(raw) {
   }
 }
 
-export async function routeUserMessage({ text, attachment }) {
+export async function routeUserMessage({
+  text,
+  attachment,
+}: {
+  text: string;
+  attachment?: { url: string; type: 'video' | 'image' } | null;
+}): Promise<RouteResult> {
   const userContent = attachment?.url
     ? [
         { type: 'text', text: text || '请根据附件内容回答或处理我的请求。' },

@@ -16,27 +16,23 @@ type ProgressBoardProps = {
 
 const STORAGE_KEY = "study-plan-progress-v1";
 
-const ProgressBoard = ({ items }: ProgressBoardProps) => {
-  const [progress, setProgress] = useState<ProgressState>({});
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    try {
-      const cache = localStorage.getItem(STORAGE_KEY);
-      if (!cache) {
-        setLoaded(true);
-        return;
-      }
-      const parsed: unknown = JSON.parse(cache);
-      if (parsed && typeof parsed === "object") {
-        setProgress(parsed as ProgressState);
-      }
-    } catch (error) {
-      console.warn("Failed to read study progress from localStorage.", error);
-    } finally {
-      setLoaded(true);
+const readStoredProgress = (): ProgressState => {
+  try {
+    const cache = localStorage.getItem(STORAGE_KEY);
+    if (!cache) return {};
+    const parsed: unknown = JSON.parse(cache);
+    if (parsed && typeof parsed === "object") {
+      return parsed as ProgressState;
     }
-  }, []);
+  } catch (error) {
+    console.warn("Failed to read study progress from localStorage.", error);
+  }
+  return {};
+};
+
+const ProgressBoard = ({ items }: ProgressBoardProps) => {
+  const [progress, setProgress] = useState<ProgressState>(readStoredProgress);
+  const [loaded] = useState(true);
 
   useEffect(() => {
     if (!loaded) return;

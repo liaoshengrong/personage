@@ -67,3 +67,5 @@ export const MODEL_CATEGORIES = [
 export const ALL_MODELS = MODEL_CATEGORIES.flatMap((c) => c.models);
 
 export const DEFAULT_MODEL = UNIVERSAL_MODEL;
+
+export type Model = (typeof MODEL_CATEGORIES)[number]['models'][number] | typeof UNIVERSAL_MODEL;

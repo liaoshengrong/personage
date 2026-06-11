@@ -6,11 +6,23 @@ import {
   createVideoTask,
   pollVideoTask,
 } from '../_lib/api/client';
-import { routeUserMessage } from '../_lib/router';
+import { routeUserMessage, type RouteResult } from '../_lib/router';
 import { useWorks } from '../_context/WorksContext';
 import { createWorkId, WORK_STATUS } from '../_lib/store/works';
+import type { Model } from '../_lib/models';
 
-const VIDEO_STATUS_LABEL = {
+type ChatMessage = {
+  role: string;
+  content: string;
+  attachment?: { url: string; type: 'video' | 'image' };
+  isError?: boolean;
+  status?: string;
+  routeLabel?: string;
+  generatedMedia?: { type: 'video' | 'image'; url: string };
+  revisedPrompt?: string;
+};
+
+const VIDEO_STATUS_LABEL: Record<string, string> = {
   queued: '排队中',
   in_progress: '生成中',
   processing: '处理中',
@@ -18,7 +30,10 @@ const VIDEO_STATUS_LABEL = {
   failed: '失败',
 };
 
-function updateLastAssistant(setMessages, patch) {
+function updateLastAssistant(
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  patch: Partial<ChatMessage>,
+) {
   setMessages((prev) => {
     const updated = [...prev];
     const last = updated[updated.length - 1];
@@ -29,9 +44,9 @@ function updateLastAssistant(setMessages, patch) {
   });
 }
 
-export default function UniversalChatPanel({ model }) {
+export default function UniversalChatPanel({ model }: { model: Model }) {
   const { addWork, updateWork } = useWorks();
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
       content: '你好！我是通用对话助手，会自动判断你的需求并调用合适的模型。你可以直接聊天、描述想生成的图片或视频。',
@@ -39,15 +54,25 @@ export default function UniversalChatPanel({ model }) {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [attachment, setAttachment] = useState(null);
-  const bottomRef = useRef(null);
-  const fileRef = useRef(null);
+  const [attachment, setAttachment] = useState<{ url: string; type: 'video' | 'image' } | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  const runImageGeneration = async ({ route, userText, currentAttachment, assistantIndex }) => {
+  const runImageGeneration = async ({
+    route,
+    userText,
+    currentAttachment,
+    assistantIndex,
+  }: {
+    route: RouteResult;
+    userText: string;
+    currentAttachment: { url: string; type: 'video' | 'image' } | null;
+    assistantIndex: number;
+  }) => {
     const prompt = route.prompt || userText;
     const workId = createWorkId();
 
@@ -102,7 +127,17 @@ export default function UniversalChatPanel({ model }) {
     });
   };
 
-  const runVideoGeneration = async ({ route, userText, currentAttachment, assistantIndex }) => {
+  const runVideoGeneration = async ({
+    route,
+    userText,
+    currentAttachment,
+    assistantIndex,
+  }: {
+    route: RouteResult;
+    userText: string;
+    currentAttachment: { url: string; type: 'video' | 'image' } | null;
+    assistantIndex: number;
+  }) => {
     const prompt = route.prompt || userText;
     const workId = createWorkId();
 
@@ -221,11 +256,12 @@ export default function UniversalChatPanel({ model }) {
         await runVideoGeneration({ route, userText: text, currentAttachment, assistantIndex });
       }
     } catch (err) {
+      const message = err instanceof Error ? err.message : '未知错误';
       setMessages((prev) => {
         const updated = [...prev];
         updated[assistantIndex] = {
           role: 'assistant',
-          content: `❌ ${err.message}`,
+          content: `❌ ${message}`,
           isError: true,
         };
         return updated;
@@ -235,7 +271,7 @@ export default function UniversalChatPanel({ model }) {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       send();
@@ -312,6 +348,7 @@ export default function UniversalChatPanel({ model }) {
               if (!file) return;
               const reader = new FileReader();
               reader.onload = () => {
+                if (typeof reader.result !== 'string') return;
                 setAttachment({
                   url: reader.result,
                   type: file.type.startsWith('video/') ? 'video' : 'image',
