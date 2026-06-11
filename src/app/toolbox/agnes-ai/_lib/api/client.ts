@@ -1,4 +1,6 @@
 const API_KEY_STORAGE = 'agnes_api_key';
+const FREE_USAGE_STORAGE = 'agnes_free_usage';
+export const FREE_USAGE_LIMIT = 20;
 const AGNES_API_HOST = 'https://apihub.agnes-ai.com';
 const AGNES_API_BASE = `${AGNES_API_HOST}/v1`;
 
@@ -15,11 +17,12 @@ export function getUserApiKey() {
 
 export function setUserApiKey(key: string) {
   if (typeof window === 'undefined') return;
-  if (key) {
-    localStorage.setItem(API_KEY_STORAGE, key);
+  if (key.trim()) {
+    localStorage.setItem(API_KEY_STORAGE, key.trim());
   } else {
     localStorage.removeItem(API_KEY_STORAGE);
   }
+  window.dispatchEvent(new Event('agnes-api-key-update'));
 }
 
 export function getStoredApiKey() {
@@ -30,8 +33,35 @@ export function hasConfiguredKey() {
   return Boolean(getStoredApiKey());
 }
 
-export function isEnvKeyActive() {
+/** 未填写个人 Key 时，使用 .env 中的共享 Key */
+export function isUsingSharedKey() {
   return Boolean(envApiKey) && !getUserApiKey();
+}
+
+export function getFreeUsageCount() {
+  if (typeof window === 'undefined') return 0;
+  const raw = localStorage.getItem(FREE_USAGE_STORAGE);
+  const n = parseInt(raw || '0', 10);
+  return Number.isFinite(n) ? n : 0;
+}
+
+export function getFreeUsageRemaining() {
+  if (!isUsingSharedKey()) return FREE_USAGE_LIMIT;
+  return Math.max(0, FREE_USAGE_LIMIT - getFreeUsageCount());
+}
+
+function assertFreeQuota() {
+  if (!isUsingSharedKey()) return;
+  if (getFreeUsageCount() >= FREE_USAGE_LIMIT) {
+    throw new Error(`免费额度已用完（${FREE_USAGE_LIMIT} 次）`);
+  }
+}
+
+function recordFreeUsage() {
+  if (!isUsingSharedKey()) return;
+  const next = getFreeUsageCount() + 1;
+  localStorage.setItem(FREE_USAGE_STORAGE, String(next));
+  window.dispatchEvent(new Event('agnes-free-usage-update'));
 }
 
 function resolveUrl(path: string) {
@@ -41,7 +71,7 @@ function resolveUrl(path: string) {
 function headers() {
   const h: Record<string, string> = { 'Content-Type': 'application/json' };
   const key = getStoredApiKey();
-  if (!key) throw new Error('请先在顶部填写 API Key');
+  if (!key) throw new Error('服务暂不可用，请联系管理员配置 API Key');
   h.Authorization = `Bearer ${key}`;
   return h;
 }
@@ -67,6 +97,8 @@ export async function chatCompletion({
   maxTokens = 2048,
   enableThinking = false,
 }: ChatCompletionOptions) {
+  assertFreeQuota();
+
   const body: Record<string, unknown> = {
     model,
     messages,
@@ -89,6 +121,8 @@ export async function chatCompletion({
     const err = await res.json().catch(() => ({}));
     throw new Error(err.error?.message || `请求失败 (${res.status})`);
   }
+
+  recordFreeUsage();
 
   if (!stream) {
     const data = await res.json();
@@ -139,6 +173,8 @@ export async function generateImage({
   n?: number;
   image?: string;
 }) {
+  assertFreeQuota();
+
   const body: Record<string, unknown> = { model, prompt, size, n };
   if (image) {
     body.extra_body = { image: [image] };
@@ -154,6 +190,7 @@ export async function generateImage({
   if (!res.ok) {
     throw new Error(data.error?.message || `图像生成失败 (${res.status})`);
   }
+  recordFreeUsage();
   return data;
 }
 
@@ -174,6 +211,8 @@ export async function createVideoTask({
   frameRate?: number;
   image?: string;
 }) {
+  assertFreeQuota();
+
   const body: Record<string, unknown> = {
     model,
     prompt,
@@ -197,6 +236,7 @@ export async function createVideoTask({
   if (!res.ok) {
     throw new Error(data.error?.message || data.error || `视频任务创建失败 (${res.status})`);
   }
+  recordFreeUsage();
   return data;
 }
 
