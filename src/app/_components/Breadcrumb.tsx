@@ -52,7 +52,8 @@ const Breadcrumb = ({ items, articleTitle, articleId }: BreadcrumbProps) => {
         "/tag": "技能标签",
         "/chat": "个人AI",
         "/resume": "个人简历",
-        "/demo": "手写Demo"
+        "/demo": "手写Demo",
+        "/toolbox": "工具箱",
       };
 
       const pageName = routeMap[pathname];

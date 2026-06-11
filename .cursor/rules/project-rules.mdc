@@ -47,7 +47,7 @@ alwaysApply: false
 - **核心目录**：
   - `src/app`：Next.js App Router 页面与组件。
   - `public/files`：Markdown 技术文章与学习笔记（按主题分类：`Browser`, `Taro`, `engineer` 等）。
-  - `functions`：Netlify Serverless 函数（如 `ai-chat.mjs`, `export-pdf.mjs`, `wallpaper.js`）。
+  - `functions`：Netlify Serverless 函数（如 `ai-chat.mjs`, `wallpaper.js`）。
   - `plugins` + `scripts`：XLSX 驱动的数据转换与构建期自动化。
   - `src/config/data.json`：从 `datalist.xlsx` 转换而来的文章元数据源。
 - **分层思路**：

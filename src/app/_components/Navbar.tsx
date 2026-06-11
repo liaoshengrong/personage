@@ -63,10 +63,7 @@ const Navbar = () => {
         <div className="flex gap-2 items-center justify-center xs:hidden">
           {menus.map((v, i) => {
             // 详情页应该高亮"博客"链接
-            const isActive =
-              pathname === v.path ||
-              (v.path === "/" &&
-                (pathname === "/" || pathname.startsWith("/detail")));
+            const isActive = isMenuActive(pathname, v.path);
             return (
               <Link
                 href={v.path}
@@ -91,10 +88,7 @@ const Navbar = () => {
         <div className="hidden xs:flex gap-1 items-center justify-center animate__animated animate__backInUp">
           {menus.filter((item) => !item.pcOnly).map((item, index) => {
             // 详情页应该高亮"博客"链接
-            const isActive =
-              pathname === item.path ||
-              (item.path === "/" &&
-                (pathname === "/" || pathname.startsWith("/detail")));
+            const isActive = isMenuActive(pathname, item.path);
             return (
               <Link
                 href={item.path}
@@ -116,6 +110,16 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+function isMenuActive(pathname: string, path: string) {
+  if (path === "/") {
+    return pathname === "/" || pathname.startsWith("/detail");
+  }
+  if (path === "/toolbox") {
+    return pathname === "/toolbox";
+  }
+  return pathname === path;
+}
 
 const menus: MenuItem[] = [
   {
@@ -147,26 +151,33 @@ const menus: MenuItem[] = [
     text: "简历",
   },
   {
-    title: "手写demo",
-    path: "/demo",
+    title: "工具箱",
+    path: "/toolbox",
     icon: parseIcon,
     direction: "right",
-    text: "Demo",
+    text: "工具箱",
   },
-  {
-    title: "学习计划",
-    path: "/study",
-    icon: skillIcon,
-    direction: "right",
-    text: "学习计划",
-    pcOnly: true,
-  },
-  {
-    title: "对话记录",
-    path: "/study-log",
-    icon: listIcon,
-    direction: "right",
-    text: "对话记录",
-    pcOnly: true,
-  },
+  // {
+  //   title: "手写demo",
+  //   path: "/demo",
+  //   icon: parseIcon,
+  //   direction: "right",
+  //   text: "Demo",
+  // },
+  // {
+  //   title: "学习计划",
+  //   path: "/study",
+  //   icon: skillIcon,
+  //   direction: "right",
+  //   text: "学习计划",
+  //   pcOnly: true,
+  // },
+  // {
+  //   title: "对话记录",
+  //   path: "/study-log",
+  //   icon: listIcon,
+  //   direction: "right",
+  //   text: "对话记录",
+  //   pcOnly: true,
+  // },
 ];
