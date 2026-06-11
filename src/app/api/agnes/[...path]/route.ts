@@ -40,6 +40,11 @@ async function proxy(request: NextRequest, pathSegments: string[]) {
   const upstreamContentType = upstream.headers.get('Content-Type');
   if (upstreamContentType) {
     responseHeaders.set('Content-Type', upstreamContentType);
+    if (upstreamContentType.includes('text/event-stream')) {
+      responseHeaders.set('Cache-Control', 'no-cache, no-transform');
+      responseHeaders.set('Connection', 'keep-alive');
+      responseHeaders.set('X-Accel-Buffering', 'no');
+    }
   }
 
   return new NextResponse(upstream.body, {

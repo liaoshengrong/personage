@@ -105,5 +105,5 @@ export async function routeUserMessage({
     maxTokens: 2048,
   });
 
-  return parseRouterResponse(raw);
+  return parseRouterResponse(raw.content);
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import MDRender from '@/app/_components/MDRender';
 import {
   generateImage,
   createVideoTask,
@@ -327,7 +328,15 @@ export default function UniversalChatPanel({ model }: { model: Model }) {
                   {msg.revisedPrompt && (
                     <p className="revised-prompt-inline">优化 Prompt：{msg.revisedPrompt}</p>
                   )}
-                  {msg.content ? <p>{msg.content}</p> : null}
+                  {msg.content ? (
+                    msg.role === 'assistant' && !msg.isError ? (
+                      <div className="message-md">
+                        <MDRender content={msg.content} />
+                      </div>
+                    ) : (
+                      <p>{msg.content}</p>
+                    )
+                  ) : null}
                 </>
               )}
             </div>

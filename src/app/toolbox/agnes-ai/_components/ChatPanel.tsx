@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import MDRender from '@/app/_components/MDRender';
 import { chatCompletion } from '../_lib/api/client';
 import type { Model } from '../_lib/models';
 
 type ChatMessage = {
   role: string;
   content: string;
+  reasoningContent?: string;
+  thinkingCollapsed?: boolean;
   attachment?: { url: string; type: 'video' | 'image' };
   isError?: boolean;
 };
@@ -66,11 +69,33 @@ export default function ChatPanel({ model }: { model: Model }) {
         messages: apiMessages,
         temperature,
         enableThinking: supportsThinking && enableThinking,
+        onDelta: ({ content, reasoningContent }) => {
+          setMessages((prev) => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            if (last?.role !== 'assistant') return prev;
+
+            const thinkingEnded = Boolean(content) && Boolean(last.reasoningContent || reasoningContent);
+
+            updated[updated.length - 1] = {
+              ...last,
+              content,
+              reasoningContent: reasoningContent || undefined,
+              thinkingCollapsed: thinkingEnded ? true : last.thinkingCollapsed,
+            };
+            return updated;
+          });
+        },
       });
 
       setMessages((prev) => {
         const updated = [...prev];
-        updated[updated.length - 1] = { role: 'assistant', content: reply || '（无响应内容）' };
+        updated[updated.length - 1] = {
+          role: 'assistant',
+          content: reply.content || (reply.reasoningContent ? '' : '（无响应内容）'),
+          reasoningContent: reply.reasoningContent,
+          thinkingCollapsed: reply.reasoningContent ? true : undefined,
+        };
         return updated;
       });
     } catch (err) {
@@ -137,7 +162,7 @@ export default function ChatPanel({ model }: { model: Model }) {
               {msg.role === 'user' ? '你' : 'AI'}
             </div>
             <div className="message-body">
-              {loading && i === messages.length - 1 && msg.role === 'assistant' && !msg.content ? (
+              {loading && i === messages.length - 1 && msg.role === 'assistant' && !msg.content && !msg.reasoningContent ? (
                 <span className="typing">
                   <span /><span /><span />
                 </span>
@@ -152,7 +177,41 @@ export default function ChatPanel({ model }: { model: Model }) {
                       )}
                     </div>
                   )}
-                  {msg.content ? <p>{msg.content}</p> : null}
+                  {msg.reasoningContent ? (
+                    <details
+                      className="message-thinking"
+                      open={msg.thinkingCollapsed !== true}
+                    >
+                      <summary
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setMessages((prev) => {
+                            const updated = [...prev];
+                            if (updated[i]?.role !== 'assistant') return prev;
+                            updated[i] = {
+                              ...updated[i],
+                              thinkingCollapsed: updated[i].thinkingCollapsed !== true,
+                            };
+                            return updated;
+                          });
+                        }}
+                      >
+                        Thinking
+                      </summary>
+                      <div className="message-md">
+                        <MDRender content={msg.reasoningContent} />
+                      </div>
+                    </details>
+                  ) : null}
+                  {msg.content ? (
+                    msg.role === 'assistant' && !msg.isError ? (
+                      <div className="message-md">
+                        <MDRender content={msg.content} />
+                      </div>
+                    ) : (
+                      <p>{msg.content}</p>
+                    )
+                  ) : null}
                 </>
               )}
             </div>

@@ -86,7 +86,46 @@ type ChatCompletionOptions = {
   temperature?: number;
   maxTokens?: number;
   enableThinking?: boolean;
+  onDelta?: (delta: { content: string; reasoningContent: string }) => void;
 };
+
+export type ChatCompletionResult = {
+  content: string;
+  reasoningContent?: string;
+};
+
+function parseSseChunk(
+  line: string,
+  state: { content: string; reasoningContent: string },
+  onDelta?: ChatCompletionOptions['onDelta'],
+) {
+  const trimmed = line.trim();
+  if (!trimmed || !trimmed.startsWith('data:')) return;
+
+  const data = trimmed.slice(5).trim();
+  if (data === '[DONE]') return;
+
+  try {
+    const parsed = JSON.parse(data);
+    const delta = parsed.choices?.[0]?.delta;
+    let changed = false;
+
+    if (delta?.reasoning_content) {
+      state.reasoningContent += delta.reasoning_content;
+      changed = true;
+    }
+    if (delta?.content) {
+      state.content += delta.content;
+      changed = true;
+    }
+
+    if (changed) {
+      onDelta?.({ content: state.content, reasoningContent: state.reasoningContent });
+    }
+  } catch {
+    /* skip malformed chunks */
+  }
+}
 
 export async function chatCompletion({
   model,
@@ -95,7 +134,8 @@ export async function chatCompletion({
   temperature = 0.7,
   maxTokens = 2048,
   enableThinking = false,
-}: ChatCompletionOptions) {
+  onDelta,
+}: ChatCompletionOptions): Promise<ChatCompletionResult> {
   assertFreeQuota();
 
   const body: Record<string, unknown> = {
@@ -125,13 +165,17 @@ export async function chatCompletion({
 
   if (!stream) {
     const data = await res.json();
-    return data.choices?.[0]?.message?.content ?? '';
+    const message = data.choices?.[0]?.message;
+    return {
+      content: message?.content ?? '',
+      reasoningContent: message?.reasoning_content || undefined,
+    };
   }
 
   const reader = res.body!.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
-  let fullText = '';
+  const state = { content: '', reasoningContent: '' };
 
   while (true) {
     const { done, value } = await reader.read();
@@ -142,21 +186,18 @@ export async function chatCompletion({
     buffer = lines.pop() || '';
 
     for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed || !trimmed.startsWith('data:')) continue;
-      const data = trimmed.slice(5).trim();
-      if (data === '[DONE]') continue;
-      try {
-        const parsed = JSON.parse(data);
-        const delta = parsed.choices?.[0]?.delta?.content || '';
-        if (delta) fullText += delta;
-      } catch {
-        /* skip malformed chunks */
-      }
+      parseSseChunk(line, state, onDelta);
     }
   }
 
-  return fullText;
+  if (buffer.trim()) {
+    parseSseChunk(buffer, state, onDelta);
+  }
+
+  return {
+    content: state.content,
+    reasoningContent: state.reasoningContent || undefined,
+  };
 }
 
 export async function generateImage({
