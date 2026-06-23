@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   GROUPS,
@@ -17,17 +17,25 @@ import {
   type TeamMatch,
 } from '../_lib/matches';
 import ThirdPlaceTable from './ThirdPlaceTable';
+import LineupModal from './LineupModal';
+import { enrichMatchPreview, getMatchLineupPreview } from '../_data/matchLineups';
+import { findFixture } from '../_lib/fixtureLookup';
+import type { MatchLineupPreview } from '../_data/lineupTypes';
 
 function MatchBlock({
   title,
   titleClass,
   matches,
   played,
+  teamName,
+  onUpcomingClick,
 }: {
   title: string;
   titleClass: string;
   matches: TeamMatch[];
   played: boolean;
+  teamName: string;
+  onUpcomingClick: (teamName: string, opponent: string, md: number, date: string) => void;
 }) {
   if (!matches.length) return null;
 
@@ -53,15 +61,28 @@ function MatchBlock({
             </span>
           </div>
         ) : (
-          <div key={`${m.md}-${m.opponent}`} className="match-line upcoming">
+          <button
+            key={`${m.md}-${m.opponent}`}
+            type="button"
+            className="match-line upcoming clickable"
+            onClick={(e) => {
+              e.stopPropagation();
+              onUpcomingClick(teamName, m.opponent, m.md, m.date);
+            }}
+          >
             <span className="match-opponent">
               <em>{m.venue}</em>vs {m.opponent}
             </span>
             <span className="match-meta">
               R{m.md} · {m.date}
             </span>
-            <span className="match-result pending">未赛</span>
-          </div>
+            <span className="match-result pending">
+              预测阵容
+              <span className="match-line-hint" aria-hidden="true">
+                ›
+              </span>
+            </span>
+          </button>
         ),
       )}
     </div>
@@ -71,9 +92,11 @@ function MatchBlock({
 function MatchPanel({
   teamName,
   groupLetter,
+  onUpcomingClick,
 }: {
   teamName: string;
   groupLetter: GroupLetter;
+  onUpcomingClick: (teamName: string, opponent: string, md: number, date: string) => void;
 }) {
   const all = getTeamMatches(teamName, groupLetter);
   const played = all.filter((m): m is Extract<TeamMatch, { played: true }> => m.played);
@@ -82,8 +105,22 @@ function MatchPanel({
   return (
     <div className="match-panel-inner">
       <div className="match-panel-content">
-        <MatchBlock title="已赛" titleClass="played" matches={played} played />
-        <MatchBlock title="未赛" titleClass="upcoming" matches={upcoming} played={false} />
+        <MatchBlock
+          title="已赛"
+          titleClass="played"
+          matches={played}
+          played
+          teamName={teamName}
+          onUpcomingClick={onUpcomingClick}
+        />
+        <MatchBlock
+          title="未赛"
+          titleClass="upcoming"
+          matches={upcoming}
+          played={false}
+          teamName={teamName}
+          onUpcomingClick={onUpcomingClick}
+        />
       </div>
     </div>
   );
@@ -94,17 +131,17 @@ function TeamItem({
   index,
   letter,
   leaderPts,
-  barsReady,
   expanded,
   onToggle,
+  onUpcomingClick,
 }: {
   team: Team;
   index: number;
   letter: GroupLetter;
   leaderPts: number;
-  barsReady: boolean;
   expanded: boolean;
   onToggle: () => void;
+  onUpcomingClick: (teamName: string, opponent: string, md: number, date: string) => void;
 }) {
   const isLeader = index === 0 && team.pts === leaderPts && team.pts > 0;
   const playedCount = getTeamMatches(team.name, letter).filter((m) => m.played).length;
@@ -135,7 +172,7 @@ function TeamItem({
           <div className="pts-bar-wrap" aria-hidden="true">
             <div
               className="pts-bar"
-              style={{ width: barsReady ? `${barPct}%` : '0' }}
+              style={{ width: `${barPct}%` }}
             />
           </div>
         </div>
@@ -155,7 +192,11 @@ function TeamItem({
         role="region"
         aria-label={`${team.name} 赛程`}
       >
-        <MatchPanel teamName={team.name} groupLetter={letter} />
+        <MatchPanel
+          teamName={team.name}
+          groupLetter={letter}
+          onUpcomingClick={onUpcomingClick}
+        />
       </div>
     </li>
   );
@@ -167,14 +208,14 @@ function GroupCard({
   animationIndex,
   expandedKey,
   onExpand,
-  barsReady,
+  onUpcomingClick,
 }: {
   letter: GroupLetter;
   teams: Team[];
   animationIndex: number;
   expandedKey: string | null;
   onExpand: (key: string | null) => void;
-  barsReady: boolean;
+  onUpcomingClick: (teamName: string, opponent: string, md: number, date: string) => void;
 }) {
   const leaderPts = teams[0].pts;
 
@@ -208,9 +249,9 @@ function GroupCard({
               index={i}
               letter={letter}
               leaderPts={leaderPts}
-              barsReady={barsReady}
               expanded={expandedKey === key}
               onToggle={() => onExpand(expandedKey === key ? null : key)}
+              onUpcomingClick={onUpcomingClick}
             />
           );
         })}
@@ -220,17 +261,29 @@ function GroupCard({
 }
 
 export default function WorldcupGroupsBoard() {
-  const [barsReady, setBarsReady] = useState(false);
   const [expandedByGroup, setExpandedByGroup] = useState<
     Record<string, string | null>
   >({});
-
-  useEffect(() => {
-    requestAnimationFrame(() => setBarsReady(true));
-  }, []);
+  const [lineupPreview, setLineupPreview] = useState<MatchLineupPreview | null>(
+    null,
+  );
 
   const handleExpand = (letter: GroupLetter, key: string | null) => {
     setExpandedByGroup((prev) => ({ ...prev, [letter]: key }));
+  };
+
+  const handleUpcomingClick = (
+    letter: GroupLetter,
+    teamName: string,
+    opponent: string,
+    md: number,
+    date: string,
+  ) => {
+    const fixture = findFixture(letter, teamName, opponent, md);
+    if (!fixture || fixture.played) return;
+    const preview = getMatchLineupPreview(letter, fixture.home, fixture.away, md);
+    if (!preview) return;
+    setLineupPreview(enrichMatchPreview(preview, date));
   };
 
   return (
@@ -290,8 +343,8 @@ export default function WorldcupGroupsBoard() {
 
         <div className="strategy-banner">
           <p>
-            实时追踪世界排名与小组赛积分。点击任意球队可展开查看已赛比分与未赛场次。榜首以金色高亮；已赛
-            2 场且 0 分标记为 OUT。
+            实时追踪世界排名与小组赛积分。点击球队展开赛程；<strong>点击未赛场次</strong>
+            查看预测阵容。榜首金色高亮；已赛 2 场且 0 分标记 OUT。
           </p>
         </div>
 
@@ -310,7 +363,7 @@ export default function WorldcupGroupsBoard() {
             <span className="legend-dot out" />
             已赛 2 场 · 0 分出局
           </div>
-          <div className="legend-item">点击球队查看赛程</div>
+          <div className="legend-item">未赛场次 · 预测阵容</div>
         </div>
 
         <main className="groups-grid">
@@ -323,7 +376,9 @@ export default function WorldcupGroupsBoard() {
                 animationIndex={gi}
                 expandedKey={expandedByGroup[letter] ?? null}
                 onExpand={(key) => handleExpand(letter, key)}
-                barsReady={barsReady}
+                onUpcomingClick={(teamName, opponent, md, date) =>
+                  handleUpcomingClick(letter, teamName, opponent, md, date)
+                }
               />
             ),
           )}
@@ -335,6 +390,8 @@ export default function WorldcupGroupsBoard() {
           WC 2026 · GROUP STANDINGS · FOR REFERENCE ONLY
         </footer>
       </div>
+
+      <LineupModal preview={lineupPreview} onClose={() => setLineupPreview(null)} />
     </div>
   );
 }
