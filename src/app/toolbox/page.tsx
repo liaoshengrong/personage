@@ -16,6 +16,12 @@ const tools = [
     href: '/toolbox/agnes-ai',
     tags: ['文本', '图像', '视频'],
   },
+  {
+    title: '世界杯积分榜',
+    description: '2026 美加墨世界杯 12 组积分榜，点击球队查看已赛比分与未赛场次',
+    href: '/toolbox/worldcup-groups',
+    tags: ['足球', '世界杯', '积分榜'],
+  },
 ];
 
 export default function ToolboxPage() {
