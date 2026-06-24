@@ -234,7 +234,9 @@ function GroupCard({
       <div className="group-cols-head">
         <span className="col-head">排名</span>
         <span />
-        <span className="col-head col-fifa">世界排名</span>
+        <span className="col-head col-fifa" title="FIFA 赛后实时排名，截至 2026.06.24">
+          世界排名
+        </span>
         <span className="col-head col-gd">净球</span>
         <span className="col-head col-pts">积分</span>
         <span />
@@ -316,14 +318,14 @@ export default function WorldcupGroupsBoard() {
               </span>
             </Link>
             <span className="header-top-mark" aria-hidden="true">
-              MATCHDAY · 06.23
+              MATCHDAY · 06.24
             </span>
           </div>
 
           <div className="badge">FIFA WORLD CUP 2026 · GROUP STAGE</div>
           <h1 className="page-title">
             小组积分榜
-            <span>48 支球队 · 12 个小组 · 数据截至 2026.06.23</span>
+            <span>48 支球队 · 12 个小组 · 数据截至 2026.06.24</span>
           </h1>
           <div className="header-meta">
             <div className="meta-item">
