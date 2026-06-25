@@ -1,4 +1,4 @@
-import { FIXTURES, type GroupLetter } from '../_data';
+import { FIXTURES, type GroupLetter, type Team } from '../_data';
 
 export type MatchOutcome = 'win' | 'draw' | 'loss';
 
@@ -98,4 +98,19 @@ export function outcomeLabel(outcome: MatchOutcome) {
   if (outcome === 'win') return '胜';
   if (outcome === 'loss') return '负';
   return '平';
+}
+
+export function isGroupComplete(groupLetter: GroupLetter) {
+  return FIXTURES[groupLetter].every((m) => m.played);
+}
+
+/** 早淘汰：0 分且已赛 ≥2 场；小组收官后第四名直接出局 */
+export function isTeamEliminated(team: Team, groupLetter: GroupLetter, rankIndex: number) {
+  const playedCount = getTeamMatches(team.name, groupLetter).filter((m) => m.played).length;
+
+  if (isGroupComplete(groupLetter) && rankIndex === 3) {
+    return true;
+  }
+
+  return team.pts === 0 && playedCount >= 2;
 }

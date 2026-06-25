@@ -13,6 +13,7 @@ import {
   gdClass,
   getGoalDiff,
   getTeamMatches,
+  isTeamEliminated,
   outcomeLabel,
   type TeamMatch,
 } from '../_lib/matches';
@@ -144,8 +145,7 @@ function TeamItem({
   onUpcomingClick: (teamName: string, opponent: string, md: number, date: string) => void;
 }) {
   const isLeader = index === 0 && team.pts === leaderPts && team.pts > 0;
-  const playedCount = getTeamMatches(team.name, letter).filter((m) => m.played).length;
-  const isElim = team.pts === 0 && playedCount >= 2;
+  const isElim = isTeamEliminated(team, letter, index);
   const barPct = (team.pts / MAX_PTS) * 100;
   const gd = getGoalDiff(team.name, letter);
 
@@ -363,7 +363,7 @@ export default function WorldcupGroupsBoard() {
           </div>
           <div className="legend-item">
             <span className="legend-dot out" />
-            已赛 2 场 · 0 分出局
+            已出局
           </div>
           <div className="legend-item">未赛场次 · 预测阵容</div>
         </div>
