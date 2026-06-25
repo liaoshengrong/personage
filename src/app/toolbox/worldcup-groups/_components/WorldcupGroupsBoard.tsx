@@ -335,7 +335,7 @@ export default function WorldcupGroupsBoard() {
               <strong>48</strong>参赛队
             </div>
             <div className="meta-item">
-              <strong>6</strong>最高积分
+              <strong>9</strong>最高积分
             </div>
             <div className="meta-item">
               <strong>美加墨</strong>联合举办

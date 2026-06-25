@@ -27,24 +27,24 @@ export type GroupLetter =
   | 'K'
   | 'L';
 
-export const MAX_PTS = 6;
+export const MAX_PTS = 9;
 
 export const GROUPS: Record<GroupLetter, Team[]> = {
   A: [
-    { name: '墨西哥', fifa: 11, pts: 6 },
+    { name: '墨西哥', fifa: 11, pts: 9 },
+    { name: '南非', fifa: 61, pts: 4 },
     { name: '韩国', fifa: 23, pts: 3 },
     { name: '捷克', fifa: 44, pts: 1 },
-    { name: '南非', fifa: 61, pts: 1 },
   ],
   B: [
+    { name: '瑞士', fifa: 18, pts: 7 },
     { name: '加拿大', fifa: 28, pts: 4 },
-    { name: '瑞士', fifa: 18, pts: 4 },
-    { name: '波黑', fifa: 64, pts: 1 },
+    { name: '波黑', fifa: 64, pts: 4 },
     { name: '卡塔尔', fifa: 57, pts: 1 },
   ],
   C: [
-    { name: '巴西', fifa: 5, pts: 4 },
-    { name: '摩洛哥', fifa: 6, pts: 4 },
+    { name: '巴西', fifa: 5, pts: 7 },
+    { name: '摩洛哥', fifa: 6, pts: 7 },
     { name: '苏格兰', fifa: 41, pts: 3 },
     { name: '海地', fifa: 87, pts: 0 },
   ],
@@ -110,24 +110,24 @@ export const FIXTURES: Record<GroupLetter, Fixture[]> = {
     { home: '韩国', away: '捷克', date: '06-11', md: 1, played: true, score: '2-1' },
     { home: '捷克', away: '南非', date: '06-18', md: 2, played: true, score: '1-1' },
     { home: '墨西哥', away: '韩国', date: '06-19', md: 2, played: true, score: '1-0' },
-    { home: '捷克', away: '墨西哥', date: '06-24', md: 3, played: false },
-    { home: '南非', away: '韩国', date: '06-24', md: 3, played: false },
+    { home: '捷克', away: '墨西哥', date: '06-24', md: 3, played: true, score: '0-3' },
+    { home: '南非', away: '韩国', date: '06-24', md: 3, played: true, score: '1-0' },
   ],
   B: [
     { home: '加拿大', away: '波黑', date: '06-12', md: 1, played: true, score: '1-1' },
     { home: '卡塔尔', away: '瑞士', date: '06-13', md: 1, played: true, score: '1-1' },
     { home: '瑞士', away: '波黑', date: '06-18', md: 2, played: true, score: '4-1' },
     { home: '加拿大', away: '卡塔尔', date: '06-18', md: 2, played: true, score: '6-0' },
-    { home: '瑞士', away: '加拿大', date: '06-24', md: 3, played: false },
-    { home: '波黑', away: '卡塔尔', date: '06-24', md: 3, played: false },
+    { home: '瑞士', away: '加拿大', date: '06-24', md: 3, played: true, score: '2-1' },
+    { home: '波黑', away: '卡塔尔', date: '06-24', md: 3, played: true, score: '3-1' },
   ],
   C: [
     { home: '巴西', away: '摩洛哥', date: '06-14', md: 1, played: true, score: '1-1' },
     { home: '海地', away: '苏格兰', date: '06-14', md: 1, played: true, score: '0-1' },
     { home: '苏格兰', away: '摩洛哥', date: '06-20', md: 2, played: true, score: '0-1' },
     { home: '巴西', away: '海地', date: '06-20', md: 2, played: true, score: '3-0' },
-    { home: '苏格兰', away: '巴西', date: '06-24', md: 3, played: false },
-    { home: '摩洛哥', away: '海地', date: '06-24', md: 3, played: false },
+    { home: '苏格兰', away: '巴西', date: '06-24', md: 3, played: true, score: '0-3' },
+    { home: '摩洛哥', away: '海地', date: '06-24', md: 3, played: true, score: '4-2' },
   ],
   D: [
     { home: '美国', away: '巴拉圭', date: '06-12', md: 1, played: true, score: '4-1' },
