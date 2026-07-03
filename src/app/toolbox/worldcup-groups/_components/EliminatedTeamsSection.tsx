@@ -57,7 +57,7 @@ export default function EliminatedTeamsSection() {
       </div>
 
       <p className="eliminated-disclaimer">
-        含小组赛出局队及 32 强已淘汰队（德国、荷兰、日本等）；后续场次结束后名单将继续更新。
+        含小组赛出局队及 32 强已淘汰队；7 月 3 日 M86–M88 待赛后继续更新。
       </p>
     </section>
   );

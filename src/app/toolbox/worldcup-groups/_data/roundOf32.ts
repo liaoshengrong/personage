@@ -159,7 +159,9 @@ export const ROUND_OF_32_FINAL: RoundOf32FinalMatch[] = [
     home: '葡萄牙',
     away: '克罗地亚',
     qualLabel: 'K 组第二 · L 组第二',
-    played: false,
+    played: true,
+    score: '2-1',
+    winner: '葡萄牙',
   },
   {
     matchNo: 84,
@@ -170,7 +172,9 @@ export const ROUND_OF_32_FINAL: RoundOf32FinalMatch[] = [
     home: '西班牙',
     away: '奥地利',
     qualLabel: 'H 组第一 · J 组第二',
-    played: false,
+    played: true,
+    score: '3-0',
+    winner: '西班牙',
   },
   {
     matchNo: 85,
@@ -181,7 +185,9 @@ export const ROUND_OF_32_FINAL: RoundOf32FinalMatch[] = [
     home: '瑞士',
     away: '阿尔及利亚',
     qualLabel: 'B 组第一 · J 组第三 (+8)',
-    played: false,
+    played: true,
+    score: '2-0',
+    winner: '瑞士',
   },
   {
     matchNo: 86,

@@ -321,14 +321,14 @@ export default function WorldcupGroupsBoard() {
               </span>
             </Link>
             <span className="header-top-mark" aria-hidden="true">
-              MATCHDAY · 07.01
+              MATCHDAY · 07.02
             </span>
           </div>
 
           <div className="badge">FIFA WORLD CUP 2026 · KNOCKOUT STAGE</div>
           <h1 className="page-title">
             小组积分榜
-            <span>48 支球队 · 12 个小组 · 数据截至 2026.07.01 · 32 强 10/16 场已结束</span>
+            <span>48 支球队 · 12 个小组 · 数据截至 2026.07.02 · 32 强 13/16 场已结束</span>
           </h1>
           <div className="header-meta">
             <div className="meta-item">

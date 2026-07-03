@@ -18,7 +18,7 @@ export default function RoundOf32Table() {
 
       <div className="strategy-banner round32-intro">
         <p>
-          32 强已于 6 月 28 日开打，共 16 场单败淘汰。截至 <strong>2026.07.01</strong> 已结束{' '}
+          32 强已于 6 月 28 日开打，共 16 场单败淘汰。截至 <strong>2026.07.02</strong> 已结束{' '}
           <strong>{playedCount}</strong> 场；未赛场次按赛程表显示。
         </p>
       </div>
