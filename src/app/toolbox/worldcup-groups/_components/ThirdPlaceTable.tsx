@@ -1,19 +1,19 @@
-import { getHopefulCandidates, tierLabel } from '../_lib/thirdPlace';
+import { getThirdPlaceCandidates, tierLabel } from '../_lib/thirdPlace';
 
 export default function ThirdPlaceTable() {
-  const candidates = getHopefulCandidates();
+  const candidates = getThirdPlaceCandidates();
 
   return (
     <section className="third-place-section" aria-labelledby="third-place-title">
       <div className="section-label" id="third-place-title">
-        BEST 8 THIRD · +8 晋级预测
+        BEST 8 THIRD · +8 晋级结果
       </div>
 
       <div className="strategy-banner third-place-intro">
         <p>
           12 个小组前 2 名（24 队）直接晋级，12 个第三名中成绩最好的 8 队补充进 32 强。
-          下表按当前积分、净胜球、进球数排序，<strong>前 8 行高亮</strong>为最有希望进入
-          +8 的球队（数据截至 2026.06.24，含末轮形势说明）。
+          小组赛已全部结束，下表为<strong>最终 +8 排名</strong>（数据截至 2026.06.27），前 8
+          行高亮为确认晋级队。
         </p>
       </div>
 
@@ -27,8 +27,8 @@ export default function ThirdPlaceTable() {
               <th scope="col">积分</th>
               <th scope="col">净胜球</th>
               <th scope="col">进球</th>
-              <th scope="col">+8 希望</th>
-              <th scope="col">形势说明</th>
+              <th scope="col">结果</th>
+              <th scope="col">说明</th>
             </tr>
           </thead>
           <tbody>
@@ -47,7 +47,7 @@ export default function ThirdPlaceTable() {
                 <td>{row.gf}</td>
                 <td>
                   <span className={`tier-badge tier-${row.tier}`}>
-                    {row.inTop8 ? '预测晋级' : tierLabel(row.tier)}
+                    {row.inTop8 ? '确认晋级' : tierLabel(row.tier)}
                   </span>
                 </td>
                 <td className="note-cell">{row.note}</td>
@@ -58,7 +58,7 @@ export default function ThirdPlaceTable() {
       </div>
 
       <p className="third-place-disclaimer">
-        预测基于当前积分榜推演，末轮结束后以 FIFA 官方第三名排序为准。
+        第三名同分依次比较净胜球、进球、公平竞赛、FIFA 排名。韩国（3 分）与苏格兰（3 分）未进前 8。
       </p>
     </section>
   );

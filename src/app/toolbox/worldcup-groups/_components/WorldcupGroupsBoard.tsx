@@ -18,6 +18,9 @@ import {
   type TeamMatch,
 } from '../_lib/matches';
 import ThirdPlaceTable from './ThirdPlaceTable';
+import RoundOf32Table from './RoundOf32Table';
+import KnockoutBracket from './KnockoutBracket';
+import EliminatedTeamsSection from './EliminatedTeamsSection';
 import LineupModal from './LineupModal';
 import { enrichMatchPreview, getMatchLineupPreview } from '../_data/matchLineups';
 import { findFixture } from '../_lib/fixtureLookup';
@@ -234,7 +237,7 @@ function GroupCard({
       <div className="group-cols-head">
         <span className="col-head">排名</span>
         <span />
-        <span className="col-head col-fifa" title="FIFA 赛后实时排名，截至 2026.06.24">
+        <span className="col-head col-fifa" title="FIFA 赛后实时排名，截至 2026.06.27">
           世界排名
         </span>
         <span className="col-head col-gd">净球</span>
@@ -318,14 +321,14 @@ export default function WorldcupGroupsBoard() {
               </span>
             </Link>
             <span className="header-top-mark" aria-hidden="true">
-              MATCHDAY · 06.24
+              MATCHDAY · 07.01
             </span>
           </div>
 
-          <div className="badge">FIFA WORLD CUP 2026 · GROUP STAGE</div>
+          <div className="badge">FIFA WORLD CUP 2026 · KNOCKOUT STAGE</div>
           <h1 className="page-title">
             小组积分榜
-            <span>48 支球队 · 12 个小组 · 数据截至 2026.06.24</span>
+            <span>48 支球队 · 12 个小组 · 数据截至 2026.07.01 · 32 强 10/16 场已结束</span>
           </h1>
           <div className="header-meta">
             <div className="meta-item">
@@ -387,6 +390,12 @@ export default function WorldcupGroupsBoard() {
         </main>
 
         <ThirdPlaceTable />
+
+        <RoundOf32Table />
+
+        <KnockoutBracket />
+
+        <EliminatedTeamsSection />
 
         <footer className="page-footer">
           WC 2026 · GROUP STANDINGS · FOR REFERENCE ONLY

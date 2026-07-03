@@ -23,6 +23,9 @@ importers:
       animate.css:
         specifier: ^4.1.1
         version: 4.1.1
+      bracketkit:
+        specifier: ^0.1.1
+        version: 0.1.1(react@19.0.0)
       critters:
         specifier: ^0.0.25
         version: 0.0.25
@@ -804,6 +807,11 @@ packages:
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
+
+  bracketkit@0.1.1:
+    resolution: {integrity: sha512-IhGzPgjPCYrDX8Lk+IjxpezYDySohOZhvftt/eIz/8cWRjmSvNnYwj4xeoRsqS4LtokRKJWcbN89CDW11VJXYw==}
+    peerDependencies:
+      react: '>=18'
 
   browserslist@4.28.2:
     resolution: {integrity: sha512-48xSriZYYg+8qXna9kwqjIVzuQxi+KYWp2+5nCYnYKPTr0LvD89Jqk2Or5ogxz0NUMfIjhh2lIUX/LyX9B4oIg==}
@@ -3232,6 +3240,10 @@ snapshots:
   braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
+
+  bracketkit@0.1.1(react@19.0.0):
+    dependencies:
+      react: 19.0.0
 
   browserslist@4.28.2:
     dependencies:
